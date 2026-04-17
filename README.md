@@ -58,7 +58,7 @@ Optional prelim-section selection:
 
 ```latex
 \customizeprelim{
-  frontmatterstyle=auto,
+  frontmatterstyle=curly,
   backmatterstyle=auto,
   frontmatterimage={assets/frontimages/feminine.jpg},
   backmatterimage={assets/frontimages/feminine.jpg}
@@ -69,9 +69,9 @@ Optional prelim-section selection:
 
 `bookish.sty` supports:
 
-- `theme=default|purple|black|sepia|ocean|forest`
+- `theme=default|purple|black|sepia|ocean|forest|bluelight|cushion|embroid|emerald|feminine|goldenblue|greencutton|greenflower|petals|rose`
 - `paper=6x9|a5|a4|letter`
-- `frontpage=star|flower|circle`
+- `frontpage=star|flower|circle|bluelight|cushion|embroid|emerald|feminine|goldenblue|greencutton|greenflower|petals|rose`
 - `backmatter=true|false`
 - `chapternumbering=roman|roman-lower|arabic`
 - `coverstyle=auto|classic|band|frame`
@@ -100,14 +100,82 @@ Notes:
 - `publishstatus=published` hides the front-cover status tag.
 - `year` is retained as metadata, but the current frontmatter system does not print it on the front cover.
 
-## Frontmatter Styles
+## Frontpage Styles
 
-- `star`
-  Right-aligned title block with a left footer publisher block.
-- `flower`
-  Floral central motif with right-aligned title and author stacks.
-- `circle`
-  Circular band composition with right-aligned title and author stacks.
+Refresh these previews with:
+
+- `scripts/generate-frontpage-samples.bat`
+- `scripts/generate-frontpage-samples.sh`
+
+<table>
+  <tr>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/frontpage/star.png" alt="star frontpage preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">star</div>
+    </td>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/frontpage/flower.png" alt="flower frontpage preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">flower</div>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/frontpage/circle.png" alt="circle frontpage preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">circle</div>
+    </td>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/frontpage/bluelight.png" alt="bluelight frontpage preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">bluelight</div>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/frontpage/cushion.png" alt="cushion frontpage preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">cushion</div>
+    </td>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/frontpage/embroid.png" alt="embroid frontpage preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">embroid</div>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/frontpage/emerald.png" alt="emerald frontpage preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">emerald</div>
+    </td>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/frontpage/feminine.png" alt="feminine frontpage preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">feminine</div>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/frontpage/goldenblue.png" alt="goldenblue frontpage preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">goldenblue</div>
+    </td>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/frontpage/greencutton.png" alt="greencutton frontpage preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">greencutton</div>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/frontpage/greenflower.png" alt="greenflower frontpage preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">greenflower</div>
+    </td>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/frontpage/petals.png" alt="petals frontpage preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">petals</div>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/frontpage/rose.png" alt="rose frontpage preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">rose</div>
+    </td>
+    <td width="50%"></td>
+  </tr>
+</table>
 
 When `backmatter=true`, `\bookmakebackmatter` uses the back cover style associated with the selected frontpage style.
 
@@ -116,6 +184,7 @@ With `theme=default`, the package currently maps:
 - `star` -> `black`
 - `flower` -> `purple`
 - `circle` -> `sepia`
+- image-backed frontpages -> matching derived image themes
 
 ## Helper Commands
 
@@ -136,22 +205,48 @@ The frontmatter/backmatter section openers now live in [bookish-prelim.sty](./bo
 
 Use `\customizeprelim{...}` with:
 
-- `frontmatterstyle=auto|flower|circle|elegant|imagebg`
-- `backmatterstyle=auto|flower|circle|elegant|imagebg`
-- `image={...}` as a shared fallback image for `imagebg`
+- `frontmatterstyle=curly|straight|sideblock|useimage|auto`
+- `backmatterstyle=auto|curly|straight|sideblock|useimage`
+- `image={...}` as a shared fallback image for `useimage`
 - `frontmatterimage={...}` to override only frontmatter opener images
 - `backmatterimage={...}` to override only backmatter opener images
 
-With `auto`, the package currently maps:
+Behavior:
 
-- `frontpage=flower` -> `flower`
-- `frontpage=circle` -> `circle`
-- image-backed frontpages -> `imagebg`
-- everything else -> `elegant`
+- `frontmatterstyle` defaults to `curly`
+- `frontmatterstyle=auto` also resolves to `curly`
+- `backmatterstyle=auto` means "use the same style as `frontmatterstyle`"
 
-If an `imagebg` prelim style is selected and no image is provided, the package
-reuses the matching `assets/frontimages/<frontpage>.jpg` file when possible,
-and otherwise falls back to `assets/frontimages/emerald.jpg`.
+If `useimage` is selected and no image is provided, the package falls back to
+`assets/frontimages/emerald.jpg`.
+
+Refresh these previews with:
+
+- `scripts/generate-prelim-samples.bat`
+- `scripts/generate-prelim-samples.sh`
+
+<table>
+  <tr>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/prelim/curly.png" alt="curly prelim preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">curly</div>
+    </td>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/prelim/straight.png" alt="straight prelim preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">straight</div>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/prelim/sideblock.png" alt="sideblock prelim preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">sideblock</div>
+    </td>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/prelim/useimage.png" alt="useimage prelim preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">useimage</div>
+    </td>
+  </tr>
+</table>
 
 ## Fonts
 
@@ -170,6 +265,9 @@ XeLaTeX is required because the package depends on `fontspec` and local font loa
 - [bookish-frontpage.sty](./bookish-frontpage.sty): frontmatter and backmatter renderers
 - [bookish-prelim.sty](./bookish-prelim.sty): frontmatter/backmatter section opener renderers
 - [main.tex](./main.tex): example entrypoint
+- [scripts](./scripts): sample-generation scripts for frontpages and prelim styles
+- [sample/frontpage](./sample/frontpage): generated frontpage preview PNGs
+- [sample/prelim](./sample/prelim): generated prelim preview PNGs
 - [src/content](./src/content): example chapter files
 - [src/frontmatter](./src/frontmatter): example front/backmatter content
 - [assets/fonts](./assets/fonts): bundled fonts

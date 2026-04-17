@@ -1,7 +1,7 @@
 \documentclass[11pt,fleqn,oneside]{book}
 \usepackage[
-  frontpage=feminine, % Options: star, flower, circle, bluelight, cushion, embroid, emerald, feminine, goldenblue, greencutton, greenflower, petals
-  theme=default, % Options: default, purple, black, sepia, ocean, and forest
+  frontpage=feminine, % Options: star, flower, circle, bluelight, cushion, embroid, emerald, feminine, goldenblue, greencutton, greenflower, petals, rose
+  theme=default, % Options: default, purple, black, sepia, ocean, forest, bluelight, cushion, embroid, emerald, feminine, goldenblue, greencutton, greenflower, petals, rose
   paper=a5, % Options: a4, a5, letter, etc.
   backmatter=true,
   chapternumbering=roman,
@@ -43,12 +43,18 @@
 }
 
 % Optional prelim-section tuning. Styles:
-% - flower   (from flower-center)
-% - circle   (from spiral-circle-mid)
-% - elegant  (from hexagon-elegant)
-% - imagebg  (from imagebg)
+% - curly     : ornamented centered opener
+% - straight  : plain centered opener
+% - sideblock : asymmetric side-accent opener
+% - useimage  : image-backed opener
+%
+% Notes:
+% - frontmatterstyle defaults to curly
+% - frontmatterstyle=auto also resolves to curly
+% - backmatterstyle=auto means "use the same style as frontmatterstyle"
+% - frontmatterimage/backmatterimage are only used when the selected style is useimage
 \customizeprelim{
-%   frontmatterstyle=auto,
+%   frontmatterstyle=curly,
 %   backmatterstyle=auto,
 %   frontmatterimage={assets/frontimages/feminine.jpg},
 %   backmatterimage={assets/frontimages/feminine.jpg}
