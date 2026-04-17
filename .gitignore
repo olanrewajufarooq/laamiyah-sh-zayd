@@ -3,3 +3,18 @@ resources/
 latex templates/
 reference-aux/*
 reference-main/*
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+*.tmp
+*.temp
+Thumbs.db
+.DS_Store
+node_modules/
+.husky/_/

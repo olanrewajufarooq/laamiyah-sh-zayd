@@ -71,7 +71,7 @@ Optional prelim-section selection:
 
 - `theme=default|purple|black|sepia|ocean|forest|bluelight|cushion|embroid|emerald|feminine|goldenblue|greencutton|greenflower|petals|rose`
 - `paper=6x9|a5|a4|letter`
-- `frontpage=star|flower|circle|bluelight|cushion|embroid|emerald|feminine|goldenblue|greencutton|greenflower|petals|rose`
+- `frontpage=<see Frontpage Styles below>`
 - `backmatter=true|false`
 - `chapternumbering=roman|roman-lower|arabic`
 - `coverstyle=auto|classic|band|frame`
@@ -177,14 +177,7 @@ Refresh these previews with:
   </tr>
 </table>
 
-When `backmatter=true`, `\bookmakebackmatter` uses the back cover style associated with the selected frontpage style.
-
-With `theme=default`, the package currently maps:
-
-- `star` -> `black`
-- `flower` -> `purple`
-- `circle` -> `sepia`
-- image-backed frontpages -> matching derived image themes
+With `theme=default`, each frontpage uses its intended built-in design colors. If you set a different `theme`, it fully recolors `star`, `flower`, and `circle`, while the image-backed frontpages keep their image design and only the text styling is affected.
 
 ## Helper Commands
 
@@ -294,3 +287,20 @@ Both scripts:
 - write the PDF to `build/main.pdf`
 - clean common LaTeX byproducts from the repo root and `build/`
 - prepend the repo root to `TEXINPUTS` so subdirectory TeX files can still resolve local `.sty` files
+
+## Hooks
+
+This repo is set up for Husky pre-commit hooks.
+
+After cloning, run:
+
+```bash
+npm install
+```
+
+The pre-commit hook keeps generated previews in sync:
+
+- changes to `bookish-frontpage.sty` regenerate and stage `sample/frontpage/`
+- changes to `bookish-prelim.sty` regenerate and stage `sample/prelim/`
+
+The sample generators compile each preview twice with XeLaTeX before converting it to PNG.

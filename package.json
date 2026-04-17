@@ -1,0 +1,10 @@
+{
+  "name": "laamiyyah-sh-zayd",
+  "private": true,
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}

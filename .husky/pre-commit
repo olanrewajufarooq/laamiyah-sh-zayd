@@ -1,0 +1,41 @@
+#!/usr/bin/env sh
+
+set -eu
+
+staged_files="$(git diff --cached --name-only --diff-filter=ACMR)"
+
+run_frontpage=false
+run_prelim=false
+
+printf '%s\n' "$staged_files" | grep -qx 'bookish-frontpage.sty' && run_frontpage=true || true
+printf '%s\n' "$staged_files" | grep -qx 'bookish-prelim.sty' && run_prelim=true || true
+
+if [ "$run_frontpage" = false ] && [ "$run_prelim" = false ]; then
+  exit 0
+fi
+
+run_script() {
+  windows_script="$1"
+  unix_script="$2"
+
+  case "$(uname -s)" in
+    MINGW*|MSYS*|CYGWIN*)
+      cmd.exe /c "$windows_script"
+      ;;
+    *)
+      sh "$unix_script"
+      ;;
+  esac
+}
+
+if [ "$run_frontpage" = true ]; then
+  echo "Regenerating frontpage samples..."
+  run_script "scripts\\generate-frontpage-samples.bat" "scripts/generate-frontpage-samples.sh"
+  git add sample/frontpage
+fi
+
+if [ "$run_prelim" = true ]; then
+  echo "Regenerating prelim samples..."
+  run_script "scripts\\generate-prelim-samples.bat" "scripts/generate-prelim-samples.sh"
+  git add sample/prelim
+fi

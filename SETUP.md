@@ -95,3 +95,23 @@ The build scripts also:
 
 - clean common `.aux` / `.log` / `.toc` style byproducts
 - set `TEXINPUTS` so TeX files in subdirectories can still resolve the repo-root style files
+
+## Husky Hooks
+
+This repo can use Husky to keep generated preview samples in sync during commits.
+
+Install it once after cloning:
+
+```bash
+npm install
+```
+
+The pre-commit hook behaves like this:
+
+- if `bookish-frontpage.sty` is staged, it runs `scripts/generate-frontpage-samples.*`
+  for the current OS and stages `sample/frontpage/`
+- if `bookish-prelim.sty` is staged, it runs `scripts/generate-prelim-samples.*`
+  for the current OS and stages `sample/prelim/`
+
+The sample generators compile each preview twice with XeLaTeX before converting
+it to PNG, matching the normal build flow.
