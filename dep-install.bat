@@ -1,33 +1,14 @@
 @echo off
+setlocal
 
-echo Checking and installing dependencies...
+set "LATEX_CMD=xelatex"
+if defined XELATEX_EXE set "LATEX_CMD=%XELATEX_EXE%"
 
-:: ----------------------------
-:: Check Pandoc
-:: ----------------------------
-pandoc --version >nul 2>nul
-if %errorlevel% neq 0 (
-    echo Pandoc not found. Installing...
-    winget install --id JohnMacFarlane.Pandoc -e --source winget
-) else (
-    echo Pandoc already installed.
+"%LATEX_CMD%" --version >nul 2>nul
+if errorlevel 1 (
+    echo XeLaTeX is not runnable.
+    echo Install a TeX distribution that includes xelatex.
+    exit /b 1
 )
 
-:: ----------------------------
-:: Check Typst
-:: ----------------------------
-typst --version >nul 2>nul
-if %errorlevel% neq 0 (
-    echo Typst not found or not runnable. Installing...
-    winget install typst
-) else (
-    echo Typst already installed.
-)
-
-echo.
-echo =====================================
-echo Dependency check complete.
-echo =====================================
-
-
-pause
+echo XeLaTeX is installed and runnable.

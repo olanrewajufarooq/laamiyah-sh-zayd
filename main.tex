@@ -1,0 +1,61 @@
+\documentclass[11pt,fleqn,oneside]{book}
+\usepackage[
+  theme=forest, % Options: purple, black, sepia, ocean, and forest
+  paper=a5, % Options: a4, a5, letter, etc.
+  frontpage=flower, % Options: hexagon, star, flower, circle
+  backmatter=true,
+  chapternumbering=roman,
+  coverstyle=auto,
+  runningheader=none,
+  toc=true
+]{bookish}
+
+\booksetup{
+  title={An Explanation of Laamiyyah},
+  subtitle={of Shaykhul-Islam Ibn Taymiyyah},
+  subtitleposition={below},
+  author={Zayd ibn Hadi Al-Madkhali},
+  authoraddress={Shaykh Al-Allamah},
+  translator={Abu Al-Abbas Moosaa Richardson},
+  imprint={My Press},
+  publisherlogo={assets/images/publisher-white.png},
+  year={04/10/2023},
+  publishstatus={demo},
+  backtext={This is sample back cover copy. Replace it with a short synopsis, endorsement, or series description. The package now maps the backmatter art to the selected frontpage style so the front and back covers stay visually consistent.}
+}
+
+\begin{document}
+
+\frontmatter
+\bookmaketitlepage
+
+\bookfrontmattersection{Translator's Note}
+This is a sample translator's note. Replace it with a brief introduction to the translation, including any relevant background on the original work, the author, and the translator's approach to the translation.
+
+You can also use this section to acknowledge any sources, inspirations, or assistance you received during the translation process. Keep it concise and informative, providing readers with context for the translation and setting the stage for the main content of the book.
+
+\vspace{1.5em}
+\bookepigraph{}{Abu Al-Abbas Moosaa Richardson}
+
+\bookfrontmattersection{Preface}
+This repository now uses a single XeLaTeX style file rather than a Typst
+package. The goal is the familiar LaTeX workflow: choose options at
+\verb|\usepackage| time, set metadata once, and keep the document body clean.
+
+\vspace{1.5em}
+\bookepigraph
+  {One style file with a controlled option surface is still the simplest mental
+  model for reusable book design in LaTeX.}
+  {Design note}
+
+\booktableofcontents
+
+\mainmatter
+\input{content/chapter1}
+\input{content/chapter2}
+
+\backmatter
+\input{frontmatter/afterword}
+\bookmakebackmatter
+
+\end{document}

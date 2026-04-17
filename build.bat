@@ -3,49 +3,43 @@ setlocal EnableDelayedExpansion
 
 if not exist build mkdir build
 
-pandoc --version >nul 2>nul
+set "LATEX_CMD=xelatex"
+if defined XELATEX_EXE set "LATEX_CMD=%XELATEX_EXE%"
+
+"%LATEX_CMD%" --version >nul 2>nul
 if errorlevel 1 (
-    echo Pandoc is not runnable. Install Pandoc first.
+    echo XeLaTeX is not runnable from cmd.exe.
+    echo Set XELATEX_EXE to the full path of xelatex.exe or reinstall your TeX distribution.
     exit /b 1
 )
 
-set "TYPST_CMD=typst"
-if defined TYPST_EXE set "TYPST_CMD=%TYPST_EXE%"
+echo Building main.tex...
+"%LATEX_CMD%" -interaction=nonstopmode -halt-on-error -output-directory=build main.tex
+if errorlevel 1 exit /b 1
+"%LATEX_CMD%" -interaction=nonstopmode -halt-on-error -output-directory=build main.tex
+if errorlevel 1 exit /b 1
 
-set "PDF_INPUTS="
-for %%F in (src\chapters\*.md) do (
-    set "PDF_INPUTS=!PDF_INPUTS! "%%F""
-)
-
-if not defined PDF_INPUTS (
-    echo No PDF content files found in src\
-    exit /b 1
-)
-
-set "PDF_READY=1"
-%TYPST_CMD% --version >nul 2>nul
-if errorlevel 1 set "PDF_READY=0"
-
-if "%PDF_READY%"=="1" (
-    echo Preparing PDF front matter...
-    powershell -NoProfile -Command "Get-Content 'src\\prelims\\01-translators-introduction.md' | Where-Object { $_ -notmatch '^:::' } | Set-Content 'build\\translator-introduction.md'"
-    if errorlevel 1 exit /b 1
-
-    echo Rendering Typst source...
-    pandoc --defaults metadata/pdf.yaml %PDF_INPUTS%
-    if errorlevel 1 exit /b 1
-
-    echo Rendering Translator's Introduction...
-    pandoc build\translator-introduction.md -t typst --output build\translator-introduction.typ
-    if errorlevel 1 exit /b 1
-
-    echo Building PDF...
-    "%TYPST_CMD%" compile --root . --font-path assets\fonts build\book.typ build\book.pdf
-    if errorlevel 1 exit /b 1
-) else (
-    echo Skipping PDF build because Typst is not runnable from cmd.exe.
-    echo Set TYPST_EXE to the full path of typst.exe or reinstall Typst.
+for %%F in (
+    *.aux
+    *.log
+    *.toc
+    *.out
+    *.bcf
+    *.blg
+    *.run.xml
+    *.fdb_latexmk
+    *.fls
+    build\*.aux
+    build\*.log
+    build\*.toc
+    build\*.out
+    build\*.bcf
+    build\*.blg
+    build\*.run.xml
+    build\*.fdb_latexmk
+    build\*.fls
+) do (
+    if exist "%%~F" del /q "%%~F"
 )
 
 echo Done.
-pause

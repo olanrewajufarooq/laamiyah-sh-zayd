@@ -1,0 +1,790 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{bookish-frontpage}[2026/04/17 Frontpage styles for bookish]
+% Usage:
+% Loaded by bookish.sty. Select with \usepackage[frontpage=hexagon]{bookish}
+% Available styles: hexagon, star, flower, circle.
+% Matching backmatter pages are rendered through \bookmakebackmatter.
+
+% Frontpage rendering relies on TikZ composition and a few helper comparisons.
+\RequirePackage{etoolbox}
+\RequirePackage{graphicx}
+\RequirePackage{tikz}
+\usetikzlibrary{calc,math,positioning,shapes.geometric}
+
+\newcommand{\bookishfrontpage@style}{hexagon}
+
+% Store the public frontpage style name for later dispatch.
+\newcommand{\bookishfrontpagesetup}[1]{%
+  \edef\bookishfrontpage@style{#1}%
+}
+
+% Shared drawing helpers used by the geometric cover styles.
+\newcommand{\bookish@drawhexagon}[5]{%
+  \node[
+    rounded corners,
+    inner sep=0pt,
+    ultra thick,
+    regular polygon,
+    regular polygon sides=6,
+    minimum size=#3,
+    rotate=#4,
+    #5
+  ] at (#2) {#1}%
+}
+
+\newcommand{\bookish@drawtext}[5]{%
+  \node[
+    left,
+    bookishcoverbg,
+    rounded corners,
+    minimum width=\paperwidth,
+    minimum height=#3,
+    text width=\paperwidth,
+    rotate=#4,
+    #5
+  ] at (#2) {#1}%
+}
+
+% Geometry helpers for the Forta-style emblem used by the elegant cover.
+\newcommand{\bookish@pentagonvertex}[5]{%
+  ({#1 + #3*cos(72*#5 + #4)},{#2 + #3*sin(72*#5 + #4)})%
+}
+
+\newcommand{\bookish@drawfortalogo}[7]{%
+  \foreach \i [evaluate=\i as \j using {int(mod(\i+1,5))},
+               evaluate=\i as \Aout using {#6 + 90 + #5 + \i*72},
+               evaluate=\i as \Bin using {#6 - 90 - #5 + \i*72},
+               evaluate=\i as \Bout using {#6 + 180 + #5 + \i*72},
+               evaluate=\i as \Cin using {#6 - #5 + \i*72},
+               evaluate=\i as \Cout using {#6 + 72 + #5 + \i*72},
+               evaluate=\i as \Din using {#6 + 252 - #5 + \i*72}] in {0,1,2,3,4} {%
+    \path let \p1 = \bookish@pentagonvertex{#1}{#2}{#3}{#6-0.5*#4}{\i},
+              \p2 = \bookish@pentagonvertex{#1}{#2}{#3}{#6+0.5*#4}{\i},
+              \p3 = \bookish@pentagonvertex{#1}{#2}{0.4*#3}{#6+36}{\i},
+              \p4 = \bookish@pentagonvertex{#1}{#2}{#3}{#6-0.5*#4}{\j}
+          in coordinate (A) at (\p1)
+             coordinate (B) at (\p2)
+             coordinate (C) at (\p3)
+             coordinate (D) at (\p4);
+    \draw[#7] (A) to[out=\Aout,in=\Bin] (B)
+              to[out=\Bout,in=\Cin] (C)
+              to[out=\Cout,in=\Din] (D);
+  }%
+}
+
+% Shared publisher helpers keep logo rendering optional across all styles.
+\newcommand{\bookish@publishername}{%
+  \bookish@imprint%
+}
+
+\newcommand{\bookish@publishstatuslabel}{%
+  \ifdefstring{\bookish@publishstatus}{demo}{Demo}{%
+    \ifdefstring{\bookish@publishstatus}{review}{For Review}{%
+      \ifdefstring{\bookish@publishstatus}{published}{}{%
+        \bookish@publishstatus%
+      }%
+    }%
+  }%
+}
+
+\newcommand{\bookish@drawpublisherlogo}[2]{%
+  \ifstrempty{\bookish@publisherlogo}{}{%
+    \node[#1] {\includegraphics[width=#2]{\bookish@publisherlogo}};%
+  }%
+}
+
+% The hexagon cover needs slightly stricter stroke geometry than the other styles.
+\newcommand{\bookish@drawcoverhexagon}[5]{%
+  \node[
+    rounded corners=2pt,
+    inner sep=0pt,
+    line width=0.9pt,
+    regular polygon,
+    regular polygon sides=6,
+    minimum size=#3,
+    rotate=#4,
+    #5
+  ] at (#2) {#1}%
+}
+
+% Subtitle placement is configurable: above or below the title.
+\newcommand{\bookish@ifsubtitleabove}[2]{%
+  \ifdefstring{\bookish@subtitleposition}{above}{#1}{#2}%
+}
+
+% Hexagon-based cover derived from the original black template layout.
+\newcommand{\bookishfrontpagehexagons}{%
+  \fill[bookishcoverbg] (current page.south west) rectangle (current page.north east);
+
+  \foreach \i in {0.5,...,20} {%
+    \bookish@drawcoverhexagon{}{$(current page.north west)+(2.5,0)$}{\i cm}{0}{bookishcoveraccent!60,draw};%
+  }%
+  \foreach \i in {2.5,...,22} {%
+    \bookish@drawcoverhexagon{}{$(current page.west)+(2.5,-5)$}{\i cm}{0}{bookishcoveraccent!60,draw};%
+  }%
+  \foreach \i in {0.5,...,22} {%
+    \bookish@drawcoverhexagon{}{$(current page.north east)+(0,-8.2)$}{\i cm}{0}{bookishcoveraccent!90,draw};%
+  }%
+  \foreach \i in {21,...,2} {%
+    \bookish@drawcoverhexagon{}{$(current page.south east)+(-0.2,-1.0)$}{\i cm}{0}{bookishcoveraccent!85,draw};%
+  }%
+
+  \bookish@drawtext{%
+    \bookish@ifsubtitleabove{%
+      \ifstrempty{\bookish@subtitle}{}{\large\textsc{\bookish@subtitle}\\[8pt]}%
+    }{}%
+    \Huge\textsc{\textbf{\bookish@title}}%
+    \bookish@ifsubtitleabove{}{%
+      \ifstrempty{\bookish@subtitle}{}{\\[6pt]\Large\textsc{\bookish@subtitle}}%
+    }%
+  }{$(current page.center)+(3.2,-3.2)$}{3cm}{-60}{text=bookishcoverfg,align=right,font=\bookishelegantfont};
+
+  \bookish@drawtext{%
+    \ifstrempty{\bookish@authoraddress}{}{\large\textsc{\bookish@authoraddress}\\[2pt]}%
+    \Large\textsc{\bookish@author}%
+    \ifstrempty{\bookish@year}{}{\\\Large\textsc{\bookish@year}}%
+  }{$(current page.east)+(-0.55,-4.85)$}{2cm}{0}{text=bookishcoverfg,anchor=east,align=right,font=\bookishelegantfont};
+
+  \ifstrempty{\bookish@publishstatuslabel}{}{%
+    \bookish@drawcoverhexagon{%
+      {\bookishelegantfont\Large\bookish@publishstatuslabel}%
+    }{$(current page.west)+(2.5,-5)$}{2.5 cm}{0}{bookishcoveraccent!60,draw,text=bookishcoverfg,font=\bookishelegantfont};%
+  }%
+
+  \node[
+    text=bookishcovermuted,
+    anchor=south,
+    font=\bookishelegantfont
+  ] (publisher) at ([yshift=18pt] current page.south) {%
+    \Large\textsc{\bookish@publishername}%
+  };
+  \bookish@drawpublisherlogo{anchor=north, above=4pt of publisher.north}{0.07\textwidth}
+}
+
+% Matching hexagon backmatter page built to echo the frontpage geometry.
+\newcommand{\bookishbackmatterhexagons}{%
+  \fill[bookishcoverbg] (current page.south west) rectangle (current page.north east);
+
+  \foreach \i in {0.5,...,20} {%
+    \bookish@drawcoverhexagon{}{$(current page.north west)+(2.5,0)$}{\i cm}{0}{bookishcoveraccent!60,draw};%
+  }%
+  \foreach \i in {2.5,...,22} {%
+    \bookish@drawcoverhexagon{}{$(current page.west)+(2.5,-5)$}{\i cm}{0}{bookishcoveraccent!60,draw};%
+  }%
+  \foreach \i in {0.5,...,22} {%
+    \bookish@drawcoverhexagon{}{$(current page.north east)+(0,-8.9)$}{\i cm}{0}{bookishcoveraccent!90,draw};%
+  }%
+  \foreach \i in {21,...,2} {%
+    \bookish@drawcoverhexagon{}{$(current page.south east)+(-0.2,-1.0)$}{\i cm}{0}{bookishcoveraccent!85,draw};%
+  }%
+
+  \node[
+    text=bookishcoverfg,
+    text width=.8\paperwidth,
+    align=justify,
+    anchor=north
+  ] at ([yshift=-52pt] current page.north) {%
+    \scshape\small
+    \ifstrempty{\bookish@backtext}{\bookish@title}{\bookish@backtext}%
+  };
+
+  \node[
+    text=bookishcovermuted,
+    anchor=south,
+    font=\bookishcoverfont
+  ] (publisher) at ([yshift=20pt] current page.south) {%
+    \Large\textsc{\bookish@publishername}%
+  };
+  \bookish@drawpublisherlogo{anchor=north, above=4pt of publisher.north}{0.07\textwidth}
+}
+
+% Elegant Forta-style cover derived from the alternate black template cover.
+\newcommand{\bookishfrontpageelegant}{%
+  \fill[bookishcoverbg] (current page.south west) rectangle (current page.north east);
+  \foreach \i [evaluate=\i as \Ox using {5 + 0.2 * \i},
+               evaluate=\i as \Oy using {-4},
+               evaluate=\i as \R using {4 + 0.4 * \i},
+               evaluate=\i as \Tilt using {36 + 0.5 * \i},
+               evaluate=\i as \percent using {100-\i*5}] in {0,...,20} {%
+    \bookish@drawfortalogo{\Ox}{\Oy}{\R}{28}{8}{\Tilt}{very thick, densely dotted, draw=bookishcovermuted!\percent!black};%
+  }%
+
+  \node[
+    text=bookishcoverfg,
+    minimum width=\paperwidth,
+    minimum height=2cm,
+    text width=\paperwidth,
+    align=right,
+    anchor=east,
+    inner sep=0pt,
+    outer sep=0pt,
+    font=\fontsize{48}{52}\bookishelegantfont\bfseries
+  ] at ($(current page.east)+(-0.8,-2)$) {%
+    \textsc{\bookish@title}%
+  };
+
+  \bookish@ifsubtitleabove{%
+    \ifstrempty{\bookish@subtitle}{}{%
+      \node[
+        text=bookishcovermuted,
+        minimum width=.5\paperwidth,
+        minimum height=0.8cm,
+        text width=.5\paperwidth,
+        align=right,
+        anchor=east,
+        inner sep=0pt,
+        outer sep=0pt,
+        font=\fontsize{13}{15}\bookishelegantfont
+      ] at ($(current page.east)+(-0.8,0.4)$) {%
+        \textsc{\bookish@subtitle}%
+      };
+    }%
+  }{%
+    \ifstrempty{\bookish@subtitle}{}{%
+      \node[
+        text=bookishcoverfg,
+        minimum width=\paperwidth,
+        minimum height=2cm,
+        text width=\paperwidth,
+        align=right,
+        anchor=east,
+        inner sep=0pt,
+        outer sep=0pt,
+        font=\fontsize{18}{20}\bookishelegantfont
+      ] at ($(current page.east)+(-0.8,-4.55)$) {%
+        \textsc{\bookish@subtitle}%
+      };
+    }%
+  }%
+
+  \node[
+    text=bookishcoverfg,
+    text width=.38\paperwidth,
+    align=right,
+    anchor=east,
+    font=\fontsize{12}{14}\bookishelegantfont
+  ] at ($(current page.south east)+(-2,2)$) {%
+    \ifstrempty{\bookish@authoraddress}{}{{\color{bookishcovermuted}\textsc{\bookish@authoraddress}}\\[2pt]}%
+    {\fontsize{18}{20}\selectfont\textsc{\textbf{\bookish@author}}}%
+    \ifstrempty{\bookish@year}{}{\\[4pt]{\color{bookishcovermuted}\textsc{\bookish@year}}}%
+  };
+
+  \bookish@drawpublisherlogo{anchor=south west, at={($(current page.south west)+(0.8,1.35)$)}}{0.08\textwidth}
+  \ifstrempty{\bookish@publisherlogo}{}{%
+    \node[
+      text=bookishcovermuted,
+      anchor=north,
+      align=left,
+      font=\fontsize{12}{12}\bookishelegantfont
+    ] at ($(current page.south west)+(1.2,0.8)$) {\textsc{\bookish@publishername}};
+  }%
+}
+
+% Matching elegant backmatter page reuses the same emblem and text placement.
+\newcommand{\bookishbackmatterelegant}{%
+  \fill[bookishcoverbg] (current page.south west) rectangle (current page.north east);
+  \foreach \i [evaluate=\i as \Ox using {5 + 0.2 * \i},
+               evaluate=\i as \Oy using {-4},
+               evaluate=\i as \R using {4 + 0.4 * \i},
+               evaluate=\i as \Tilt using {36 + 0.5 * \i},
+               evaluate=\i as \percent using {100-\i*5}] in {0,...,20} {%
+    \bookish@drawfortalogo{\Ox}{\Oy}{\R}{28}{8}{\Tilt}{very thick, densely dotted, draw=bookishcovermuted!\percent!black};%
+  }%
+
+  \node[
+    text=bookishcoverfg,
+    text width=.58\paperwidth,
+    align=right,
+    anchor=east,
+    font=\fontsize{15}{17}\bookishelegantfont
+  ] at ($(current page.east)+(-2,-2.2)$) {%
+    \ifstrempty{\bookish@backtext}{\bookish@title}{\bookish@backtext}%
+  };
+
+  \node[
+    text=bookishcovermuted,
+    align=right,
+    anchor=east,
+    font=\fontsize{12}{12}\bookishelegantfont
+  ] at ($(current page.south east)+(-2,2)$) {%
+    \textsc{\bookish@publishername}%
+  };
+
+  \bookish@drawpublisherlogo{anchor=south west, at={($(current page.south west)+(0.8,0.9)$)}}{0.08\textwidth}
+}
+
+% Central floral spiral cover derived from the purple template layout.
+\newcommand{\bookishfrontpageflowercenter}{%
+  % The original pattern uses the golden ratio to set the central motif scale.
+  \pgfmathsetmacro{\phi}{(1+sqrt(5))/2}%
+  \pgfmathsetlengthmacro{\goldenHeight}{\paperheight/\phi}%
+  \pgfmathsetmacro{\scaleFactor}{\goldenHeight/1cm/6.90}%
+  \begin{scope}[remember picture, overlay, shift={(current page.south west)}]
+    % Build the vertical background bands from the active theme colors.
+    \shade[bottom color=bookishcoverbg, top color=bookishaccent!85!black]
+      (0,0) rectangle (\paperwidth,0.5\paperheight);
+    \fill[bookishaccent!92!black]
+      (0,0.5\paperheight) rectangle (\paperwidth,0.7\paperheight);
+    \shade[bottom color=bookishaccent!85!black, top color=bookishcoverbg]
+      (0,0.7\paperheight) rectangle (\paperwidth,\paperheight);
+  \end{scope}
+
+  \node[
+    white,
+    anchor=north east,
+    text width=.78\paperwidth,
+    align=right,
+    font=\bookishelegantfont\bfseries\fontsize{32}{36}\selectfont
+  ] (title) at ([xshift=-22pt,yshift=-56pt] current page.north east) {\textcolor{bookishcoveraccent}{\scshape\bookish@title}};
+
+  \bookish@ifsubtitleabove{%
+    \ifstrempty{\bookish@subtitle}{}{%
+      \node[
+        white,
+        text width=.74\paperwidth,
+        align=right,
+        anchor=south east,
+        above=8pt of title.north,
+        font=\bookishelegantfont\fontsize{13}{15}\selectfont
+      ] (subtitle) {\textcolor{bookishcovermuted}{\scshape\bookish@subtitle}};
+    }%
+  }{%
+    \ifstrempty{\bookish@subtitle}{}{%
+      \node[
+        white,
+        text width=.74\paperwidth,
+        align=right,
+        anchor=north east,
+        below=8pt of title.south,
+        font=\bookishelegantfont\fontsize{13}{15}\selectfont
+      ] (subtitle) {\textcolor{bookishcovermuted}{\scshape\bookish@subtitle}};
+    }%
+  }%
+
+  \bookish@ifsubtitleabove{%
+    \node[
+      bookishcoveraccent,
+      anchor=north east,
+      text width=.74\paperwidth,
+      align=right,
+      below=92pt of title.south,
+      font=\bookishelegantfont\fontsize{15}{17}\selectfont
+    ] (author) {%
+      \textcolor{bookishcoverfg}{%
+        \ifstrempty{\bookish@authoraddress}{}{\scshape\bookish@authoraddress\\[4pt]}%
+        {\fontsize{24}{26}\selectfont\scshape\bookish@author}%
+      }%
+    };
+  }{%
+    \ifstrempty{\bookish@subtitle}{%
+      \node[
+        bookishcoveraccent,
+        anchor=north east,
+        text width=.74\paperwidth,
+        align=right,
+        below=92pt of title.south,
+        font=\bookishelegantfont\fontsize{15}{17}\selectfont
+      ] (author) {%
+        \textcolor{bookishcoverfg}{%
+          \ifstrempty{\bookish@authoraddress}{}{\scshape\bookish@authoraddress\\[4pt]}%
+          {\fontsize{24}{26}\selectfont\scshape\bookish@author}%
+        }%
+      };
+    }{%
+      \node[
+        bookishcoveraccent,
+        anchor=north east,
+        text width=.74\paperwidth,
+        align=right,
+        below=92pt of title.south,
+        font=\bookishelegantfont\fontsize{15}{17}\selectfont
+      ] (author) {%
+        \textcolor{bookishcoverfg}{%
+          \ifstrempty{\bookish@authoraddress}{}{\scshape\bookish@authoraddress\\[4pt]}%
+          {\fontsize{24}{26}\selectfont\scshape\bookish@author}%
+        }%
+      };
+    }%
+  }%
+
+  \begin{scope}[remember picture, overlay, shift={(current page.center)}]
+    % Add the soft circular motif behind the flower.
+    \pgfmathsetlengthmacro{\circleradius}{\paperwidth/14}%
+    \foreach \i in {0,1,5,6} {%
+      \fill[line width=1.5pt, fill=bookishcoverfg, fill opacity=0.2]
+        ({(\i - 3)*2*\circleradius}, 0) circle (\circleradius);
+    }%
+    \fill[line width=1.5pt, fill=bookishcoverfg, fill opacity=0.12]
+      (0,0) circle ({0.474*\goldenHeight/\scaleFactor});
+  \end{scope}
+
+  \begin{scope}[remember picture, overlay, shift={(current page.center)}, scale=\scaleFactor]
+    % Reconstruct the petal spiral using small repeated quadrilateral pieces.
+    \tikzmath{
+      integer \nbPetals, \nbQuad;
+      \nbPetals = 8;
+      \nbQuad = 8;
+      real \a, \base, \r;
+      \a = 360/\nbPetals;
+      \base = 2;
+      \r = .35;
+      function tmpR(\i) {
+        return {\r*pow(\base, 2.928*\i/\nbQuad)};
+      };
+    }
+    \tikzset{
+      pics/petalPiece/.style 2 args={
+        code={
+          \tikzmath{integer \b, \p; \b = ##1; \p = ##2;}
+          \path
+            (\p/\nbQuad*180 +\b*\a: {tmpR(\p)}) coordinate (NW)
+            ({(\p +1)/\nbQuad*180 +\b*\a}: {tmpR(\p +1)}) coordinate (NE)
+            ({(\p +2)/\nbQuad*180 +(\b -1)*\a}: {tmpR(\p +2)}) coordinate (SE)
+            ({(\p +1)/\nbQuad*180 +(\b -1)*\a}: {tmpR(\p +1)}) coordinate (SW);
+          \foreach \i in {0, .05, ..., .9}{%
+            \draw[bookishcoverfg, thick, fill=bookishcoverfg, opacity=.08]
+              ($(NW)!\i!(SW)$) -- ($(NE)!\i/2!(SE)$) -- (SE) -- (SW) -- cycle;
+          }%
+        }
+      }
+    }
+    \foreach \l in {1, 2, ..., 8}{%
+      \foreach \i in {-1, 0, 1, 2, ..., 8}{%
+        \path (0,0) pic {petalPiece={\l}{\i}};
+      }%
+    }%
+  \end{scope}
+
+  \node[white, font=\Huge, anchor=south]
+    (publisher) at ([yshift=18pt] current page.south)
+    {\textcolor{bookishcovermuted}{\scshape\large\bookish@publishername}};
+
+  \bookish@drawpublisherlogo{anchor=north, above=2pt of publisher.north}{0.07\textwidth}
+
+  \ifstrempty{\bookish@translator}{}{%
+    \node[white, font=\Large, anchor=north, above=115pt of publisher.north]
+      (translatedBy) {\textcolor{bookishcovermuted}{\itshape\large{Translated by}}};
+    \node[white, font=\Large, anchor=south, below=2pt of translatedBy.south]
+      (translatorAuthor) {\textcolor{bookishcoverfg}{\itshape\large\bookish@translator}};
+  }%
+}
+
+% Matching floral backmatter page based on the original purple template backpage.
+\newcommand{\bookishbackmatterflowercenter}{%
+  \pgfmathsetmacro{\phi}{(1+sqrt(5))/2}%
+  \pgfmathsetlengthmacro{\goldenHeight}{\paperheight/\phi}%
+  \pgfmathsetmacro{\scaleFactor}{\goldenHeight/1cm/6.90}%
+
+  \begin{scope}[remember picture, overlay, shift={(current page.south west)}]
+    \shade[bottom color=bookishcoverbg, top color=bookishaccent!85!black]
+      (0,0) rectangle (\paperwidth,0.5\paperheight);
+    \fill[bookishaccent!92!black]
+      (0,0.5\paperheight) rectangle (\paperwidth,0.7\paperheight);
+    \shade[bottom color=bookishaccent!85!black, top color=bookishcoverbg]
+      (0,0.7\paperheight) rectangle (\paperwidth,\paperheight);
+  \end{scope}
+
+  \begin{scope}[remember picture, overlay, shift={(current page.center)}]
+    \pgfmathsetlengthmacro{\circleradius}{\paperwidth/14}%
+    \foreach \i in {0,1,5,6} {%
+      \fill[line width=1.5pt, fill=bookishcoverfg, fill opacity=0.2]
+        ({(\i - 3)*2*\circleradius}, 0) circle (\circleradius);
+    }%
+    \fill[line width=1.5pt, fill=bookishcoverfg, fill opacity=0.12]
+      (0,0) circle ({0.474*\goldenHeight/\scaleFactor});
+  \end{scope}
+
+  \begin{scope}[remember picture, overlay, shift={(current page.center)}, scale=\scaleFactor]
+    \tikzmath{
+      integer \nbPetals, \nbQuad;
+      \nbPetals = 8;
+      \nbQuad = 8;
+      real \a, \base, \r;
+      \a = 360/\nbPetals;
+      \base = 2;
+      \r = .35;
+      function tmpR(\i) {
+        return {\r*pow(\base, 2.637*\i/\nbQuad)};
+      };
+    }
+    \tikzset{
+      pics/petalPiece/.style 2 args={
+        code={
+          \tikzmath{integer \b, \p; \b = ##1; \p = ##2;}
+          \path
+            (\p/\nbQuad*180 +\b*\a: {tmpR(\p)}) coordinate (NW)
+            ({(\p +1)/\nbQuad*180 +\b*\a}: {tmpR(\p +1)}) coordinate (NE)
+            ({(\p +2)/\nbQuad*180 +(\b -1)*\a}: {tmpR(\p +2)}) coordinate (SE)
+            ({(\p +1)/\nbQuad*180 +(\b -1)*\a}: {tmpR(\p +1)}) coordinate (SW);
+          \foreach \i in {0, .05, ..., .9}{%
+            \draw[bookishcoverfg, thick, fill=bookishcoverfg, opacity=.08]
+              ($(NW)!\i!(SW)$) -- ($(NE)!\i/2!(SE)$) -- (SE) -- (SW) -- cycle;
+          }%
+        }
+      }
+    }
+    \foreach \l in {1, 2, ..., 8}{%
+      \foreach \i in {-1, 0, 1, 2, ..., 8}{%
+        \path (0,0) pic {petalPiece={\l}{\i}};
+      }%
+    }%
+  \end{scope}
+
+  \node[
+    text=bookishcoverfg,
+    text width=.84\paperwidth,
+    align=justify,
+    anchor=north
+  ] at ([yshift=-48pt] current page.north) {%
+    \scshape\small
+    \ifstrempty{\bookish@backtext}{\bookish@title}{\bookish@backtext}%
+  };
+
+  \node[anchor=south] (publisher) at ([yshift=18pt] current page.south) {%
+    \textcolor{bookishcovermuted}{\scshape\large\bookish@publishername}%
+  };
+
+  \bookish@drawpublisherlogo{anchor=north, above=4pt of publisher.north}{0.07\textwidth}
+}
+
+% Mid-band spiral/circle cover derived from the warm dark reference layout.
+\newcommand{\bookishfrontpagespiralcirclemid}{%
+  \fill[bookishcoverbg] (current page.south west) rectangle (current page.north east);
+
+  \node[
+    white,
+    anchor=north east,
+    text width=.78\paperwidth,
+    align=right,
+    font=\bookishelegantfont\bfseries\fontsize{32}{36}\selectfont
+  ] (title) at ([xshift=-22pt,yshift=-44pt] current page.north east) {\textcolor{bookishcoverfg}{\scshape\bookish@title}};
+
+  \bookish@ifsubtitleabove{%
+    \ifstrempty{\bookish@subtitle}{}{%
+      \node[
+        white,
+        text width=.74\paperwidth,
+        align=right,
+        anchor=south east,
+        above=8pt of title.north,
+        font=\bookishelegantfont\fontsize{13}{15}\selectfont
+      ] (subtitle) {\textcolor{bookishcovermuted}{\scshape\bookish@subtitle}};
+    }%
+  }{%
+    \ifstrempty{\bookish@subtitle}{}{%
+      \node[
+        white,
+        text width=.74\paperwidth,
+        align=right,
+        anchor=north east,
+        below=8pt of title.south,
+        font=\bookishelegantfont\fontsize{13}{15}\selectfont
+      ] (subtitle) {\textcolor{bookishcovermuted}{\scshape\bookish@subtitle}};
+    }%
+  }%
+
+  \bookish@ifsubtitleabove{%
+    \node[
+      white,
+      anchor=north east,
+      text width=.74\paperwidth,
+      align=right,
+      below=88pt of title.south,
+      font=\bookishelegantfont\fontsize{15}{17}\selectfont
+    ] (author) {%
+      \textcolor{bookishcoveraccent}{%
+        \ifstrempty{\bookish@authoraddress}{}{\scshape\bookish@authoraddress\\[4pt]}%
+        {\fontsize{24}{26}\selectfont\scshape\bookish@author}%
+      }%
+    };
+  }{%
+    \ifstrempty{\bookish@subtitle}{%
+      \node[
+        white,
+        anchor=north east,
+        text width=.74\paperwidth,
+        align=right,
+        below=88pt of title.south,
+        font=\bookishelegantfont\fontsize{15}{17}\selectfont
+      ] (author) {%
+        \textcolor{bookishcoveraccent}{%
+          \ifstrempty{\bookish@authoraddress}{}{\scshape\bookish@authoraddress\\[4pt]}%
+          {\fontsize{24}{26}\selectfont\scshape\bookish@author}%
+        }%
+      };
+    }{%
+      \node[
+        white,
+        anchor=north east,
+        text width=.74\paperwidth,
+        align=right,
+        below=88pt of title.south,
+        font=\bookishelegantfont\fontsize{15}{17}\selectfont
+      ] (author) {%
+        \textcolor{bookishcoveraccent}{%
+          \ifstrempty{\bookish@authoraddress}{}{\scshape\bookish@authoraddress\\[4pt]}%
+          {\fontsize{24}{26}\selectfont\scshape\bookish@author}%
+        }%
+      };
+    }%
+  }%
+
+  \begin{scope}[shift={(current page.center)}, scale=1.0871]
+    % Repeat concentric circles across the page to form the horizontal motif band.
+    \foreach \x in {-20, -18, -16, -14, -12, -10, -8, -6, -4, -2, 0, 2, 4, 6, 8, 10, 12, 14, 16, 18} {%
+      \foreach \y in {-2, 2} {%
+        \begin{scope}[shift={(\x + 1, \y)}]
+          \foreach \r in {0.2, 0.4, 0.6, 0.8, 1.0} {%
+            \draw[thick, bookishcovermuted!28!black] (0,0) circle (\r);
+          }%
+        \end{scope}
+      }%
+      \foreach \y in {-3, -1, 1, 3} {%
+        \begin{scope}[shift={(\x, \y)}]
+          \foreach \r in {0.2, 0.4} {%
+            \draw[thick, bookishcovermuted!28!black] (0,0) circle (\r);
+          }%
+        \end{scope}
+      }%
+      \foreach \y in {-1, 1} {%
+        \begin{scope}[shift={(\x, 0)}]
+          \foreach \r in {0.2, 0.4, 0.6, 0.8, 1.0} {%
+            \draw[thick, bookishcoveraccent] (0,0) circle (\r);
+            \fill[bookishcoveraccent] (0,0) circle (\r);
+          }%
+        \end{scope}
+      }%
+      \foreach \y in {-1, 1} {%
+        \begin{scope}[shift={(\x, \y)}]
+          \foreach \r in {0.2, 0.4, 0.6, 0.8, 1.0} {%
+            \fill[bookishcoverbg] (0,0) circle (\r);
+          }%
+        \end{scope}
+      }%
+      \foreach \y in {-1, 1} {%
+        \begin{scope}[shift={(\x, \y)}]
+          \foreach \r in {0.2, 0.4, 0.6, 0.8, 1.0} {%
+            \draw[thick, bookishcovermuted!28!black] (0,0) circle (\r);
+          }%
+        \end{scope}
+      }%
+    }%
+  \end{scope}
+
+  \node[white, font=\Huge, anchor=south]
+    (publisher) at ([yshift=32pt] current page.south)
+    {\textcolor{bookishcovermuted}{\scshape\large\bookish@publishername}};
+
+  \bookish@drawpublisherlogo{anchor=north, above=4pt of publisher.north}{0.07\textwidth}
+
+  \ifstrempty{\bookish@translator}{}{%
+    \node[white, font=\Large, anchor=north, above=114pt of publisher.north]
+      (translatedBy) {\textcolor{bookishcovermuted}{\itshape\large{Translated by}}};
+    \node[white, font=\Large, anchor=south, below=2pt of translatedBy.south]
+      {\textcolor{bookishcoverfg}{\itshape\large\bookish@translator}};
+  }%
+}
+
+% Matching spiral/circle backmatter page based on the warm dark reference backpage.
+\newcommand{\bookishbackmatterspiralcirclemid}{%
+  \fill[bookishcoverbg] (current page.south west) rectangle (current page.north east);
+
+  \begin{scope}[shift={(current page.center)}, scale=1.0871]
+    % Repeat concentric circles across the page to form the horizontal motif band.
+    \foreach \x in {-20, -18, -16, -14, -12, -10, -8, -6, -4, -2, 0, 2, 4, 6, 8, 10, 12, 14, 16, 18} {%
+      \foreach \y in {-2, 2} {%
+        \begin{scope}[shift={(\x + 1, \y)}]
+          \foreach \r in {0.2, 0.4, 0.6, 0.8, 1.0} {%
+            \draw[thick, bookishcovermuted!28!black] (0,0) circle (\r);
+          }%
+        \end{scope}
+      }%
+      \foreach \y in {-3, -1, 1, 3} {%
+        \begin{scope}[shift={(\x, \y)}]
+          \foreach \r in {0.2, 0.4} {%
+            \draw[thick, bookishcovermuted!28!black] (0,0) circle (\r);
+          }%
+        \end{scope}
+      }%
+      \foreach \y in {-1, 1} {%
+        \begin{scope}[shift={(\x, 0)}]
+          \foreach \r in {0.2, 0.4, 0.6, 0.8, 1.0} {%
+            \draw[thick, bookishcoverfg!70!bookishcovermuted] (0,0) circle (\r);
+          }%
+        \end{scope}
+      }%
+      \foreach \y in {-1, 1} {%
+        \begin{scope}[shift={(\x, \y)}]
+          \foreach \r in {0.2, 0.4, 0.6, 0.8, 1.0} {%
+            \fill[bookishcoverbg] (0,0) circle (\r);
+          }%
+        \end{scope}
+      }%
+      \foreach \y in {-1, 1} {%
+        \begin{scope}[shift={(\x, \y)}]
+          \foreach \r in {0.2, 0.4, 0.6, 0.8, 1.0} {%
+            \draw[thick, bookishcovermuted!28!black] (0,0) circle (\r);
+          }%
+        \end{scope}
+      }%
+    }%
+  \end{scope}
+
+  \node[
+    text=bookishcoverfg,
+    text width=.84\paperwidth,
+    align=justify,
+    anchor=north
+  ] at ([yshift=-48pt] current page.north) {%
+    \scshape\small
+    \ifstrempty{\bookish@backtext}{\bookish@title}{\bookish@backtext}%
+  };
+
+  \node[anchor=south] (publisher) at ([yshift=28pt] current page.south) {%
+    \textcolor{bookishcovermuted}{\scshape\large\bookish@publishername}%
+  };
+
+  \bookish@drawpublisherlogo{anchor=north, above=4pt of publisher.north}{0.07\textwidth}
+}
+
+% Resolve the public style name to the matching frontpage renderer.
+\newcommand{\bookishprintfontpage}{%
+  \ifdefstring{\bookishfrontpage@style}{hexagon}{%
+    \bookishfrontpagehexagons
+  }{%
+    \ifdefstring{\bookishfrontpage@style}{star}{%
+      \bookishfrontpageelegant
+    }{%
+      \ifdefstring{\bookishfrontpage@style}{flower}{%
+        \bookishfrontpageflowercenter
+      }{%
+        \ifdefstring{\bookishfrontpage@style}{circle}{%
+          \bookishfrontpagespiralcirclemid
+        }{%
+          \bookishfrontpagehexagons
+        }%
+      }%
+    }%
+  }%
+}
+
+% Resolve the public style name to the matching backmatter renderer.
+\newcommand{\bookishprintbackmatter}{%
+  \ifdefstring{\bookishfrontpage@style}{hexagon}{%
+    \bookishbackmatterhexagons
+  }{%
+    \ifdefstring{\bookishfrontpage@style}{star}{%
+      \bookishbackmatterelegant
+    }{%
+      \ifdefstring{\bookishfrontpage@style}{flower}{%
+        \bookishbackmatterflowercenter
+      }{%
+        \ifdefstring{\bookishfrontpage@style}{circle}{%
+          \bookishbackmatterspiralcirclemid
+        }{%
+          \bookishbackmatterhexagons
+        }%
+      }%
+    }%
+  }%
+}

@@ -1,0 +1,334 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{bookish}[2026/04/17 XeLaTeX book template]
+% Usage:
+% \usepackage[theme=purple,frontpage=flower,backmatter=true,paper=a4]{bookish}
+% \booksetup{title={My Book},subtitle={Optional Subtitle},subtitleposition={below},author={Author Name},imprint={My Press},publishstatus={demo},publisherlogo={assets/images/publisher-white.png},backtext={Back cover copy}}
+
+% Restrict the package to XeLaTeX because fonts are configured through fontspec.
+\RequirePackage{iftex}
+\ifXeTeX\else
+  \PackageError{bookish}{This package requires XeLaTeX}{Compile with xelatex instead of pdflatex or lualatex.}
+\fi
+
+% Core package dependencies for options, layout, fonts, colors, and decorative elements.
+\RequirePackage{kvoptions}
+\RequirePackage{etoolbox}
+\RequirePackage{geometry}
+\RequirePackage{fontspec}
+\RequirePackage{microtype}
+\RequirePackage{polyglossia}
+\RequirePackage{xcolor}
+\RequirePackage{bookish-colors}
+\RequirePackage{graphicx}
+\RequirePackage{tikz}
+\usetikzlibrary{calc}
+\RequirePackage{pgfornament}
+\RequirePackage{titlesec}
+\RequirePackage[titles]{tocloft}
+\RequirePackage{fancyhdr}
+\RequirePackage{setspace}
+\RequirePackage{tcolorbox}
+\RequirePackage{xparse}
+\RequirePackage{bookish-frontpage}
+
+% Public package options controlling theme, page size, numbering, and frontpage style.
+\SetupKeyvalOptions{family=bookish,prefix=bookish@}
+\DeclareStringOption[purple]{theme}
+\DeclareStringOption[6x9]{paper}
+\DeclareStringOption[roman]{chapternumbering}
+\DeclareStringOption[auto]{coverstyle}
+\DeclareStringOption[book]{runningheader}
+\DeclareStringOption[hexagon]{frontpage}
+\DeclareBoolOption[true]{toc}
+\DeclareBoolOption[false]{backmatter}
+\ProcessKeyvalOptions*
+
+% Document metadata consumed by the frontpage and running elements.
+\newcommand{\bookish@title}{Untitled Book}
+\newcommand{\bookish@subtitle}{}
+\newcommand{\bookish@subtitleposition}{below}
+\newcommand{\bookish@author}{Anonymous}
+\newcommand{\bookish@authoraddress}{}
+\newcommand{\bookish@translator}{}
+\newcommand{\bookish@imprint}{}
+\newcommand{\bookish@year}{\the\year}
+\newcommand{\bookish@publishstatus}{demo}
+\newcommand{\bookish@backtext}{}
+\newcommand{\bookish@publisherlogo}{}
+
+% User-facing metadata key/value interface.
+\pgfkeys{
+  /bookish/.is family,
+  /bookish,
+  title/.store in=\bookish@title,
+  subtitle/.store in=\bookish@subtitle,
+  subtitleposition/.store in=\bookish@subtitleposition,
+  author/.store in=\bookish@author,
+  authoraddress/.store in=\bookish@authoraddress,
+  translator/.store in=\bookish@translator,
+  imprint/.store in=\bookish@imprint,
+  year/.store in=\bookish@year,
+  publishstatus/.store in=\bookish@publishstatus,
+  backtext/.store in=\bookish@backtext,
+  publisherlogo/.store in=\bookish@publisherlogo
+}
+
+\newcommand{\booksetup}[1]{\pgfkeys{/bookish,#1}}
+
+% Internal state for theme-specific defaults that affect later formatting.
+\newcommand{\bookish@resolvedcoverstyle}{classic}
+\newcommand{\bookish@chapterlabel}{Chapter}
+
+% Resolve the requested trim size into a geometry configuration.
+\newcommand{\bookish@setpaper}{%
+  \ifdefstring{\bookish@paper}{a5}{%
+    \geometry{paperwidth=148mm,paperheight=210mm,top=18mm,bottom=18mm,inner=22mm,outer=18mm,headheight=16pt,headsep=16pt}%
+  }{%
+    \ifdefstring{\bookish@paper}{a4}{%
+      \geometry{paperwidth=210mm,paperheight=297mm,top=2cm,bottom=2cm,inner=4cm,outer=2cm,headheight=16pt,headsep=10pt}%
+    }{%
+      \ifdefstring{\bookish@paper}{letter}{%
+      \geometry{paperwidth=8.5in,paperheight=11in,top=0.9in,bottom=0.9in,inner=1in,outer=0.85in,headheight=16pt,headsep=16pt}%
+      }{%
+        \geometry{paperwidth=6in,paperheight=9in,top=0.75in,bottom=0.75in,inner=0.875in,outer=0.75in,headheight=16pt,headsep=16pt}%
+      }%
+    }%
+  }%
+}
+
+% Apply the active color palette and derive any style defaults from it.
+\newcommand{\bookish@settheme}{%
+  \bookishapplytheme{\bookish@theme}%
+  \ifdefstring{\bookish@theme}{black}{%
+    \renewcommand{\bookish@resolvedcoverstyle}{band}%
+  }{%
+    \ifdefstring{\bookish@theme}{sepia}{%
+      \renewcommand{\bookish@resolvedcoverstyle}{classic}%
+    }{%
+      \renewcommand{\bookish@resolvedcoverstyle}{frame}%
+    }%
+  }%
+  \ifdefstring{\bookish@coverstyle}{auto}{}{%
+    \renewcommand{\bookish@resolvedcoverstyle}{\bookish@coverstyle}%
+  }%
+}
+
+% Load the text and display fonts used across body text, cover text, and Arabic content.
+\newcommand{\bookish@setfonts}{%
+  \setdefaultlanguage{english}%
+  \setotherlanguage{arabic}%
+  \setmainfont[
+    Path=assets/fonts/,
+    Extension=.ttf,
+    UprightFont=*-Regular,
+    ItalicFont=*-Regular,
+    BoldFont=*-Bold,
+    BoldItalicFont=*-Bold
+  ]{NotoSerif}%
+  \newfontfamily\bookishdisplayfont[
+    Path=assets/fonts/,
+    Extension=.ttf,
+    UprightFont=*-Regular,
+    ItalicFont=*-Regular,
+    BoldFont=*-Bold,
+    BoldItalicFont=*-Bold
+  ]{NotoSerif}%
+  \newfontfamily\bookishcoverfont[
+    Path=latex templates/book-templates/hexagon-elegant/template/generic/fonts/inconsolata/,
+    Ligatures=TeX,
+    Scale=MatchUppercase,
+    UprightFont=*.otf,
+    BoldFont=*-Bold.otf,
+    ItalicFont=*-Italic.otf,
+    BoldItalicFont=*-BoldItalic.otf
+  ]{Inconsolata-LGC}%
+  \newfontfamily\bookishelegantfont[
+    Path=latex templates/book-templates/hexagon-elegant/template/forta/fonts/,
+    Ligatures=TeX,
+    Scale=MatchUppercase,
+    UprightFont=*Regular.ttf,
+    BoldFont=*Bold.ttf
+  ]{NeueHaasText}%
+  \newfontfamily\bookisharabicfont[
+    Script=Arabic,
+    Path=assets/fonts/,
+    Extension=.ttf,
+    UprightFont=*-Regular,
+    BoldFont=*-Bold
+  ]{Amiri}%
+  \newfontfamily\arabicfont[
+    Script=Arabic,
+    Path=assets/fonts/,
+    Extension=.ttf,
+    UprightFont=*-Regular,
+    BoldFont=*-Bold
+  ]{Amiri}%
+}
+
+% Choose how chapter counters are printed.
+\newcommand{\bookish@setnumbering}{%
+  \ifdefstring{\bookish@chapternumbering}{arabic}{%
+    \renewcommand{\thechapter}{\arabic{chapter}}%
+  }{%
+    \ifdefstring{\bookish@chapternumbering}{roman-lower}{%
+      \renewcommand{\thechapter}{\roman{chapter}}%
+    }{%
+      \renewcommand{\thechapter}{\Roman{chapter}}%
+    }%
+  }%
+}
+
+% Configure the default and plain pagestyles.
+\newcommand{\bookish@setheaders}{%
+  \setlength{\headheight}{16pt}%
+  \pagestyle{fancy}%
+  \fancyhf{}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \fancyfoot[C]{\thepage}%
+  \ifdefstring{\bookish@runningheader}{none}{%
+    \fancyhead{}%
+  }{%
+    \ifdefstring{\bookish@runningheader}{minimal}{%
+      \fancyhead[C]{\itshape\bookish@title}%
+    }{%
+      \fancyhead[L]{\itshape\bookish@author}%
+      \fancyhead[R]{\itshape\bookish@title}%
+    }%
+  }%
+  \fancypagestyle{plain}{%
+    \fancyhf{}%
+    \renewcommand{\headrulewidth}{0pt}%
+    \fancyfoot[C]{\thepage}%
+  }%
+}
+
+% Define chapter and section heading appearance.
+\newcommand{\bookish@settitles}{%
+  \titleformat{\chapter}[display]
+    {\normalfont\bookishdisplayfont\centering}
+    {\vspace*{1.2em}\Large\scshape\color{bookishaccent}\bookish@chapterlabel\ \thechapter}
+    {0.5em}
+    {\Huge\bfseries\color{bookishtext}}
+    [\vspace{0.8em}\color{bookishaccent}\rule{4cm}{0.6pt}]%
+  \titlespacing*{\chapter}{0pt}{0pt}{1.4em}%
+  \titleformat{\section}
+    {\normalfont\Large\bookishdisplayfont\bfseries\color{bookishaccent}}
+    {\thesection}
+    {0.6em}
+    {}%
+  \titleformat{\subsection}
+    {\normalfont\large\bookishdisplayfont\bfseries\color{bookishtext}}
+    {\thesubsection}
+    {0.6em}
+    {}%
+}
+
+% Keep table-of-contents typography aligned with the active theme.
+\newcommand{\bookish@settoc}{%
+  \renewcommand{\cftchapfont}{\large\itshape}%
+  \renewcommand{\cftchappagefont}{\normalfont}%
+  \renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}%
+  \renewcommand{\cfttoctitlefont}{\hfill\Huge\bookishdisplayfont\bfseries\color{bookishaccent}}%
+  \renewcommand{\cftaftertoctitle}{\hfill}%
+}
+
+% Apply shared paragraph and page-level text formatting.
+\newcommand{\bookish@baseformat}{%
+  \color{bookishtext}%
+  \frenchspacing
+  \widowpenalty=10000
+  \clubpenalty=10000
+  \setstretch{1.08}
+  \setlength{\parindent}{1em}
+  \setlength{\parskip}{0pt}
+}
+
+% Finalize the package setup once document metadata and options are available.
+\AtBeginDocument{%
+  \bookish@setpaper
+  \bookish@settheme
+  \bookish@setfonts
+  \bookishfrontpagesetup{\bookish@frontpage}
+  \bookish@setnumbering
+  \bookish@setheaders
+  \bookish@settitles
+  \bookish@settoc
+  \bookish@baseformat
+}
+
+% Render the selected frontpage style on a full-bleed title page.
+\newcommand{\bookmaketitlepage}{%
+  \begin{titlepage}
+    \newgeometry{margin=0pt}
+    \thispagestyle{empty}
+    \begin{tikzpicture}[remember picture,overlay]
+      \bookishprintfontpage
+    \end{tikzpicture}
+    \null
+  \end{titlepage}
+  \restoregeometry
+}
+
+% Render the matching backmatter page when the option is enabled.
+\newcommand{\bookmakebackmatter}{%
+  \ifbookish@backmatter
+    \clearpage
+    \begin{titlepage}
+      \newgeometry{margin=0pt}
+      \thispagestyle{empty}
+      \begin{tikzpicture}[remember picture,overlay]
+        \bookishprintbackmatter
+      \end{tikzpicture}
+      \null
+    \end{titlepage}
+    \restoregeometry
+  \fi
+}
+
+% Optional TOC wrapper so the main document can keep a stable API.
+\newcommand{\booktableofcontents}{%
+  \ifbookish@toc
+    \tableofcontents
+  \fi
+}
+
+% Frontmatter/backmatter helpers add unnumbered chapters and keep the TOC in sync.
+\newcommand{\bookfrontmattersection}[1]{%
+  \chapter*{#1}
+  \addcontentsline{toc}{chapter}{#1}
+  \thispagestyle{plain}
+}
+
+\newcommand{\bookbackmattersection}[1]{%
+  \chapter*{#1}
+  \addcontentsline{toc}{chapter}{#1}
+  \thispagestyle{plain}
+}
+
+% Compact epigraph helper used inside chapters or frontmatter sections.
+\NewDocumentCommand{\bookepigraph}{m m}{%
+  \begin{flushright}
+    \begin{minipage}{0.72\textwidth}
+      \itshape #1\par
+      \vspace{0.5em}
+      \raggedleft\normalfont #2
+    \end{minipage}
+  \end{flushright}
+}
+
+% Theme-colored callout box for examples and notes.
+\newtcolorbox{bookcallout}[1][]{%
+  colback=bookishsoft,
+  colframe=bookishaccent,
+  boxrule=0.5pt,
+  arc=2pt,
+  left=10pt,
+  right=10pt,
+  top=8pt,
+  bottom=8pt,
+  title=#1,
+  fonttitle=\bfseries
+}
+
+% Thin wrapper around polyglossia's Arabic typesetting command.
+\newcommand{\arabictext}[1]{\textarabic{#1}}

@@ -1,145 +1,62 @@
-# Local Installation Guide
+# XeLaTeX Setup
 
-Use this guide to set up everything needed to build this project locally as a **PDF with Pandoc + Typst**.
+This repository is built for XeLaTeX.
 
-## Quick Start
+## Required Tool
 
-1. Check whether `pandoc` and `typst` are already installed.
-2. Install any missing tools for your operating system.
-3. Verify the installation.
-4. Build the PDF.
+You need `xelatex` available on your `PATH`.
 
-## 0. Check What Is Already Installed
+Verify:
 
-Run:
-
-```bash
-pandoc --version
-typst --version
+```powershell
+xelatex --version
 ```
 
-If both commands work, you can skip to [4. Build the PDF](#4-build-the-pdf).
+## Windows
 
-## 1. Install Pandoc
+Install a TeX distribution that includes XeLaTeX, for example:
 
-### macOS
+- TeX Live
+- MiKTeX
 
-```bash
-brew install pandoc
+After installation, open a fresh terminal and run:
+
+```powershell
+xelatex --version
+where.exe xelatex
 ```
 
-### Ubuntu / Debian
+## macOS
+
+Install MacTeX or TeX Live, then verify:
+
+```bash
+xelatex --version
+```
+
+## Linux
+
+Install XeLaTeX and common LaTeX extras from your distribution.
+
+Example for Ubuntu / Debian:
 
 ```bash
 sudo apt-get update
-sudo apt-get install pandoc
+sudo apt-get install -y texlive-xetex texlive-latex-extra texlive-fonts-recommended
 ```
 
-### Windows
-
-Choose one option:
-
-Option A: Official installer
-
-Download and install Pandoc from:
-https://pandoc.org/installing.html
-
-Option B: `winget`
-
-```powershell
-winget install --source winget --exact --id JohnMacFarlane.Pandoc
-```
-
-Option C: Chocolatey
-
-```powershell
-choco install pandoc
-```
-
-## 2. Install Typst
-
-### macOS
+Then verify:
 
 ```bash
-brew install typst
+xelatex --version
 ```
 
-### Linux
-
-Install the `typst` package from your distribution if it is available.
-
-If your distribution does not provide it, download the compiler from:
-https://typst.app/open-source/
-
-### Windows
-
-Strongly recommended: use the direct ZIP download.
-
-Option A: Direct download
-
-Download the Windows ZIP from:
-https://typst.app/open-source/
-
-Then:
-
-1. Unzip the archive.
-2. Move `typst.exe` to a permanent folder.
-3. Add that folder to your `PATH`.
-4. Open a fresh terminal before testing it.
-
-Option B: `winget`
-
-```powershell
-winget install typst
-```
-
-`winget` can break at times on Windows by leaving behind a bad `typst.exe` shim in the WinGet links directory. If `typst --version` fails, or if `where.exe typst` points to `C:\Users\olanr\AppData\Local\Microsoft\WinGet\Links\typst.exe`, remove that broken install and use the direct ZIP instead.
-
-## 3. Post-Install Verification
-
-Run:
-
-```bash
-pandoc --version
-typst --version
-```
-
-Both commands should complete successfully.
-
-On Windows, also run:
-
-```powershell
-where.exe typst
-```
-
-It should point to your real Typst install location, for example:
-
-```text
-C:\Program Files\typst\typst.exe
-```
-
-## 4. Build the PDF
-
-The required fonts are bundled with this repository in `assets/fonts`, so you do not need to install them separately for local builds.
-
-Recommended flow:
-
-1. Run the dependency helper once.
-2. Verify `pandoc` and `typst`.
-3. Use the build script for your platform.
-
-### Dependency Helper
-
-### macOS / Linux
-
-```bash
-./dep-install.sh
-```
+## Build
 
 ### Windows
 
 ```powershell
-dep-install.bat
+build.bat
 ```
 
 ### macOS / Linux
@@ -148,16 +65,9 @@ dep-install.bat
 ./build.sh
 ```
 
-### Windows
-
-Run:
-
-```powershell
-build.bat
-```
-
-This produces:
+The output PDF is:
 
 ```text
-build/book.pdf
+build/main.pdf
 ```
+

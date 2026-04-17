@@ -1,0 +1,75 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{bookish-colors}[2026/04/17 Theme palettes for bookish]
+% Usage:
+% Loaded by bookish.sty. Themes are applied internally with \bookishapplytheme{<name>}.
+% Available themes currently include purple, black, sepia, ocean, and forest.
+
+% Minimal dependencies for string comparison and color definitions.
+\RequirePackage{etoolbox}
+\RequirePackage{xcolor}
+
+% Default palette so color names exist even before a theme is selected.
+\providecolor{bookishpage}{HTML}{FBF7FC}
+\providecolor{bookishtext}{HTML}{241C27}
+\providecolor{bookishaccent}{HTML}{643D78}
+\providecolor{bookishsoft}{HTML}{EFE3F6}
+\providecolor{bookishcoverbg}{HTML}{241329}
+\providecolor{bookishcoverfg}{HTML}{F8F0FB}
+\providecolor{bookishcoveraccent}{HTML}{B791CA}
+\providecolor{bookishcovermuted}{HTML}{DCC8E6}
+
+% Swap the shared named colors to the palette associated with the active theme.
+\newcommand{\bookishapplytheme}[1]{%
+  \ifdefstring{#1}{black}{%
+    \definecolor{bookishpage}{HTML}{FCFBF7}%
+    \definecolor{bookishtext}{HTML}{181818}%
+    \definecolor{bookishaccent}{HTML}{A36A1D}%
+    \definecolor{bookishsoft}{HTML}{F5E7CF}%
+    \definecolor{bookishcoverbg}{HTML}{101010}%
+    \definecolor{bookishcoverfg}{HTML}{F4EFE7}%
+    \definecolor{bookishcoveraccent}{HTML}{C98A35}%
+    \definecolor{bookishcovermuted}{HTML}{E7CCB1}%
+  }{%
+    \ifdefstring{#1}{sepia}{%
+      \definecolor{bookishpage}{HTML}{FFFDF8}%
+      \definecolor{bookishtext}{HTML}{1A1714}%
+      \definecolor{bookishaccent}{HTML}{80603D}%
+      \definecolor{bookishsoft}{HTML}{F0E6D8}%
+      \definecolor{bookishcoverbg}{HTML}{171310}%
+      \definecolor{bookishcoverfg}{HTML}{F9F3EA}%
+      \definecolor{bookishcoveraccent}{HTML}{B69773}%
+      \definecolor{bookishcovermuted}{HTML}{D9C2A8}%
+    }{%
+      \ifdefstring{#1}{ocean}{%
+        \definecolor{bookishpage}{HTML}{F4FAFB}%
+        \definecolor{bookishtext}{HTML}{16333B}%
+        \definecolor{bookishaccent}{HTML}{1E6F86}%
+        \definecolor{bookishsoft}{HTML}{DDF0F4}%
+        \definecolor{bookishcoverbg}{HTML}{0E2A33}%
+        \definecolor{bookishcoverfg}{HTML}{EDF9FC}%
+        \definecolor{bookishcoveraccent}{HTML}{58B6C9}%
+        \definecolor{bookishcovermuted}{HTML}{B9DDE4}%
+      }{%
+        \ifdefstring{#1}{forest}{%
+          \definecolor{bookishpage}{HTML}{F7FBF5}%
+          \definecolor{bookishtext}{HTML}{1F3327}%
+          \definecolor{bookishaccent}{HTML}{4E7A3E}%
+          \definecolor{bookishsoft}{HTML}{E4EFDE}%
+          \definecolor{bookishcoverbg}{HTML}{1D2D22}%
+          \definecolor{bookishcoverfg}{HTML}{F1F8ED}%
+          \definecolor{bookishcoveraccent}{HTML}{8EB66D}%
+          \definecolor{bookishcovermuted}{HTML}{C9DAB9}%
+        }{%
+          \definecolor{bookishpage}{HTML}{FBF7FC}%
+          \definecolor{bookishtext}{HTML}{241C27}%
+          \definecolor{bookishaccent}{HTML}{643D78}%
+          \definecolor{bookishsoft}{HTML}{EFE3F6}%
+          \definecolor{bookishcoverbg}{HTML}{241329}%
+          \definecolor{bookishcoverfg}{HTML}{F8F0FB}%
+          \definecolor{bookishcoveraccent}{HTML}{B791CA}%
+          \definecolor{bookishcovermuted}{HTML}{DCC8E6}%
+        }%
+      }%
+    }%
+  }%
+}

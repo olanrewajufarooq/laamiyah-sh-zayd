@@ -1,0 +1,48 @@
+\chapter{A Configurable Book}
+
+This template is built around a single package, \texttt{bookish.sty}. Instead
+of scattering layout code across multiple files, the visual system is
+centralized and driven by package options such as \texttt{theme},
+\texttt{paper}, \texttt{chapternumbering}, \texttt{coverstyle}, and
+\texttt{runningheader}.
+
+\section{How to Use It}
+
+At the top of your document, choose the options you want:
+
+\begin{bookcallout}[Package Options]
+\verb|\usepackage[theme=black,paper=a5,chapternumbering=arabic]{bookish}|
+\end{bookcallout}
+
+Then set your metadata with a single call:
+
+\begin{bookcallout}[Metadata]
+\verb|\booksetup{title={My Book},author={Author Name},imprint={My Press}}|
+\end{bookcallout}
+
+The rest of the document stays ordinary LaTeX. Chapters, sections, front
+matter, and back matter all work as expected.
+
+\section{Arabic Support}
+
+Because the package is XeLaTeX-only, it can use OpenType fonts directly. The
+bundled Amiri font is available through the helper command below:
+
+\begin{center}
+\arabictext{وَمَا تَوْفِيقِي إِلَّا بِاللَّهِ}
+\end{center}
+
+\chapter{Theme Variants}
+
+The package currently exposes five themes:
+
+\begin{itemize}
+  \item \texttt{purple}
+  \item \texttt{black}
+  \item \texttt{sepia}
+  \item \texttt{ocean}
+  \item \texttt{forest}
+\end{itemize}
+
+Each theme changes the page palette, cover colors, accent colors, and default
+cover treatment.
