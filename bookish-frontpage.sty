@@ -149,28 +149,50 @@
 }
 
 % Shared defaults for the non-image bespoke frontpages: star, flower, and circle.
+% These covers all follow the same four-block model:
+% 1) title/subtitle, 2) author/address, 3) translator, 4) publisher/logo.
+% The per-style setup macros below only override these shared defaults.
+%
+% Naming convention for the layout variables:
+% - *xoffset: horizontal shift from the anchor line. Use a TeX length such as
+%   `-0.04\paperwidth` or `12pt`.
+% - *fromtop / *frombottom: vertical placement expressed as a TeX length
+%   measured from the named page edge. Use values such as `0.10\paperheight`
+%   or `42pt`.
+% - *anchor: which edge or corner the text node is attached to. The matching
+%   coordinate builder interprets this and chooses the correct page edge.
+% - *align: paragraph alignment inside the node. This controls multi-line text
+%   layout, not the node position itself.
+% - *width / *fontsize: node text width and the base font size for that block.
+%
+% Editing advice:
+% - Prefer changing these normalized values instead of touching the renderer
+%   code below. That preserves the shared override API from `\customizefrontpage`.
+% - For ornate covers, title and author blocks usually stay tied to the right
+%   side, so change `fromtop`, `width`, and sizes first before changing anchors.
+% - The coordinate macros below are derived values only; do not edit them by hand.
 \newcommand{\bookish@ornatetitlexoffset}{-0.04\paperwidth}
-\newcommand{\bookish@ornatetitlefromtop}{0.10}
+\newcommand{\bookish@ornatetitlefromtop}{0.10\paperheight}
 \newcommand{\bookish@ornatetitleanchor}{north east}
 \newcommand{\bookish@ornatetitlealign}{right}
 \newcommand{\bookish@ornatetitlewidth}{0.95\paperwidth}
 \newcommand{\bookish@ornatetitlefontsize}{33}
 \newcommand{\bookish@ornatesubtitlefontsize}{15}
 \newcommand{\bookish@ornateauthorxoffset}{-0.04\paperwidth}
-\newcommand{\bookish@ornateauthorfromtop}{0.34}
+\newcommand{\bookish@ornateauthorfromtop}{0.34\paperheight}
 \newcommand{\bookish@ornateauthoranchor}{north east}
 \newcommand{\bookish@ornateauthoralign}{right}
 \newcommand{\bookish@ornateauthorwidth}{0.95\paperwidth}
 \newcommand{\bookish@ornateauthorfontsize}{22}
 \newcommand{\bookish@ornateauthoraddressfontsize}{13}
 \newcommand{\bookish@ornatetranslatorxoffset}{0pt}
-\newcommand{\bookish@ornatetranslatorfrombottom}{0.22}
+\newcommand{\bookish@ornatetranslatorfrombottom}{0.22\paperheight}
 \newcommand{\bookish@ornatetranslatoranchor}{south}
 \newcommand{\bookish@ornatetranslatoralign}{center}
 \newcommand{\bookish@ornatetranslatorwidth}{0.50\paperwidth}
 \newcommand{\bookish@ornatetranslatorfontsize}{12}
 \newcommand{\bookish@ornatepublisherxoffset}{0pt}
-\newcommand{\bookish@ornatepublisherfrombottom}{0.05}
+\newcommand{\bookish@ornatepublisherfrombottom}{0.05\paperheight}
 \newcommand{\bookish@ornatepublisheranchor}{south}
 \newcommand{\bookish@ornatepublisheralign}{center}
 \newcommand{\bookish@ornatepublishernamewidth}{0.32\paperwidth}
@@ -180,68 +202,88 @@
 \newcommand{\bookish@ornatetranslatorcoord}{}
 \newcommand{\bookish@ornatepublishercoord}{}
 
+% Convert the normalized ornate frontpage settings above into concrete TikZ coordinates.
+% This keeps the public customization API page-size aware instead of relying on hardcoded points.
+% The logic here is intentionally repetitive:
+% - title and author blocks are measured from the top edge
+% - translator and publisher blocks are measured from the bottom edge
+% - each block can be centered or attached to the left/right page edge depending
+%   on the selected anchor
+%
+% If you add a new ornate-style frontpage later, you should only need to set the
+% normalized variables and then call this helper. Avoid writing raw TikZ
+% coordinates in the cover renderer unless the design truly cannot fit this model.
 \newcommand{\bookish@refreshornatecoords}{%
   \ifdefstring{\bookish@ornatetitleanchor}{north west}{%
-    \xdef\bookish@ornatetitlecoord{([xshift=\bookish@ornatetitlexoffset]$(current page.north west)!\bookish@ornatetitlefromtop!(current page.south west)$)}%
+    \xdef\bookish@ornatetitlecoord{([xshift=\bookish@ornatetitlexoffset,yshift=-\bookish@ornatetitlefromtop]current page.north west)}%
   }{%
     \ifdefstring{\bookish@ornatetitleanchor}{north east}{%
-      \xdef\bookish@ornatetitlecoord{([xshift=\bookish@ornatetitlexoffset]$(current page.north east)!\bookish@ornatetitlefromtop!(current page.south east)$)}%
+      \xdef\bookish@ornatetitlecoord{([xshift=\bookish@ornatetitlexoffset,yshift=-\bookish@ornatetitlefromtop]current page.north east)}%
     }{%
-      \xdef\bookish@ornatetitlecoord{([xshift=\bookish@ornatetitlexoffset]$(current page.north)!\bookish@ornatetitlefromtop!(current page.south)$)}%
+      \xdef\bookish@ornatetitlecoord{([xshift=\bookish@ornatetitlexoffset,yshift=-\bookish@ornatetitlefromtop]current page.north)}%
     }%
   }%
   \ifdefstring{\bookish@ornateauthoranchor}{north west}{%
-    \xdef\bookish@ornateauthorcoord{([xshift=\bookish@ornateauthorxoffset]$(current page.north west)!\bookish@ornateauthorfromtop!(current page.south west)$)}%
+    \xdef\bookish@ornateauthorcoord{([xshift=\bookish@ornateauthorxoffset,yshift=-\bookish@ornateauthorfromtop]current page.north west)}%
   }{%
     \ifdefstring{\bookish@ornateauthoranchor}{north east}{%
-      \xdef\bookish@ornateauthorcoord{([xshift=\bookish@ornateauthorxoffset]$(current page.north east)!\bookish@ornateauthorfromtop!(current page.south east)$)}%
+      \xdef\bookish@ornateauthorcoord{([xshift=\bookish@ornateauthorxoffset,yshift=-\bookish@ornateauthorfromtop]current page.north east)}%
     }{%
-      \xdef\bookish@ornateauthorcoord{([xshift=\bookish@ornateauthorxoffset]$(current page.north)!\bookish@ornateauthorfromtop!(current page.south)$)}%
+      \xdef\bookish@ornateauthorcoord{([xshift=\bookish@ornateauthorxoffset,yshift=-\bookish@ornateauthorfromtop]current page.north)}%
     }%
   }%
   \ifdefstring{\bookish@ornatepublisheranchor}{south west}{%
-    \xdef\bookish@ornatepublishercoord{([xshift=\bookish@ornatepublisherxoffset]$(current page.south west)!\bookish@ornatepublisherfrombottom!(current page.north west)$)}%
+    \xdef\bookish@ornatepublishercoord{([xshift=\bookish@ornatepublisherxoffset,yshift=\bookish@ornatepublisherfrombottom]current page.south west)}%
   }{%
     \ifdefstring{\bookish@ornatepublisheranchor}{south east}{%
-      \xdef\bookish@ornatepublishercoord{([xshift=\bookish@ornatepublisherxoffset]$(current page.south east)!\bookish@ornatepublisherfrombottom!(current page.north east)$)}%
+      \xdef\bookish@ornatepublishercoord{([xshift=\bookish@ornatepublisherxoffset,yshift=\bookish@ornatepublisherfrombottom]current page.south east)}%
     }{%
-      \xdef\bookish@ornatepublishercoord{([xshift=\bookish@ornatepublisherxoffset]$(current page.south)!\bookish@ornatepublisherfrombottom!(current page.north)$)}%
+      \xdef\bookish@ornatepublishercoord{([xshift=\bookish@ornatepublisherxoffset,yshift=\bookish@ornatepublisherfrombottom]current page.south)}%
     }%
   }%
   \ifdefstring{\bookish@ornatetranslatoranchor}{south west}{%
-    \xdef\bookish@ornatetranslatorcoord{([xshift=\bookish@ornatetranslatorxoffset]$(current page.south west)!\bookish@ornatetranslatorfrombottom!(current page.north west)$)}%
+    \xdef\bookish@ornatetranslatorcoord{([xshift=\bookish@ornatetranslatorxoffset,yshift=\bookish@ornatetranslatorfrombottom]current page.south west)}%
   }{%
     \ifdefstring{\bookish@ornatetranslatoranchor}{south east}{%
-      \xdef\bookish@ornatetranslatorcoord{([xshift=\bookish@ornatetranslatorxoffset]$(current page.south east)!\bookish@ornatetranslatorfrombottom!(current page.north east)$)}%
+      \xdef\bookish@ornatetranslatorcoord{([xshift=\bookish@ornatetranslatorxoffset,yshift=\bookish@ornatetranslatorfrombottom]current page.south east)}%
     }{%
-      \xdef\bookish@ornatetranslatorcoord{([xshift=\bookish@ornatetranslatorxoffset]$(current page.south)!\bookish@ornatetranslatorfrombottom!(current page.north)$)}%
+      \xdef\bookish@ornatetranslatorcoord{([xshift=\bookish@ornatetranslatorxoffset,yshift=\bookish@ornatetranslatorfrombottom]current page.south)}%
     }%
   }%
 }
 
+% Style-specific ornate presets. Keep these small: only set what differs from the shared defaults.
+% These macros describe the visual personality of each ornate cover without
+% duplicating the renderer:
+% - `star` is more dramatic, with larger type and a left footer block
+% - `flower` keeps the right-aligned title stack and centered footer
+% - `circle` is similar to flower but sits a bit higher to clear the motif band
+%
+% When tuning one of these styles, keep the changes local here unless you need a
+% new renderer feature. That way the generic customization layer still applies.
 \newcommand{\bookish@setupornatefrontpage@star}{%
   \renewcommand{\bookish@ornatetitlexoffset}{-0.06\paperwidth}%
-  \renewcommand{\bookish@ornatetitlefromtop}{0.19}%
+  \renewcommand{\bookish@ornatetitlefromtop}{0.19\paperheight}%
   \renewcommand{\bookish@ornatetitleanchor}{north east}%
   \renewcommand{\bookish@ornatetitlealign}{right}%
   \renewcommand{\bookish@ornatetitlewidth}{0.95\paperwidth}%
   \renewcommand{\bookish@ornatetitlefontsize}{48}%
   \renewcommand{\bookish@ornatesubtitlefontsize}{18}%
   \renewcommand{\bookish@ornateauthorxoffset}{-0.05\paperwidth}%
-  \renewcommand{\bookish@ornateauthorfromtop}{0.70}%
+  \renewcommand{\bookish@ornateauthorfromtop}{0.70\paperheight}%
   \renewcommand{\bookish@ornateauthoranchor}{north east}%
   \renewcommand{\bookish@ornateauthoralign}{right}%
   \renewcommand{\bookish@ornateauthorwidth}{0.95\paperwidth}%
   \renewcommand{\bookish@ornateauthorfontsize}{22}%
   \renewcommand{\bookish@ornateauthoraddressfontsize}{12}%
   \renewcommand{\bookish@ornatetranslatorxoffset}{0.09\paperwidth}%
-  \renewcommand{\bookish@ornatetranslatorfrombottom}{0.24}%
+  \renewcommand{\bookish@ornatetranslatorfrombottom}{0.24\paperheight}%
   \renewcommand{\bookish@ornatetranslatoranchor}{south west}%
   \renewcommand{\bookish@ornatetranslatoralign}{left}%
   \renewcommand{\bookish@ornatetranslatorwidth}{0.34\paperwidth}%
   \renewcommand{\bookish@ornatetranslatorfontsize}{12}%
   \renewcommand{\bookish@ornatepublisherxoffset}{0.09\paperwidth}%
-  \renewcommand{\bookish@ornatepublisherfrombottom}{0.10}%
+  \renewcommand{\bookish@ornatepublisherfrombottom}{0.10\paperheight}%
   \renewcommand{\bookish@ornatepublisheranchor}{south west}%
   \renewcommand{\bookish@ornatepublisheralign}{center}%
   \renewcommand{\bookish@ornatepublishernamewidth}{0.18\paperwidth}%
@@ -250,27 +292,27 @@
 
 \newcommand{\bookish@setupornatefrontpage@flower}{%
   \renewcommand{\bookish@ornatetitlexoffset}{-0.04\paperwidth}%
-  \renewcommand{\bookish@ornatetitlefromtop}{0.09}%
+  \renewcommand{\bookish@ornatetitlefromtop}{0.09\paperheight}%
   \renewcommand{\bookish@ornatetitleanchor}{north east}%
   \renewcommand{\bookish@ornatetitlealign}{right}%
-  \renewcommand{\bookish@ornatetitlewidth}{\paperwidth}%
+  \renewcommand{\bookish@ornatetitlewidth}{0.8\paperwidth}%
   \renewcommand{\bookish@ornatetitlefontsize}{33}%
   \renewcommand{\bookish@ornatesubtitlefontsize}{15}%
   \renewcommand{\bookish@ornateauthorxoffset}{-0.04\paperwidth}%
-  \renewcommand{\bookish@ornateauthorfromtop}{0.31}%
+  \renewcommand{\bookish@ornateauthorfromtop}{0.25\paperheight}%
   \renewcommand{\bookish@ornateauthoranchor}{north east}%
   \renewcommand{\bookish@ornateauthoralign}{right}%
   \renewcommand{\bookish@ornateauthorwidth}{\paperwidth}%
   \renewcommand{\bookish@ornateauthorfontsize}{22}%
   \renewcommand{\bookish@ornateauthoraddressfontsize}{13}%
   \renewcommand{\bookish@ornatetranslatorxoffset}{0pt}%
-  \renewcommand{\bookish@ornatetranslatorfrombottom}{0.22}%
+  \renewcommand{\bookish@ornatetranslatorfrombottom}{0.22\paperheight}%
   \renewcommand{\bookish@ornatetranslatoranchor}{south}%
   \renewcommand{\bookish@ornatetranslatoralign}{center}%
   \renewcommand{\bookish@ornatetranslatorwidth}{0.50\paperwidth}%
   \renewcommand{\bookish@ornatetranslatorfontsize}{12}%
   \renewcommand{\bookish@ornatepublisherxoffset}{0pt}%
-  \renewcommand{\bookish@ornatepublisherfrombottom}{0.03}%
+  \renewcommand{\bookish@ornatepublisherfrombottom}{0.03\paperheight}%
   \renewcommand{\bookish@ornatepublisheranchor}{south}%
   \renewcommand{\bookish@ornatepublisheralign}{center}%
   \renewcommand{\bookish@ornatepublishernamewidth}{0.35\paperwidth}%
@@ -279,27 +321,27 @@
 
 \newcommand{\bookish@setupornatefrontpage@circle}{%
   \renewcommand{\bookish@ornatetitlexoffset}{-0.04\paperwidth}%
-  \renewcommand{\bookish@ornatetitlefromtop}{0.07}%
+  \renewcommand{\bookish@ornatetitlefromtop}{0.07\paperheight}%
   \renewcommand{\bookish@ornatetitleanchor}{north east}%
   \renewcommand{\bookish@ornatetitlealign}{right}%
-  \renewcommand{\bookish@ornatetitlewidth}{\paperwidth}%
+  \renewcommand{\bookish@ornatetitlewidth}{0.80\paperwidth}%
   \renewcommand{\bookish@ornatetitlefontsize}{33}%
   \renewcommand{\bookish@ornatesubtitlefontsize}{15}%
   \renewcommand{\bookish@ornateauthorxoffset}{-0.04\paperwidth}%
-  \renewcommand{\bookish@ornateauthorfromtop}{0.29}%
+  \renewcommand{\bookish@ornateauthorfromtop}{0.25\paperheight}%
   \renewcommand{\bookish@ornateauthoranchor}{north east}%
   \renewcommand{\bookish@ornateauthoralign}{right}%
   \renewcommand{\bookish@ornateauthorwidth}{\paperwidth}%
   \renewcommand{\bookish@ornateauthorfontsize}{22}%
   \renewcommand{\bookish@ornateauthoraddressfontsize}{13}%
   \renewcommand{\bookish@ornatetranslatorxoffset}{0pt}%
-  \renewcommand{\bookish@ornatetranslatorfrombottom}{0.24}%
+  \renewcommand{\bookish@ornatetranslatorfrombottom}{0.24\paperheight}%
   \renewcommand{\bookish@ornatetranslatoranchor}{south}%
   \renewcommand{\bookish@ornatetranslatoralign}{center}%
   \renewcommand{\bookish@ornatetranslatorwidth}{0.50\paperwidth}%
   \renewcommand{\bookish@ornatetranslatorfontsize}{12}%
   \renewcommand{\bookish@ornatepublisherxoffset}{0pt}%
-  \renewcommand{\bookish@ornatepublisherfrombottom}{0.05}%
+  \renewcommand{\bookish@ornatepublisherfrombottom}{0.05\paperheight}%
   \renewcommand{\bookish@ornatepublisheranchor}{south}%
   \renewcommand{\bookish@ornatepublisheralign}{center}%
   \renewcommand{\bookish@ornatepublishernamewidth}{0.35\paperwidth}%
@@ -307,28 +349,37 @@
 }
 
 \newcommand{\bookish@setupornatefrontpage}[1]{%
+  % Reset to shared ornate defaults, then apply the selected style preset, then user overrides.
+  % This function is the only place where the ornate covers merge:
+  % 1) package defaults
+  % 2) style defaults for `star`, `flower`, or `circle`
+  % 3) document-level overrides from `\customizefrontpage`
+  % 4) final coordinate materialization
+  %
+  % If a user reports that `\customizefrontpage` is not affecting one of the
+  % ornate covers, this is the first function to inspect.
   \renewcommand{\bookish@ornatetitlexoffset}{-0.04\paperwidth}%
-  \renewcommand{\bookish@ornatetitlefromtop}{0.10}%
+  \renewcommand{\bookish@ornatetitlefromtop}{0.10\paperheight}%
   \renewcommand{\bookish@ornatetitleanchor}{north east}%
   \renewcommand{\bookish@ornatetitlealign}{right}%
   \renewcommand{\bookish@ornatetitlewidth}{0.95\paperwidth}%
   \renewcommand{\bookish@ornatetitlefontsize}{33}%
   \renewcommand{\bookish@ornatesubtitlefontsize}{15}%
   \renewcommand{\bookish@ornateauthorxoffset}{-0.04\paperwidth}%
-  \renewcommand{\bookish@ornateauthorfromtop}{0.34}%
+  \renewcommand{\bookish@ornateauthorfromtop}{0.34\paperheight}%
   \renewcommand{\bookish@ornateauthoranchor}{north east}%
   \renewcommand{\bookish@ornateauthoralign}{right}%
   \renewcommand{\bookish@ornateauthorwidth}{0.95\paperwidth}%
   \renewcommand{\bookish@ornateauthorfontsize}{22}%
   \renewcommand{\bookish@ornateauthoraddressfontsize}{13}%
   \renewcommand{\bookish@ornatetranslatorxoffset}{0pt}%
-  \renewcommand{\bookish@ornatetranslatorfrombottom}{0.22}%
+  \renewcommand{\bookish@ornatetranslatorfrombottom}{0.22\paperheight}%
   \renewcommand{\bookish@ornatetranslatoranchor}{south}%
   \renewcommand{\bookish@ornatetranslatoralign}{center}%
   \renewcommand{\bookish@ornatetranslatorwidth}{0.50\paperwidth}%
   \renewcommand{\bookish@ornatetranslatorfontsize}{12}%
   \renewcommand{\bookish@ornatepublisherxoffset}{0pt}%
-  \renewcommand{\bookish@ornatepublisherfrombottom}{0.05}%
+  \renewcommand{\bookish@ornatepublisherfrombottom}{0.05\paperheight}%
   \renewcommand{\bookish@ornatepublisheranchor}{south}%
   \renewcommand{\bookish@ornatepublisheralign}{center}%
   \renewcommand{\bookish@ornatepublishernamewidth}{0.32\paperwidth}%
@@ -354,9 +405,22 @@
 }
 
 % Default image-background frontpage settings live here so cover tuning is easy to audit.
+% These are the baseline values for all photo / illustration-backed frontpages.
+% As with the ornate covers, the workflow is: shared defaults -> style preset -> user overrides.
+%
+% The image-backed covers use the same four content groups as the ornate covers,
+% but add one more concern: panel opacity. The image may be calm enough to allow
+% bare text, or busy enough to require a soft background panel behind the text.
+%
+% Variable conventions mirror the ornate system. The main additions are:
+% - *panelopacity: background tint behind the title/author/meta blocks
+% - *filepath: source image path selected from the public frontpage style name
+% - *metapanelopacity: shared panel opacity for translator and publisher blocks
+%
+% Use TeX lengths for `fromtop` / `frombottom`, `xoffset`, and widths.
 \newcommand{\bookish@imagebgfilepath}{assets/frontimages/bluelight.jpg}
 \newcommand{\bookish@imagebgtitlexoffset}{0pt}
-\newcommand{\bookish@imagebgtitlefromtop}{0.16}
+\newcommand{\bookish@imagebgtitlefromtop}{0.16\paperheight}
 \newcommand{\bookish@imagebgtitleanchor}{north}
 \newcommand{\bookish@imagebgtitlealign}{center}
 \newcommand{\bookish@imagebgtitlewidth}{0.72\paperwidth}
@@ -364,7 +428,7 @@
 \newcommand{\bookish@imagebgtitlefontsize}{34}
 \newcommand{\bookish@imagebgsubtitlefontsize}{15}
 \newcommand{\bookish@imagebgauthorxoffset}{0pt}
-\newcommand{\bookish@imagebgauthorfromtop}{0.82}
+\newcommand{\bookish@imagebgauthorfromtop}{0.82\paperheight}
 \newcommand{\bookish@imagebgauthoranchor}{south}
 \newcommand{\bookish@imagebgauthoralign}{center}
 \newcommand{\bookish@imagebgauthorwidth}{0.58\paperwidth}
@@ -372,12 +436,12 @@
 \newcommand{\bookish@imagebgauthorfontsize}{19}
 \newcommand{\bookish@imagebgaddressfontsize}{11}
 \newcommand{\bookish@imagebgpublisherxoffset}{0pt}
-\newcommand{\bookish@imagebgpublisherfrombottom}{0.048}
+\newcommand{\bookish@imagebgpublisherfrombottom}{0.048\paperheight}
 \newcommand{\bookish@imagebgpublisheranchor}{south}
 \newcommand{\bookish@imagebgpublisheralign}{center}
 \newcommand{\bookish@imagebgpublisherwidth}{0.20\paperwidth}
 \newcommand{\bookish@imagebgtranslatorxoffset}{0pt}
-\newcommand{\bookish@imagebgtranslatorfrombottom}{0.086}
+\newcommand{\bookish@imagebgtranslatorfrombottom}{0.086\paperheight}
 \newcommand{\bookish@imagebgtranslatoranchor}{south}
 \newcommand{\bookish@imagebgtranslatoralign}{center}
 \newcommand{\bookish@imagebgtranslatorwidth}{0.40\paperwidth}
@@ -390,6 +454,10 @@
 \newcommand{\bookish@imagebgpublishercoord}{}
 \newcommand{\bookish@imagebgtranslatorcoord}{}
 
+% Frontpage overrides are passed in from bookish.sty as raw strings.
+% Expand them once here before writing into the layout macros so later coordinate math sees final values.
+% Without this expansion step, keys such as `titleblockfromtop={0.24\paperheight}` would stay
+% as references to the original storage macro and break the later TikZ math.
 \newcommand{\bookish@applyfrontpageoverride}[2]{%
   \ifdefempty{#1}{}{%
     \edef\bookish@frontpageoverridevalue{#1}%
@@ -397,41 +465,46 @@
   }%
 }
 
+% Convert the normalized image-cover settings into concrete TikZ coordinates.
+% This is called after defaults, style-specific tweaks, and user overrides have all been applied.
+% Like the ornate coordinate helper above, this isolates the page-geometry math
+% from the actual drawing code. That separation makes it possible to keep the
+% renderer stable while moving blocks around through defaults and user overrides.
 \newcommand{\bookish@refreshimagebgcoords}{%
   \ifdefstring{\bookish@imagebgtitleanchor}{north west}{%
-    \xdef\bookish@imagebgtitlecoord{([xshift=\bookish@imagebgtitlexoffset]$(current page.north west)!\bookish@imagebgtitlefromtop!(current page.south west)$)}%
+    \xdef\bookish@imagebgtitlecoord{([xshift=\bookish@imagebgtitlexoffset,yshift=-\bookish@imagebgtitlefromtop]current page.north west)}%
   }{%
     \ifdefstring{\bookish@imagebgtitleanchor}{north east}{%
-      \xdef\bookish@imagebgtitlecoord{([xshift=\bookish@imagebgtitlexoffset]$(current page.north east)!\bookish@imagebgtitlefromtop!(current page.south east)$)}%
+      \xdef\bookish@imagebgtitlecoord{([xshift=\bookish@imagebgtitlexoffset,yshift=-\bookish@imagebgtitlefromtop]current page.north east)}%
     }{%
-      \xdef\bookish@imagebgtitlecoord{([xshift=\bookish@imagebgtitlexoffset]$(current page.north)!\bookish@imagebgtitlefromtop!(current page.south)$)}%
+      \xdef\bookish@imagebgtitlecoord{([xshift=\bookish@imagebgtitlexoffset,yshift=-\bookish@imagebgtitlefromtop]current page.north)}%
     }%
   }%
   \ifdefstring{\bookish@imagebgauthoranchor}{south west}{%
-    \xdef\bookish@imagebgauthorcoord{([xshift=\bookish@imagebgauthorxoffset]$(current page.north west)!\bookish@imagebgauthorfromtop!(current page.south west)$)}%
+    \xdef\bookish@imagebgauthorcoord{([xshift=\bookish@imagebgauthorxoffset,yshift=-\bookish@imagebgauthorfromtop]current page.north west)}%
   }{%
     \ifdefstring{\bookish@imagebgauthoranchor}{south east}{%
-      \xdef\bookish@imagebgauthorcoord{([xshift=\bookish@imagebgauthorxoffset]$(current page.north east)!\bookish@imagebgauthorfromtop!(current page.south east)$)}%
+      \xdef\bookish@imagebgauthorcoord{([xshift=\bookish@imagebgauthorxoffset,yshift=-\bookish@imagebgauthorfromtop]current page.north east)}%
     }{%
-      \xdef\bookish@imagebgauthorcoord{([xshift=\bookish@imagebgauthorxoffset]$(current page.north)!\bookish@imagebgauthorfromtop!(current page.south)$)}%
+      \xdef\bookish@imagebgauthorcoord{([xshift=\bookish@imagebgauthorxoffset,yshift=-\bookish@imagebgauthorfromtop]current page.north)}%
     }%
   }%
   \ifdefstring{\bookish@imagebgpublisheranchor}{south west}{%
-    \xdef\bookish@imagebgpublishercoord{([xshift=\bookish@imagebgpublisherxoffset]$(current page.south west)!\bookish@imagebgpublisherfrombottom!(current page.north west)$)}%
+    \xdef\bookish@imagebgpublishercoord{([xshift=\bookish@imagebgpublisherxoffset,yshift=\bookish@imagebgpublisherfrombottom]current page.south west)}%
   }{%
     \ifdefstring{\bookish@imagebgpublisheranchor}{south east}{%
-      \xdef\bookish@imagebgpublishercoord{([xshift=\bookish@imagebgpublisherxoffset]$(current page.south east)!\bookish@imagebgpublisherfrombottom!(current page.north east)$)}%
+      \xdef\bookish@imagebgpublishercoord{([xshift=\bookish@imagebgpublisherxoffset,yshift=\bookish@imagebgpublisherfrombottom]current page.south east)}%
     }{%
-      \xdef\bookish@imagebgpublishercoord{([xshift=\bookish@imagebgpublisherxoffset]$(current page.south)!\bookish@imagebgpublisherfrombottom!(current page.north)$)}%
+      \xdef\bookish@imagebgpublishercoord{([xshift=\bookish@imagebgpublisherxoffset,yshift=\bookish@imagebgpublisherfrombottom]current page.south)}%
     }%
   }%
   \ifdefstring{\bookish@imagebgtranslatoranchor}{south west}{%
-    \xdef\bookish@imagebgtranslatorcoord{([xshift=\bookish@imagebgtranslatorxoffset]$(current page.south west)!\bookish@imagebgtranslatorfrombottom!(current page.north west)$)}%
+    \xdef\bookish@imagebgtranslatorcoord{([xshift=\bookish@imagebgtranslatorxoffset,yshift=\bookish@imagebgtranslatorfrombottom]current page.south west)}%
   }{%
     \ifdefstring{\bookish@imagebgtranslatoranchor}{south east}{%
-      \xdef\bookish@imagebgtranslatorcoord{([xshift=\bookish@imagebgtranslatorxoffset]$(current page.south east)!\bookish@imagebgtranslatorfrombottom!(current page.north east)$)}%
+      \xdef\bookish@imagebgtranslatorcoord{([xshift=\bookish@imagebgtranslatorxoffset,yshift=\bookish@imagebgtranslatorfrombottom]current page.south east)}%
     }{%
-      \xdef\bookish@imagebgtranslatorcoord{([xshift=\bookish@imagebgtranslatorxoffset]$(current page.south)!\bookish@imagebgtranslatorfrombottom!(current page.north)$)}%
+      \xdef\bookish@imagebgtranslatorcoord{([xshift=\bookish@imagebgtranslatorxoffset,yshift=\bookish@imagebgtranslatorfrombottom]current page.south)}%
     }%
   }%
 }
@@ -439,46 +512,55 @@
 % Per-style layout macros for image-background covers.
 % Each macro overrides only the variables that differ from the defaults set in \bookish@setupimagebgstyle.
 % To tune a style: find its macro below, adjust values, rebuild.
+%
+% Practical tuning rules for these presets:
+% - move title/author vertically with `fromtop` before changing `xoffset`
+% - use `xoffset` only when the image has an asymmetric quiet zone
+% - increase text widths before increasing font sizes if lines are breaking too early
+% - increase panel opacity only when the image contrast is the real problem
+% - keep publisher and translator independent; they no longer have to travel together
 
 \newcommand{\bookish@imagebgsetup@bluelight}{%
   % Strong central arch — symmetric, formal. Text inside arch, light panels.
+  % This is the reference layout for centered dark-arch images.
   \renewcommand{\bookish@imagebgtitlexoffset}{0pt}%
-  \renewcommand{\bookish@imagebgtitlefromtop}{0.20}%
+  \renewcommand{\bookish@imagebgtitlefromtop}{0.20\paperheight}%
   \renewcommand{\bookish@imagebgtitlewidth}{0.60\paperwidth}%
   \renewcommand{\bookish@imagebgtitlepanelopacity}{0.08}%
   \renewcommand{\bookish@imagebgtitlefontsize}{36}%
   \renewcommand{\bookish@imagebgauthorxoffset}{0pt}%
-  \renewcommand{\bookish@imagebgauthorfromtop}{0.50}%
+  \renewcommand{\bookish@imagebgauthorfromtop}{0.50\paperheight}%
   \renewcommand{\bookish@imagebgauthorwidth}{0.68\paperwidth}%
   \renewcommand{\bookish@imagebgauthorpanelopacity}{0.04}%
   \renewcommand{\bookish@imagebgaddressfontsize}{16}%
   \renewcommand{\bookish@imagebgauthorfontsize}{22}%
   \renewcommand{\bookish@imagebgtranslatorxoffset}{0pt}%
-  \renewcommand{\bookish@imagebgtranslatorfrombottom}{0.32}%
+  \renewcommand{\bookish@imagebgtranslatorfrombottom}{0.32\paperheight}%
   \renewcommand{\bookish@imagebgtranslatorwidth}{0.80\paperwidth}%
   \renewcommand{\bookish@imagebgpublisherxoffset}{0pt}%
-  \renewcommand{\bookish@imagebgpublisherfrombottom}{0.14}%
+  \renewcommand{\bookish@imagebgpublisherfrombottom}{0.14\paperheight}%
   \renewcommand{\bookish@imagebgpublisherwidth}{0.40\paperwidth}%
   \renewcommand{\bookish@imagebglogowidth}{0.08\textwidth}%
 }
 
 \newcommand{\bookish@imagebgsetup@cushion}{%
   % Busy tufted texture — needs stronger panels for readability.
+  % Compared with bluelight, this style mainly turns up block widths and panel opacity.
   \renewcommand{\bookish@imagebgtitlexoffset}{0pt}%
-  \renewcommand{\bookish@imagebgtitlefromtop}{0.22}%
+  \renewcommand{\bookish@imagebgtitlefromtop}{0.22\paperheight}%
   \renewcommand{\bookish@imagebgtitlewidth}{0.80\paperwidth}%
   \renewcommand{\bookish@imagebgtitlepanelopacity}{0.10}%
   \renewcommand{\bookish@imagebgauthorxoffset}{0pt}%
-  \renewcommand{\bookish@imagebgauthorfromtop}{0.52}%
+  \renewcommand{\bookish@imagebgauthorfromtop}{0.52\paperheight}%
   \renewcommand{\bookish@imagebgauthorwidth}{0.80\paperwidth}%
   \renewcommand{\bookish@imagebgauthorpanelopacity}{0.10}%
   \renewcommand{\bookish@imagebgaddressfontsize}{15}%
   \renewcommand{\bookish@imagebgauthorfontsize}{25}%
   \renewcommand{\bookish@imagebgtranslatorxoffset}{0pt}%
-  \renewcommand{\bookish@imagebgtranslatorfrombottom}{0.34}%
+  \renewcommand{\bookish@imagebgtranslatorfrombottom}{0.34\paperheight}%
   \renewcommand{\bookish@imagebgtranslatorwidth}{0.80\paperwidth}%
   \renewcommand{\bookish@imagebgpublisherxoffset}{0pt}%
-  \renewcommand{\bookish@imagebgpublisherfrombottom}{0.18}%
+  \renewcommand{\bookish@imagebgpublisherfrombottom}{0.18\paperheight}%
   \renewcommand{\bookish@imagebgpublisherwidth}{0.70\paperwidth}%
   \renewcommand{\bookish@imagebgmetapanelopacity}{0.10}%
   \renewcommand{\bookish@imagebglogowidth}{0.08\textwidth}%
@@ -486,15 +568,17 @@
 
 \newcommand{\bookish@imagebgsetup@embroid}{%
   % Asymmetric — strong right ornament, quiet left. All text left-aligned.
+  % This style demonstrates how to push title and footer groups away from the
+  % page center when the artwork strongly occupies one side.
   \renewcommand{\bookish@imagebgtitlexoffset}{0.13\paperwidth}%
-  \renewcommand{\bookish@imagebgtitlefromtop}{0.15}%
+  \renewcommand{\bookish@imagebgtitlefromtop}{0.15\paperheight}%
   \renewcommand{\bookish@imagebgtitleanchor}{north west}%
   \renewcommand{\bookish@imagebgtitlealign}{left}%
   \renewcommand{\bookish@imagebgtitlewidth}{0.60\paperwidth}%
   \renewcommand{\bookish@imagebgtitlepanelopacity}{0.24}%
   \renewcommand{\bookish@imagebgsubtitlefontsize}{17}%
   \renewcommand{\bookish@imagebgauthorxoffset}{0pt}%
-  \renewcommand{\bookish@imagebgauthorfromtop}{0.50}%
+  \renewcommand{\bookish@imagebgauthorfromtop}{0.50\paperheight}%
   \renewcommand{\bookish@imagebgauthoranchor}{center}%
   \renewcommand{\bookish@imagebgauthoralign}{center}%
   \renewcommand{\bookish@imagebgauthorwidth}{0.75\paperwidth}%
@@ -502,12 +586,12 @@
   \renewcommand{\bookish@imagebgaddressfontsize}{15}%
   \renewcommand{\bookish@imagebgauthorfontsize}{22}%
   \renewcommand{\bookish@imagebgpublisherxoffset}{-0.10\paperwidth}%
-  \renewcommand{\bookish@imagebgpublisherfrombottom}{0.10}%
+  \renewcommand{\bookish@imagebgpublisherfrombottom}{0.10\paperheight}%
   \renewcommand{\bookish@imagebgpublisheranchor}{south east}%
   \renewcommand{\bookish@imagebgpublisheralign}{center}%
   \renewcommand{\bookish@imagebgpublisherwidth}{0.22\paperwidth}%
   \renewcommand{\bookish@imagebgtranslatorxoffset}{0pt}%
-  \renewcommand{\bookish@imagebgtranslatorfrombottom}{0.32}%
+  \renewcommand{\bookish@imagebgtranslatorfrombottom}{0.32\paperheight}%
   \renewcommand{\bookish@imagebgtranslatoranchor}{south}%
   \renewcommand{\bookish@imagebgtranslatoralign}{center}%
   \renewcommand{\bookish@imagebgtranslatorwidth}{0.48\paperwidth}%
@@ -518,21 +602,21 @@
 \newcommand{\bookish@imagebgsetup@emerald}{%
   % Symmetric dark-teal arch — similar to bluelight but slightly tighter.
   \renewcommand{\bookish@imagebgtitlexoffset}{0pt}%
-  \renewcommand{\bookish@imagebgtitlefromtop}{0.20}%
+  \renewcommand{\bookish@imagebgtitlefromtop}{0.20\paperheight}%
   \renewcommand{\bookish@imagebgtitlewidth}{0.60\paperwidth}%
   \renewcommand{\bookish@imagebgtitlepanelopacity}{0.10}%
   \renewcommand{\bookish@imagebgtitlefontsize}{35}%
   \renewcommand{\bookish@imagebgauthorxoffset}{0pt}%
-  \renewcommand{\bookish@imagebgauthorfromtop}{0.50}%
+  \renewcommand{\bookish@imagebgauthorfromtop}{0.50\paperheight}%
   \renewcommand{\bookish@imagebgauthorwidth}{0.68\paperwidth}%
   \renewcommand{\bookish@imagebgauthorpanelopacity}{0.06}%
   \renewcommand{\bookish@imagebgaddressfontsize}{15}%
   \renewcommand{\bookish@imagebgauthorfontsize}{22}%
   \renewcommand{\bookish@imagebgtranslatorxoffset}{0pt}%
-  \renewcommand{\bookish@imagebgtranslatorfrombottom}{0.35}%
+  \renewcommand{\bookish@imagebgtranslatorfrombottom}{0.35\paperheight}%
   \renewcommand{\bookish@imagebgtranslatorwidth}{0.76\paperwidth}%
   \renewcommand{\bookish@imagebgpublisherxoffset}{0pt}%
-  \renewcommand{\bookish@imagebgpublisherfrombottom}{0.16}%
+  \renewcommand{\bookish@imagebgpublisherfrombottom}{0.16\paperheight}%
   \renewcommand{\bookish@imagebgpublisherwidth}{0.40\paperwidth}%
   \renewcommand{\bookish@imagebglogowidth}{0.08\textwidth}%
 }
@@ -540,15 +624,16 @@
 \newcommand{\bookish@imagebgsetup@feminine}{%
   % Light floral frame, large empty center. No panels — let the image breathe.
   % Title upper-left, author lower-right for visual balance.
+  % This is a good reference if you need a diagonally balanced image style later.
   \renewcommand{\bookish@imagebgtitlexoffset}{0.13\paperwidth}%
-  \renewcommand{\bookish@imagebgtitlefromtop}{0.20}%
+  \renewcommand{\bookish@imagebgtitlefromtop}{0.20\paperheight}%
   \renewcommand{\bookish@imagebgtitleanchor}{north west}%
   \renewcommand{\bookish@imagebgtitlealign}{left}%
   \renewcommand{\bookish@imagebgtitlewidth}{0.48\paperwidth}%
   \renewcommand{\bookish@imagebgtitlepanelopacity}{0.00}%
   \renewcommand{\bookish@imagebgsubtitlefontsize}{17}%
   \renewcommand{\bookish@imagebgauthorxoffset}{0pt}%
-  \renewcommand{\bookish@imagebgauthorfromtop}{0.50}%
+  \renewcommand{\bookish@imagebgauthorfromtop}{0.50\paperheight}%
   \renewcommand{\bookish@imagebgauthoranchor}{center}%
   \renewcommand{\bookish@imagebgauthoralign}{center}%
   \renewcommand{\bookish@imagebgauthorwidth}{0.80\paperwidth}%
@@ -556,12 +641,12 @@
   \renewcommand{\bookish@imagebgaddressfontsize}{14}%
   \renewcommand{\bookish@imagebgauthorfontsize}{21}%
   \renewcommand{\bookish@imagebgpublisherxoffset}{-0.15\paperwidth}%
-  \renewcommand{\bookish@imagebgpublisherfrombottom}{0.13}%
+  \renewcommand{\bookish@imagebgpublisherfrombottom}{0.13\paperheight}%
   \renewcommand{\bookish@imagebgpublisheranchor}{south east}%
   \renewcommand{\bookish@imagebgpublisheralign}{center}%
   \renewcommand{\bookish@imagebgpublisherwidth}{0.24\paperwidth}%
   \renewcommand{\bookish@imagebgtranslatorxoffset}{-0.15\paperwidth}%
-  \renewcommand{\bookish@imagebgtranslatorfrombottom}{0.325}%
+  \renewcommand{\bookish@imagebgtranslatorfrombottom}{0.325\paperheight}%
   \renewcommand{\bookish@imagebgtranslatoranchor}{south east}%
   \renewcommand{\bookish@imagebgtranslatoralign}{right}%
   \renewcommand{\bookish@imagebgtranslatorwidth}{0.65\paperwidth}%
@@ -571,33 +656,36 @@
 
 \newcommand{\bookish@imagebgsetup@goldenblue}{%
   % Ornate teal frame — strong border, deep background. Very light panels.
+  % This is the shared base for a few centered image styles, so keep it conservative.
   \renewcommand{\bookish@imagebgtitlexoffset}{0pt}%
-  \renewcommand{\bookish@imagebgtitlefromtop}{0.20}%
+  \renewcommand{\bookish@imagebgtitlefromtop}{0.20\paperheight}%
   \renewcommand{\bookish@imagebgtitlewidth}{0.60\paperwidth}%
   \renewcommand{\bookish@imagebgtitlepanelopacity}{0.08}%
   \renewcommand{\bookish@imagebgtitlefontsize}{35}%
   \renewcommand{\bookish@imagebgauthorxoffset}{0pt}%
-  \renewcommand{\bookish@imagebgauthorfromtop}{0.50}%
+  \renewcommand{\bookish@imagebgauthorfromtop}{0.50\paperheight}%
   \renewcommand{\bookish@imagebgauthorwidth}{0.68\paperwidth}%
   \renewcommand{\bookish@imagebgauthorpanelopacity}{0.05}%
   \renewcommand{\bookish@imagebgaddressfontsize}{15}%
   \renewcommand{\bookish@imagebgauthorfontsize}{22}%
   \renewcommand{\bookish@imagebgtranslatorxoffset}{0pt}%
-  \renewcommand{\bookish@imagebgtranslatorfrombottom}{0.35}%
+  \renewcommand{\bookish@imagebgtranslatorfrombottom}{0.35\paperheight}%
   \renewcommand{\bookish@imagebgtranslatorwidth}{0.76\paperwidth}%
   \renewcommand{\bookish@imagebgpublisherxoffset}{0pt}%
-  \renewcommand{\bookish@imagebgpublisherfrombottom}{0.16}%
+  \renewcommand{\bookish@imagebgpublisherfrombottom}{0.16\paperheight}%
   \renewcommand{\bookish@imagebgpublisherwidth}{0.40\paperwidth}%
   \renewcommand{\bookish@imagebglogowidth}{0.08\textwidth}%
 }
 
 \newcommand{\bookish@imagebgsetup@greencutton}{%
   % Use the same centered composition as goldenblue.
+  % Intentionally thin wrapper: all distinctive behavior is inherited from goldenblue.
   \bookish@imagebgsetup@goldenblue
 }
 
 \newcommand{\bookish@imagebgsetup@greenflower}{%
   % Use the same centered composition approach as goldenblue with slightly softer panels.
+  % This is another thin wrapper. Use it when only color/contrast differs, not structure.
   \bookish@imagebgsetup@goldenblue
   \renewcommand{\bookish@imagebgtitlepanelopacity}{0.06}%
   \renewcommand{\bookish@imagebgauthorpanelopacity}{0.04}%
@@ -607,13 +695,15 @@
 \newcommand{\bookish@imagebgsetup@petals}{%
   % Very soft, airy — no panels. Title top-center (larger), author lower-right.
   % Publisher bottom-left for diagonal balance.
+  % This style relies more on typography than panels, so font size changes are usually
+  % safer than opacity changes.
   \renewcommand{\bookish@imagebgtitlexoffset}{0pt}%
-  \renewcommand{\bookish@imagebgtitlefromtop}{0.14}%
+  \renewcommand{\bookish@imagebgtitlefromtop}{0.14\paperheight}%
   \renewcommand{\bookish@imagebgtitlewidth}{0.55\paperwidth}%
   \renewcommand{\bookish@imagebgtitlepanelopacity}{0.00}%
   \renewcommand{\bookish@imagebgtitlefontsize}{38}%
   \renewcommand{\bookish@imagebgauthorxoffset}{0pt}%
-  \renewcommand{\bookish@imagebgauthorfromtop}{0.50}%
+  \renewcommand{\bookish@imagebgauthorfromtop}{0.50\paperheight}%
   \renewcommand{\bookish@imagebgauthoranchor}{center}%
   \renewcommand{\bookish@imagebgauthoralign}{center}%
   \renewcommand{\bookish@imagebgauthorwidth}{0.70\paperwidth}%
@@ -621,12 +711,12 @@
   \renewcommand{\bookish@imagebgaddressfontsize}{14}%
   \renewcommand{\bookish@imagebgauthorfontsize}{21}%
   \renewcommand{\bookish@imagebgpublisherxoffset}{0.15\paperwidth}%
-  \renewcommand{\bookish@imagebgpublisherfrombottom}{0.13}%
+  \renewcommand{\bookish@imagebgpublisherfrombottom}{0.13\paperheight}%
   \renewcommand{\bookish@imagebgpublisheranchor}{south west}%
   \renewcommand{\bookish@imagebgpublisheralign}{center}%
   \renewcommand{\bookish@imagebgpublisherwidth}{0.28\paperwidth}%
   \renewcommand{\bookish@imagebgtranslatorxoffset}{0pt}%
-  \renewcommand{\bookish@imagebgtranslatorfrombottom}{0.35}%
+  \renewcommand{\bookish@imagebgtranslatorfrombottom}{0.35\paperheight}%
   \renewcommand{\bookish@imagebgtranslatoranchor}{center}%
   \renewcommand{\bookish@imagebgtranslatoralign}{center}%
   \renewcommand{\bookish@imagebgtranslatorwidth}{0.40\paperwidth}%
@@ -636,15 +726,17 @@
 
 \newcommand{\bookish@imagebgsetup@rose}{%
   % Mirror the feminine layout: title top-right, author/footer bottom-left.
+  % Keep rose and feminine conceptually paired: if you improve one diagonal layout,
+  % compare the other before introducing a new rule.
   \renewcommand{\bookish@imagebgtitlexoffset}{-0.15\paperwidth}%
-  \renewcommand{\bookish@imagebgtitlefromtop}{0.13}%
+  \renewcommand{\bookish@imagebgtitlefromtop}{0.13\paperheight}%
   \renewcommand{\bookish@imagebgtitleanchor}{north east}%
   \renewcommand{\bookish@imagebgtitlealign}{right}%
   \renewcommand{\bookish@imagebgtitlewidth}{0.60\paperwidth}%
   \renewcommand{\bookish@imagebgtitlepanelopacity}{0.00}%
   \renewcommand{\bookish@imagebgsubtitlefontsize}{17}%
   \renewcommand{\bookish@imagebgauthorxoffset}{0pt}%
-  \renewcommand{\bookish@imagebgauthorfromtop}{0.40}%
+  \renewcommand{\bookish@imagebgauthorfromtop}{0.40\paperheight}%
   \renewcommand{\bookish@imagebgauthoranchor}{center}%
   \renewcommand{\bookish@imagebgauthoralign}{center}%
   \renewcommand{\bookish@imagebgauthorwidth}{0.80\paperwidth}%
@@ -652,12 +744,12 @@
   \renewcommand{\bookish@imagebgaddressfontsize}{14}%
   \renewcommand{\bookish@imagebgauthorfontsize}{21}%
   \renewcommand{\bookish@imagebgpublisherxoffset}{0.15\paperwidth}%
-  \renewcommand{\bookish@imagebgpublisherfrombottom}{0.133}%
+  \renewcommand{\bookish@imagebgpublisherfrombottom}{0.133\paperheight}%
   \renewcommand{\bookish@imagebgpublisheranchor}{south west}%
   \renewcommand{\bookish@imagebgpublisheralign}{center}%
   \renewcommand{\bookish@imagebgpublisherwidth}{0.24\paperwidth}%
   \renewcommand{\bookish@imagebgtranslatorxoffset}{0.15\paperwidth}%
-  \renewcommand{\bookish@imagebgtranslatorfrombottom}{0.362}%
+  \renewcommand{\bookish@imagebgtranslatorfrombottom}{0.362\paperheight}%
   \renewcommand{\bookish@imagebgtranslatoranchor}{south west}%
   \renewcommand{\bookish@imagebgtranslatoralign}{left}%
   \renewcommand{\bookish@imagebgtranslatorwidth}{0.65\paperwidth}%
@@ -666,11 +758,15 @@
 }
 
 % Configure the generic image-background cover to fit the visual breathing room of each source image.
-% Defaults are applied first, then the per-style macro overrides what it needs.
+% Order matters here:
+% 1) reset shared defaults
+% 2) apply the selected image style preset
+% 3) apply document-level \customizefrontpage overrides
+% 4) freeze the final coordinates for drawing
 \newcommand{\bookish@setupimagebgstyle}{%
   \edef\bookish@imagebgfilepath{assets/frontimages/\bookishfrontpage@style.jpg}%
   \renewcommand{\bookish@imagebgtitlexoffset}{0pt}%
-  \renewcommand{\bookish@imagebgtitlefromtop}{0.16}%
+  \renewcommand{\bookish@imagebgtitlefromtop}{0.16\paperheight}%
   \renewcommand{\bookish@imagebgtitleanchor}{north}%
   \renewcommand{\bookish@imagebgtitlealign}{center}%
   \renewcommand{\bookish@imagebgtitlewidth}{0.72\paperwidth}%
@@ -678,7 +774,7 @@
   \renewcommand{\bookish@imagebgtitlefontsize}{34}%
   \renewcommand{\bookish@imagebgsubtitlefontsize}{15}%
   \renewcommand{\bookish@imagebgauthorxoffset}{0pt}%
-  \renewcommand{\bookish@imagebgauthorfromtop}{0.82}%
+  \renewcommand{\bookish@imagebgauthorfromtop}{0.82\paperheight}%
   \renewcommand{\bookish@imagebgauthoranchor}{south}%
   \renewcommand{\bookish@imagebgauthoralign}{center}%
   \renewcommand{\bookish@imagebgauthorwidth}{0.58\paperwidth}%
@@ -686,12 +782,12 @@
   \renewcommand{\bookish@imagebgauthorfontsize}{19}%
   \renewcommand{\bookish@imagebgaddressfontsize}{11}%
   \renewcommand{\bookish@imagebgpublisherxoffset}{0pt}%
-  \renewcommand{\bookish@imagebgpublisherfrombottom}{0.048}%
+  \renewcommand{\bookish@imagebgpublisherfrombottom}{0.048\paperheight}%
   \renewcommand{\bookish@imagebgpublisheranchor}{south}%
   \renewcommand{\bookish@imagebgpublisheralign}{center}%
   \renewcommand{\bookish@imagebgpublisherwidth}{0.20\paperwidth}%
   \renewcommand{\bookish@imagebgtranslatorxoffset}{0pt}%
-  \renewcommand{\bookish@imagebgtranslatorfrombottom}{0.093}%
+  \renewcommand{\bookish@imagebgtranslatorfrombottom}{0.093\paperheight}%
   \renewcommand{\bookish@imagebgtranslatoranchor}{south}%
   \renewcommand{\bookish@imagebgtranslatoralign}{center}%
   \renewcommand{\bookish@imagebgtranslatorwidth}{0.40\paperwidth}%
@@ -719,6 +815,17 @@
 }
 
 % Full-bleed image cover derived from the local imagebg template and tuned per source image.
+% The decorative image is always painted first, then the four text groups are layered on top.
+% Render order matters:
+% 1) background image
+% 2) status tag
+% 3) title block
+% 4) author block
+% 5) publisher block and logo
+% 6) translator block
+%
+% That order is chosen so the logo can be positioned relative to the publisher node,
+% and so the translator block can visually sit above the footer area.
 \newcommand{\bookishfrontpageimagebg}{%
   \bookish@setupimagebgstyle
   \node[anchor=south west, inner sep=0pt] at (current page.south west) {%
@@ -798,6 +905,9 @@
 }
 
 % Matching backmatter reuses the image with a quieter synopsis panel.
+% This keeps the same footer placement logic as the front cover so the pair feels related.
+% Only the footer placement is shared with the front cover. The synopsis panel in the
+% center is intentionally fixed because the back cover has a different job than the front.
 \newcommand{\bookishbackmatterimagebg}{%
   \bookish@setupimagebgstyle
   \node[anchor=south west, inner sep=0pt] at (current page.south west) {%
@@ -837,6 +947,12 @@
 }
 
 % Elegant Forta-style cover derived from the alternate black template cover.
+% Public style name: star.
+% The background emblem is unique, but text placement now comes from the shared ornate layout system.
+% Editing guidance:
+% - tune text placement through `\bookish@setupornatefrontpage@star`
+% - tune the emblem only here
+% - keep backmatter in sync manually if the emblem treatment changes significantly
 \newcommand{\bookishfrontpageelegant}{%
   \bookish@setupornatefrontpage{star}%
   \fill[bookishcoverbg] (current page.south west) rectangle (current page.north east);
@@ -965,6 +1081,12 @@
 }
 
 % Central floral spiral cover derived from the purple template layout.
+% Public style name: flower.
+% The flower motif is fixed artwork; title, author, translator, and publisher all use ornate defaults/overrides.
+% The key separation here is:
+% - motif geometry stays local to this renderer
+% - text system stays in the shared ornate layout layer
+% That split is what lets `\customizefrontpage` work without duplicating floral geometry code.
 \newcommand{\bookishfrontpageflowercenter}{%
   \bookish@setupornatefrontpage{flower}%
   % The original pattern uses the golden ratio to set the central motif scale.
@@ -1100,6 +1222,8 @@
 }
 
 % Matching floral backmatter page based on the original purple template backpage.
+% Backmatter keeps its original art treatment; only the front cover is wired to the shared override API.
+% If you ever decide to expose backmatter tuning too, use this renderer as the starting point.
 \newcommand{\bookishbackmatterflowercenter}{%
   \pgfmathsetmacro{\phi}{(1+sqrt(5))/2}%
   \pgfmathsetlengthmacro{\goldenHeight}{\paperheight/\phi}%
@@ -1178,6 +1302,10 @@
 }
 
 % Mid-band spiral/circle cover derived from the warm dark reference layout.
+% Public style name: circle.
+% Like flower, this keeps its original motif but shares the normalized ornate text layout system.
+% The circle motif creates a dense middle band, so text placement is intentionally higher
+% than flower. Preserve that relationship when changing defaults.
 \newcommand{\bookishfrontpagespiralcirclemid}{%
   \bookish@setupornatefrontpage{circle}%
   \fill[bookishcoverbg] (current page.south west) rectangle (current page.north east);
@@ -1357,6 +1485,9 @@
 }
 
 % Resolve the public style name to the matching frontpage renderer.
+% Keep this dispatcher simple: image-backed styles are detected first, then named bespoke styles.
+% If you add a new frontpage family, prefer extending the image-style marker system or
+% adding a new explicit branch here rather than nesting more conditional logic inside renderers.
 \newcommand{\bookishprintfontpage}{%
   \bookish@ifimagebgstyle{\bookishfrontpage@style}{%
     \bookishfrontpageimagebg
