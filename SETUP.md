@@ -1,13 +1,13 @@
 # Local Installation Guide
 
-Use this guide to set up everything needed to build this project locally with **Pandoc + Typst**.
+Use this guide to set up everything needed to build this project locally as a **PDF with Pandoc + Typst**.
 
 ## Quick Start
 
 1. Check whether `pandoc` and `typst` are already installed.
 2. Install any missing tools for your operating system.
 3. Verify the installation.
-4. Build the project.
+4. Build the PDF.
 
 ## 0. Check What Is Already Installed
 
@@ -18,7 +18,7 @@ pandoc --version
 typst --version
 ```
 
-If both commands work, you can skip to [4. Build the Project](#4-build-the-project).
+If both commands work, you can skip to [4. Build the PDF](#4-build-the-pdf).
 
 ## 1. Install Pandoc
 
@@ -118,9 +118,29 @@ It should point to your real Typst install location, for example:
 C:\Program Files\typst\typst.exe
 ```
 
-## 4. Build the Project
+## 4. Build the PDF
 
 The required fonts are bundled with this repository in `assets/fonts`, so you do not need to install them separately for local builds.
+
+Recommended flow:
+
+1. Run the dependency helper once.
+2. Verify `pandoc` and `typst`.
+3. Use the build script for your platform.
+
+### Dependency Helper
+
+### macOS / Linux
+
+```bash
+./dep-install.sh
+```
+
+### Windows
+
+```powershell
+dep-install.bat
+```
 
 ### macOS / Linux
 
@@ -134,4 +154,10 @@ Run:
 
 ```powershell
 build.bat
+```
+
+This produces:
+
+```text
+build/book.pdf
 ```

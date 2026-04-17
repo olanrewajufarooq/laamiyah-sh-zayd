@@ -1,15 +1,14 @@
 from: markdown
-to: pdf
-output-file: build/book.pdf
-pdf-engine: typst
-pdf-engine-opt:
-  - --font-path=assets/fonts
+to: typst
+output-file: build/book.typ
 
 metadata-file:
+  - metadata/book.yaml
   - metadata/common.yaml
 
 template: templates/default.typst
 
 filters:
+  - filters/structure.lua
   - filters/quran.lua
   - filters/translator-note.lua

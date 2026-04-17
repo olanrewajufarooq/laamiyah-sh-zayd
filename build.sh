@@ -4,17 +4,27 @@ set -euo pipefail
 
 mkdir -p build
 
-inputs=(src/*.md)
+pdf_inputs=(src/chapters/*.md)
 
-if [[ ! -e "${inputs[0]}" ]]; then
-  echo "No Markdown files found in src/"
+if [[ ${#pdf_inputs[@]} -eq 0 ]]; then
+  echo "No PDF content files found in src/"
   exit 1
 fi
 
-echo "Building PDF..."
-pandoc --defaults metadata/pdf.yaml "${inputs[@]}"
+if command -v typst >/dev/null 2>&1; then
+  echo "Preparing PDF front matter..."
+  grep -v '^:::' src/prelims/01-translators-introduction.md > build/translator-introduction.md
 
-echo "Building HTML..."
-pandoc --defaults metadata/html.yaml "${inputs[@]}"
+  echo "Rendering Typst source..."
+  pandoc --defaults metadata/pdf.yaml "${pdf_inputs[@]}"
+
+  echo "Rendering Translator's Introduction..."
+  pandoc build/translator-introduction.md -t typst --output build/translator-introduction.typ
+
+  echo "Building PDF..."
+  typst compile --root . --font-path assets/fonts build/book.typ build/book.pdf
+else
+  echo "Skipping PDF build because typst is not available."
+fi
 
 echo "Done."
