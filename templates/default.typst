@@ -1,0 +1,19 @@
+\documentclass{article}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+
+\setmainlanguage{english}
+\setotherlanguage{arabic}
+
+\newfontfamily\arabicfont{Amiri}
+\setmainfont{Times New Roman}
+
+\usepackage{setspace}
+\onehalfspacing
+
+\begin{document}
+
+$body$
+
+\end{document}

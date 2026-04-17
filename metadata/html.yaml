@@ -1,0 +1,16 @@
+from: markdown
+to: html5
+output-file: build/book.html
+standalone: true
+
+metadata-file:
+  - metadata/common.yaml
+
+css:
+  - assets/css/site.css
+
+template: templates/default.html
+
+lua-filter:
+  - filters/quran.lua
+  - filters/translator-note.lua

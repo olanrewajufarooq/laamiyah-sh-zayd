@@ -1,0 +1,13 @@
+from: markdown
+to: pdf
+output-file: build/book.pdf
+pdf-engine: typst
+
+metadata-file:
+  - metadata/common.yaml
+
+template: templates/default.typst
+
+lua-filter:
+  - filters/quran.lua
+  - filters/translator-note.lua
