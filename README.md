@@ -133,8 +133,8 @@ XeLaTeX is required because the package depends on `fontspec` and local font loa
 - [bookish-colors.sty](./bookish-colors.sty): theme palette definitions
 - [bookish-frontpage.sty](./bookish-frontpage.sty): frontmatter and backmatter renderers
 - [main.tex](./main.tex): example entrypoint
-- [content](./content): example chapter files
-- [frontmatter](./frontmatter): example front/backmatter content
+- [src/content](./src/content): example chapter files
+- [src/frontmatter](./src/frontmatter): example front/backmatter content
 - [assets/fonts](./assets/fonts): bundled fonts
 - [assets/images](./assets/images): image assets such as publisher logos
 - [latex templates](./latex%20templates): reference material from the source template exploration
