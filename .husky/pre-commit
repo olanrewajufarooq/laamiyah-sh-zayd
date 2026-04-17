@@ -20,7 +20,7 @@ run_script() {
 
   case "$(uname -s)" in
     MINGW*|MSYS*|CYGWIN*)
-      cmd.exe /c "$windows_script"
+      sh "$unix_script"
       ;;
     *)
       sh "$unix_script"
