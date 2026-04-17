@@ -148,6 +148,211 @@
   }%
 }
 
+% Shared defaults for the non-image bespoke frontpages: star, flower, and circle.
+\newcommand{\bookish@ornatetitlexoffset}{-0.04\paperwidth}
+\newcommand{\bookish@ornatetitlefromtop}{0.10}
+\newcommand{\bookish@ornatetitleanchor}{north east}
+\newcommand{\bookish@ornatetitlealign}{right}
+\newcommand{\bookish@ornatetitlewidth}{0.95\paperwidth}
+\newcommand{\bookish@ornatetitlefontsize}{33}
+\newcommand{\bookish@ornatesubtitlefontsize}{15}
+\newcommand{\bookish@ornateauthorxoffset}{-0.04\paperwidth}
+\newcommand{\bookish@ornateauthorfromtop}{0.34}
+\newcommand{\bookish@ornateauthoranchor}{north east}
+\newcommand{\bookish@ornateauthoralign}{right}
+\newcommand{\bookish@ornateauthorwidth}{0.95\paperwidth}
+\newcommand{\bookish@ornateauthorfontsize}{22}
+\newcommand{\bookish@ornateauthoraddressfontsize}{13}
+\newcommand{\bookish@ornatetranslatorxoffset}{0pt}
+\newcommand{\bookish@ornatetranslatorfrombottom}{0.22}
+\newcommand{\bookish@ornatetranslatoranchor}{south}
+\newcommand{\bookish@ornatetranslatoralign}{center}
+\newcommand{\bookish@ornatetranslatorwidth}{0.50\paperwidth}
+\newcommand{\bookish@ornatetranslatorfontsize}{12}
+\newcommand{\bookish@ornatepublisherxoffset}{0pt}
+\newcommand{\bookish@ornatepublisherfrombottom}{0.05}
+\newcommand{\bookish@ornatepublisheranchor}{south}
+\newcommand{\bookish@ornatepublisheralign}{center}
+\newcommand{\bookish@ornatepublishernamewidth}{0.32\paperwidth}
+\newcommand{\bookish@ornatepublisherlogowidth}{0.07\textwidth}
+\newcommand{\bookish@ornatetitlecoord}{}
+\newcommand{\bookish@ornateauthorcoord}{}
+\newcommand{\bookish@ornatetranslatorcoord}{}
+\newcommand{\bookish@ornatepublishercoord}{}
+
+\newcommand{\bookish@refreshornatecoords}{%
+  \ifdefstring{\bookish@ornatetitleanchor}{north west}{%
+    \xdef\bookish@ornatetitlecoord{([xshift=\bookish@ornatetitlexoffset]$(current page.north west)!\bookish@ornatetitlefromtop!(current page.south west)$)}%
+  }{%
+    \ifdefstring{\bookish@ornatetitleanchor}{north east}{%
+      \xdef\bookish@ornatetitlecoord{([xshift=\bookish@ornatetitlexoffset]$(current page.north east)!\bookish@ornatetitlefromtop!(current page.south east)$)}%
+    }{%
+      \xdef\bookish@ornatetitlecoord{([xshift=\bookish@ornatetitlexoffset]$(current page.north)!\bookish@ornatetitlefromtop!(current page.south)$)}%
+    }%
+  }%
+  \ifdefstring{\bookish@ornateauthoranchor}{north west}{%
+    \xdef\bookish@ornateauthorcoord{([xshift=\bookish@ornateauthorxoffset]$(current page.north west)!\bookish@ornateauthorfromtop!(current page.south west)$)}%
+  }{%
+    \ifdefstring{\bookish@ornateauthoranchor}{north east}{%
+      \xdef\bookish@ornateauthorcoord{([xshift=\bookish@ornateauthorxoffset]$(current page.north east)!\bookish@ornateauthorfromtop!(current page.south east)$)}%
+    }{%
+      \xdef\bookish@ornateauthorcoord{([xshift=\bookish@ornateauthorxoffset]$(current page.north)!\bookish@ornateauthorfromtop!(current page.south)$)}%
+    }%
+  }%
+  \ifdefstring{\bookish@ornatepublisheranchor}{south west}{%
+    \xdef\bookish@ornatepublishercoord{([xshift=\bookish@ornatepublisherxoffset]$(current page.south west)!\bookish@ornatepublisherfrombottom!(current page.north west)$)}%
+  }{%
+    \ifdefstring{\bookish@ornatepublisheranchor}{south east}{%
+      \xdef\bookish@ornatepublishercoord{([xshift=\bookish@ornatepublisherxoffset]$(current page.south east)!\bookish@ornatepublisherfrombottom!(current page.north east)$)}%
+    }{%
+      \xdef\bookish@ornatepublishercoord{([xshift=\bookish@ornatepublisherxoffset]$(current page.south)!\bookish@ornatepublisherfrombottom!(current page.north)$)}%
+    }%
+  }%
+  \ifdefstring{\bookish@ornatetranslatoranchor}{south west}{%
+    \xdef\bookish@ornatetranslatorcoord{([xshift=\bookish@ornatetranslatorxoffset]$(current page.south west)!\bookish@ornatetranslatorfrombottom!(current page.north west)$)}%
+  }{%
+    \ifdefstring{\bookish@ornatetranslatoranchor}{south east}{%
+      \xdef\bookish@ornatetranslatorcoord{([xshift=\bookish@ornatetranslatorxoffset]$(current page.south east)!\bookish@ornatetranslatorfrombottom!(current page.north east)$)}%
+    }{%
+      \xdef\bookish@ornatetranslatorcoord{([xshift=\bookish@ornatetranslatorxoffset]$(current page.south)!\bookish@ornatetranslatorfrombottom!(current page.north)$)}%
+    }%
+  }%
+}
+
+\newcommand{\bookish@setupornatefrontpage@star}{%
+  \renewcommand{\bookish@ornatetitlexoffset}{-0.06\paperwidth}%
+  \renewcommand{\bookish@ornatetitlefromtop}{0.19}%
+  \renewcommand{\bookish@ornatetitleanchor}{north east}%
+  \renewcommand{\bookish@ornatetitlealign}{right}%
+  \renewcommand{\bookish@ornatetitlewidth}{0.95\paperwidth}%
+  \renewcommand{\bookish@ornatetitlefontsize}{48}%
+  \renewcommand{\bookish@ornatesubtitlefontsize}{18}%
+  \renewcommand{\bookish@ornateauthorxoffset}{-0.05\paperwidth}%
+  \renewcommand{\bookish@ornateauthorfromtop}{0.70}%
+  \renewcommand{\bookish@ornateauthoranchor}{north east}%
+  \renewcommand{\bookish@ornateauthoralign}{right}%
+  \renewcommand{\bookish@ornateauthorwidth}{0.95\paperwidth}%
+  \renewcommand{\bookish@ornateauthorfontsize}{22}%
+  \renewcommand{\bookish@ornateauthoraddressfontsize}{12}%
+  \renewcommand{\bookish@ornatetranslatorxoffset}{0.09\paperwidth}%
+  \renewcommand{\bookish@ornatetranslatorfrombottom}{0.24}%
+  \renewcommand{\bookish@ornatetranslatoranchor}{south west}%
+  \renewcommand{\bookish@ornatetranslatoralign}{left}%
+  \renewcommand{\bookish@ornatetranslatorwidth}{0.34\paperwidth}%
+  \renewcommand{\bookish@ornatetranslatorfontsize}{12}%
+  \renewcommand{\bookish@ornatepublisherxoffset}{0.09\paperwidth}%
+  \renewcommand{\bookish@ornatepublisherfrombottom}{0.10}%
+  \renewcommand{\bookish@ornatepublisheranchor}{south west}%
+  \renewcommand{\bookish@ornatepublisheralign}{center}%
+  \renewcommand{\bookish@ornatepublishernamewidth}{0.18\paperwidth}%
+  \renewcommand{\bookish@ornatepublisherlogowidth}{0.08\textwidth}%
+}
+
+\newcommand{\bookish@setupornatefrontpage@flower}{%
+  \renewcommand{\bookish@ornatetitlexoffset}{-0.04\paperwidth}%
+  \renewcommand{\bookish@ornatetitlefromtop}{0.09}%
+  \renewcommand{\bookish@ornatetitleanchor}{north east}%
+  \renewcommand{\bookish@ornatetitlealign}{right}%
+  \renewcommand{\bookish@ornatetitlewidth}{\paperwidth}%
+  \renewcommand{\bookish@ornatetitlefontsize}{33}%
+  \renewcommand{\bookish@ornatesubtitlefontsize}{15}%
+  \renewcommand{\bookish@ornateauthorxoffset}{-0.04\paperwidth}%
+  \renewcommand{\bookish@ornateauthorfromtop}{0.31}%
+  \renewcommand{\bookish@ornateauthoranchor}{north east}%
+  \renewcommand{\bookish@ornateauthoralign}{right}%
+  \renewcommand{\bookish@ornateauthorwidth}{\paperwidth}%
+  \renewcommand{\bookish@ornateauthorfontsize}{22}%
+  \renewcommand{\bookish@ornateauthoraddressfontsize}{13}%
+  \renewcommand{\bookish@ornatetranslatorxoffset}{0pt}%
+  \renewcommand{\bookish@ornatetranslatorfrombottom}{0.22}%
+  \renewcommand{\bookish@ornatetranslatoranchor}{south}%
+  \renewcommand{\bookish@ornatetranslatoralign}{center}%
+  \renewcommand{\bookish@ornatetranslatorwidth}{0.50\paperwidth}%
+  \renewcommand{\bookish@ornatetranslatorfontsize}{12}%
+  \renewcommand{\bookish@ornatepublisherxoffset}{0pt}%
+  \renewcommand{\bookish@ornatepublisherfrombottom}{0.03}%
+  \renewcommand{\bookish@ornatepublisheranchor}{south}%
+  \renewcommand{\bookish@ornatepublisheralign}{center}%
+  \renewcommand{\bookish@ornatepublishernamewidth}{0.35\paperwidth}%
+  \renewcommand{\bookish@ornatepublisherlogowidth}{0.07\textwidth}%
+}
+
+\newcommand{\bookish@setupornatefrontpage@circle}{%
+  \renewcommand{\bookish@ornatetitlexoffset}{-0.04\paperwidth}%
+  \renewcommand{\bookish@ornatetitlefromtop}{0.07}%
+  \renewcommand{\bookish@ornatetitleanchor}{north east}%
+  \renewcommand{\bookish@ornatetitlealign}{right}%
+  \renewcommand{\bookish@ornatetitlewidth}{\paperwidth}%
+  \renewcommand{\bookish@ornatetitlefontsize}{33}%
+  \renewcommand{\bookish@ornatesubtitlefontsize}{15}%
+  \renewcommand{\bookish@ornateauthorxoffset}{-0.04\paperwidth}%
+  \renewcommand{\bookish@ornateauthorfromtop}{0.29}%
+  \renewcommand{\bookish@ornateauthoranchor}{north east}%
+  \renewcommand{\bookish@ornateauthoralign}{right}%
+  \renewcommand{\bookish@ornateauthorwidth}{\paperwidth}%
+  \renewcommand{\bookish@ornateauthorfontsize}{22}%
+  \renewcommand{\bookish@ornateauthoraddressfontsize}{13}%
+  \renewcommand{\bookish@ornatetranslatorxoffset}{0pt}%
+  \renewcommand{\bookish@ornatetranslatorfrombottom}{0.24}%
+  \renewcommand{\bookish@ornatetranslatoranchor}{south}%
+  \renewcommand{\bookish@ornatetranslatoralign}{center}%
+  \renewcommand{\bookish@ornatetranslatorwidth}{0.50\paperwidth}%
+  \renewcommand{\bookish@ornatetranslatorfontsize}{12}%
+  \renewcommand{\bookish@ornatepublisherxoffset}{0pt}%
+  \renewcommand{\bookish@ornatepublisherfrombottom}{0.05}%
+  \renewcommand{\bookish@ornatepublisheranchor}{south}%
+  \renewcommand{\bookish@ornatepublisheralign}{center}%
+  \renewcommand{\bookish@ornatepublishernamewidth}{0.35\paperwidth}%
+  \renewcommand{\bookish@ornatepublisherlogowidth}{0.07\textwidth}%
+}
+
+\newcommand{\bookish@setupornatefrontpage}[1]{%
+  \renewcommand{\bookish@ornatetitlexoffset}{-0.04\paperwidth}%
+  \renewcommand{\bookish@ornatetitlefromtop}{0.10}%
+  \renewcommand{\bookish@ornatetitleanchor}{north east}%
+  \renewcommand{\bookish@ornatetitlealign}{right}%
+  \renewcommand{\bookish@ornatetitlewidth}{0.95\paperwidth}%
+  \renewcommand{\bookish@ornatetitlefontsize}{33}%
+  \renewcommand{\bookish@ornatesubtitlefontsize}{15}%
+  \renewcommand{\bookish@ornateauthorxoffset}{-0.04\paperwidth}%
+  \renewcommand{\bookish@ornateauthorfromtop}{0.34}%
+  \renewcommand{\bookish@ornateauthoranchor}{north east}%
+  \renewcommand{\bookish@ornateauthoralign}{right}%
+  \renewcommand{\bookish@ornateauthorwidth}{0.95\paperwidth}%
+  \renewcommand{\bookish@ornateauthorfontsize}{22}%
+  \renewcommand{\bookish@ornateauthoraddressfontsize}{13}%
+  \renewcommand{\bookish@ornatetranslatorxoffset}{0pt}%
+  \renewcommand{\bookish@ornatetranslatorfrombottom}{0.22}%
+  \renewcommand{\bookish@ornatetranslatoranchor}{south}%
+  \renewcommand{\bookish@ornatetranslatoralign}{center}%
+  \renewcommand{\bookish@ornatetranslatorwidth}{0.50\paperwidth}%
+  \renewcommand{\bookish@ornatetranslatorfontsize}{12}%
+  \renewcommand{\bookish@ornatepublisherxoffset}{0pt}%
+  \renewcommand{\bookish@ornatepublisherfrombottom}{0.05}%
+  \renewcommand{\bookish@ornatepublisheranchor}{south}%
+  \renewcommand{\bookish@ornatepublisheralign}{center}%
+  \renewcommand{\bookish@ornatepublishernamewidth}{0.32\paperwidth}%
+  \renewcommand{\bookish@ornatepublisherlogowidth}{0.07\textwidth}%
+  \ifcsdef{bookish@setupornatefrontpage@#1}{%
+    \csname bookish@setupornatefrontpage@#1\endcsname
+  }{}%
+  \bookish@applyfrontpageoverride{\bookish@frontpage@titleblockfromtop}{\bookish@ornatetitlefromtop}%
+  \bookish@applyfrontpageoverride{\bookish@frontpage@titleblockwidth}{\bookish@ornatetitlewidth}%
+  \bookish@applyfrontpageoverride{\bookish@frontpage@titlefontsize}{\bookish@ornatetitlefontsize}%
+  \bookish@applyfrontpageoverride{\bookish@frontpage@subtitlefontsize}{\bookish@ornatesubtitlefontsize}%
+  \bookish@applyfrontpageoverride{\bookish@frontpage@authorblockfromtop}{\bookish@ornateauthorfromtop}%
+  \bookish@applyfrontpageoverride{\bookish@frontpage@authorblockwidth}{\bookish@ornateauthorwidth}%
+  \bookish@applyfrontpageoverride{\bookish@frontpage@authorfontsize}{\bookish@ornateauthorfontsize}%
+  \bookish@applyfrontpageoverride{\bookish@frontpage@authoraddressfontsize}{\bookish@ornateauthoraddressfontsize}%
+  \bookish@applyfrontpageoverride{\bookish@frontpage@translatorblockfrombottom}{\bookish@ornatetranslatorfrombottom}%
+  \bookish@applyfrontpageoverride{\bookish@frontpage@translatorblockwidth}{\bookish@ornatetranslatorwidth}%
+  \bookish@applyfrontpageoverride{\bookish@frontpage@translatorfontsize}{\bookish@ornatetranslatorfontsize}%
+  \bookish@applyfrontpageoverride{\bookish@frontpage@publisherblockfrombottom}{\bookish@ornatepublisherfrombottom}%
+  \bookish@applyfrontpageoverride{\bookish@frontpage@publisherlogowidth}{\bookish@ornatepublisherlogowidth}%
+  \bookish@applyfrontpageoverride{\bookish@frontpage@publishernamewidth}{\bookish@ornatepublishernamewidth}%
+  \bookish@refreshornatecoords
+}
+
 % Default image-background frontpage settings live here so cover tuning is easy to audit.
 \newcommand{\bookish@imagebgfilepath}{assets/frontimages/bluelight.jpg}
 \newcommand{\bookish@imagebgtitlexoffset}{0pt}
@@ -633,6 +838,7 @@
 
 % Elegant Forta-style cover derived from the alternate black template cover.
 \newcommand{\bookishfrontpageelegant}{%
+  \bookish@setupornatefrontpage{star}%
   \fill[bookishcoverbg] (current page.south west) rectangle (current page.north east);
   \bookish@drawstatustag
   \foreach \i [evaluate=\i as \Ox using {5 + 0.2 * \i},
@@ -645,15 +851,15 @@
 
   \node[
     text=bookishcoverfg,
-    minimum width=.95\paperwidth,
+    minimum width=\bookish@ornatetitlewidth,
     minimum height=2cm,
-    text width=.95\paperwidth,
-    align=right,
-    anchor=east,
+    text width=\bookish@ornatetitlewidth,
+    align=\bookish@ornatetitlealign,
+    anchor=\bookish@ornatetitleanchor,
     inner sep=0pt,
     outer sep=0pt,
-    font=\fontsize{48}{52}\bookishelegantfont\bfseries
-  ] at ($(current page.east)+(-0.9,-2.2)$) {%
+    font=\fontsize{\bookish@ornatetitlefontsize}{\numexpr\bookish@ornatetitlefontsize+4\relax}\bookishelegantfont\bfseries
+  ] (title) at \bookish@ornatetitlecoord {%
     \bookish@coverTitleText{\bookish@title}%
   };
 
@@ -661,15 +867,15 @@
     \ifstrempty{\bookish@subtitle}{}{%
       \node[
         text=bookishcovermuted,
-        minimum width=.72\paperwidth,
+        minimum width=\bookish@ornatetitlewidth,
         minimum height=0.8cm,
-        text width=.72\paperwidth,
-        align=right,
-        anchor=east,
+        text width=\bookish@ornatetitlewidth,
+        align=\bookish@ornatetitlealign,
+        anchor=south east,
         inner sep=0pt,
         outer sep=0pt,
-        font=\fontsize{15}{17}\bookishsansfont
-      ] at ($(current page.east)+(-0.9,-0.55)$) {%
+        font=\fontsize{\bookish@ornatesubtitlefontsize}{\numexpr\bookish@ornatesubtitlefontsize+2\relax}\bookishsansfont
+      ] at ([yshift=8pt] title.north east) {%
         \bookish@coverSubtitleText{\bookish@subtitle}%
       };
     }%
@@ -679,13 +885,13 @@
         text=bookishcoverfg,
         minimum width=.72\paperwidth,
         minimum height=2cm,
-        text width=.72\paperwidth,
-        align=right,
-        anchor=east,
+        text width=\bookish@ornatetitlewidth,
+        align=\bookish@ornatetitlealign,
+        anchor=north east,
         inner sep=0pt,
         outer sep=0pt,
-        font=\fontsize{18}{20}\bookishsansfont
-      ] at ($(current page.east)+(-0.9,-4.9)$) {%
+        font=\fontsize{\bookish@ornatesubtitlefontsize}{\numexpr\bookish@ornatesubtitlefontsize+2\relax}\bookishsansfont
+      ] at ([yshift=-8pt] title.south east) {%
         \bookish@coverSubtitleText{\bookish@subtitle}%
       };
     }%
@@ -693,25 +899,35 @@
 
   \node[
     text=bookishcoverfg,
-    text width=\paperwidth,
-    align=right,
-    anchor=east,
-    font=\fontsize{12}{14}\bookishelegantfont
-  ] at ($(current page.east)+(-0.8,-12.15)$) {%
-    \ifstrempty{\bookish@authoraddress}{}{{\color{bookishcovermuted}\fontsize{12}{14}\selectfont\bookish@coverAddressText{\bookish@authoraddress}}\\[3pt]}%
-    {\fontsize{22}{24}\selectfont\bookish@coverAuthorText{\bookish@author}}%
+    text width=\bookish@ornateauthorwidth,
+    align=\bookish@ornateauthoralign,
+    anchor=\bookish@ornateauthoranchor,
+    font=\fontsize{\bookish@ornateauthoraddressfontsize}{\numexpr\bookish@ornateauthoraddressfontsize+2\relax}\bookishelegantfont
+  ] at \bookish@ornateauthorcoord {%
+    \ifstrempty{\bookish@authoraddress}{}{{\color{bookishcovermuted}\fontsize{\bookish@ornateauthoraddressfontsize}{\numexpr\bookish@ornateauthoraddressfontsize+2\relax}\selectfont\bookish@coverAddressText{\bookish@authoraddress}}\\[3pt]}%
+    {\fontsize{\bookish@ornateauthorfontsize}{\numexpr\bookish@ornateauthorfontsize+2\relax}\selectfont\bookish@coverAuthorText{\bookish@author}}%
   };
 
-  \ifstrempty{\bookish@publisherlogo}{}{%
-    \node[anchor=south west] (publisherlogo) at ($(current page.south west)+(1.45,2.05)$) {%
-      \includegraphics[width=0.08\textwidth]{\bookish@publisherlogo}%
-    };
+  \node[
+    text=bookishcovermuted,
+    anchor=\bookish@ornatepublisheranchor,
+    align=\bookish@ornatepublisheralign,
+    text width=\bookish@ornatepublishernamewidth,
+    font=\fontsize{11}{11}\bookishsansfont
+  ] (publisher) at \bookish@ornatepublishercoord {\bookish@coverMetaText{\bookish@publishername}};
+  \bookish@drawpublisherlogo{anchor=north, above=4pt of publisher.north}{\bookish@ornatepublisherlogowidth}
+
+  \ifstrempty{\bookish@translator}{}{%
     \node[
       text=bookishcovermuted,
-      anchor=north,
-      align=center,
-      font=\fontsize{11}{11}\bookishsansfont
-    ] at ([yshift=-5pt] publisherlogo.south) {\bookish@coverMetaText{\bookish@publishername}};
+      anchor=\bookish@ornatetranslatoranchor,
+      align=\bookish@ornatetranslatoralign,
+      text width=\bookish@ornatetranslatorwidth,
+      font=\fontsize{\bookish@ornatetranslatorfontsize}{\numexpr\bookish@ornatetranslatorfontsize+2\relax}\bookishsansfont
+    ] at \bookish@ornatetranslatorcoord {%
+      \textcolor{bookishcovermuted}{Translated by}\par
+      \textcolor{bookishcoverfg}{\fontsize{\numexpr\bookish@ornatetranslatorfontsize+1\relax}{\numexpr\bookish@ornatetranslatorfontsize+3\relax}\selectfont\bookish@translator}%
+    };
   }%
 }
 
@@ -750,6 +966,7 @@
 
 % Central floral spiral cover derived from the purple template layout.
 \newcommand{\bookishfrontpageflowercenter}{%
+  \bookish@setupornatefrontpage{flower}%
   % The original pattern uses the golden ratio to set the central motif scale.
   \pgfmathsetmacro{\phi}{(1+sqrt(5))/2}%
   \pgfmathsetlengthmacro{\goldenHeight}{\paperheight/\phi}%
@@ -769,83 +986,50 @@
     \ifstrempty{\bookish@subtitle}{}{%
       \node[
         white,
-        text width=\paperwidth,
-        align=right,
-        anchor=north east,
-        font=\bookishsansfont\fontsize{15}{17}\selectfont
-      ] (subtitle) at ([xshift=-22pt,yshift=-54pt] current page.north east) {\textcolor{bookishcovermuted}{\bookish@coverSubtitleText{\bookish@subtitle}}};
+        text width=\bookish@ornatetitlewidth,
+        align=\bookish@ornatetitlealign,
+        anchor=\bookish@ornatetitleanchor,
+        font=\bookishsansfont\fontsize{\bookish@ornatesubtitlefontsize}{\numexpr\bookish@ornatesubtitlefontsize+2\relax}\selectfont
+      ] (subtitle) at \bookish@ornatetitlecoord {\textcolor{bookishcovermuted}{\bookish@coverSubtitleText{\bookish@subtitle}}};
       \node[
         white,
         anchor=north east,
-        text width=\paperwidth,
-        align=right,
-        font=\bookishcoverseriffont\bfseries\fontsize{33}{37}\selectfont
+        text width=\bookish@ornatetitlewidth,
+        align=\bookish@ornatetitlealign,
+        font=\bookishcoverseriffont\bfseries\fontsize{\bookish@ornatetitlefontsize}{\numexpr\bookish@ornatetitlefontsize+4\relax}\selectfont
       ] (title) at ([yshift=-4pt] subtitle.south east) {\textcolor{bookishcoveraccent}{\bookish@coverTitleText{\bookish@title}}};
     }%
   }{%
     \node[
       white,
-      anchor=north east,
-      text width=\paperwidth,
-      align=right,
-      font=\bookishcoverseriffont\bfseries\fontsize{33}{37}\selectfont
-    ] (title) at ([xshift=-22pt,yshift=-54pt] current page.north east) {\textcolor{bookishcoveraccent}{\bookish@coverTitleText{\bookish@title}}};
+      anchor=\bookish@ornatetitleanchor,
+      text width=\bookish@ornatetitlewidth,
+      align=\bookish@ornatetitlealign,
+      font=\bookishcoverseriffont\bfseries\fontsize{\bookish@ornatetitlefontsize}{\numexpr\bookish@ornatetitlefontsize+4\relax}\selectfont
+    ] (title) at \bookish@ornatetitlecoord {\textcolor{bookishcoveraccent}{\bookish@coverTitleText{\bookish@title}}};
     \ifstrempty{\bookish@subtitle}{}{%
       \node at ([yshift=-3pt] title.south east) [
         white,
-        text width=\paperwidth,
-        align=right,
+        text width=\bookish@ornatetitlewidth,
+        align=\bookish@ornatetitlealign,
         anchor=north east,
-        font=\bookishsansfont\fontsize{15}{17}\selectfont
+        font=\bookishsansfont\fontsize{\bookish@ornatesubtitlefontsize}{\numexpr\bookish@ornatesubtitlefontsize+2\relax}\selectfont
       ] (subtitle) {\textcolor{bookishcovermuted}{\bookish@coverSubtitleText{\bookish@subtitle}}};
     }%
   }%
 
-  \bookish@ifsubtitleabove{%
-    \node[
-      bookishcoveraccent,
-      anchor=north east,
-      text width=\paperwidth,
-      align=right,
-      below=58pt of title.south,
-      font=\bookishsansfont\fontsize{13}{15}\selectfont
-    ] (author) {%
-      \textcolor{bookishcoverfg}{%
-        \ifstrempty{\bookish@authoraddress}{}{\bookish@coverAddressText{\bookish@authoraddress}\\[3pt]}%
-        {\fontsize{22}{24}\selectfont\bookish@coverAuthorText{\bookish@author}}%
-      }%
-    };
-  }{%
-    \ifstrempty{\bookish@subtitle}{%
-      \node[
-        bookishcoveraccent,
-        anchor=north east,
-        text width=\paperwidth,
-        align=right,
-        below=58pt of title.south,
-        font=\bookishsansfont\fontsize{13}{15}\selectfont
-      ] (author) {%
-        \textcolor{bookishcoverfg}{%
-          \ifstrempty{\bookish@authoraddress}{}{\bookish@coverAddressText{\bookish@authoraddress}\\[3pt]}%
-          {\fontsize{22}{24}\selectfont\bookish@coverAuthorText{\bookish@author}}%
-        }%
-      };
-    }{%
-      \node[
-        bookishcoveraccent,
-        anchor=north east,
-        text width=\paperwidth,
-        align=right,
-        below=52pt of subtitle.south,
-        font=\bookishsansfont\fontsize{13}{15}\selectfont
-      ] (author) {%
-        \textcolor{bookishcoverfg}{%
-          \ifstrempty{\bookish@authoraddress}{}{\bookish@coverAddressText{\bookish@authoraddress}\\[3pt]}%
-          {\fontsize{22}{24}\selectfont\bookish@coverAuthorText{\bookish@author}}%
-        }%
-      };
+  \node[
+    bookishcoveraccent,
+    anchor=\bookish@ornateauthoranchor,
+    text width=\bookish@ornateauthorwidth,
+    align=\bookish@ornateauthoralign,
+    font=\bookishsansfont\fontsize{\bookish@ornateauthoraddressfontsize}{\numexpr\bookish@ornateauthoraddressfontsize+2\relax}\selectfont
+  ] (author) at \bookish@ornateauthorcoord {%
+    \textcolor{bookishcoverfg}{%
+      \ifstrempty{\bookish@authoraddress}{}{\bookish@coverAddressText{\bookish@authoraddress}\\[3pt]}%
+      {\fontsize{\bookish@ornateauthorfontsize}{\numexpr\bookish@ornateauthorfontsize+2\relax}\selectfont\bookish@coverAuthorText{\bookish@author}}%
     }%
-  }%
+  };
 
   \begin{scope}[remember picture, overlay, shift={(current page.center)}]
     % Add the soft circular motif behind the flower.
@@ -896,16 +1080,22 @@
   \end{scope}
 
   \node[white, font=\Huge, anchor=south]
-    (publisher) at ([yshift=18pt] current page.south)
-    {\textcolor{bookishcovermuted}{\fontsize{11}{11}\selectfont\bookish@coverMetaText{\bookish@publishername}}};
+    (publisher) at \bookish@ornatepublishercoord
+    {\textcolor{bookishcovermuted}{\fontsize{11}{11}\selectfont\parbox{\bookish@ornatepublishernamewidth}{\centering\bookish@coverMetaText{\bookish@publishername}}}};
 
-  \bookish@drawpublisherlogo{anchor=north, above=2pt of publisher.north}{0.07\textwidth}
+  \bookish@drawpublisherlogo{anchor=north, above=2pt of publisher.north}{\bookish@ornatepublisherlogowidth}
 
   \ifstrempty{\bookish@translator}{}{%
-    \node[white, font=\Large, anchor=north, above=115pt of publisher.north]
-      (translatedBy) {\textcolor{bookishcovermuted}{\itshape\large{Translated by}}};
-    \node[white, font=\Large, anchor=south, below=2pt of translatedBy.south]
-      (translatorAuthor) {\textcolor{bookishcoverfg}{\fontsize{12}{14}\selectfont\bookish@translator}};
+    \node[
+      white,
+      anchor=\bookish@ornatetranslatoranchor,
+      text width=\bookish@ornatetranslatorwidth,
+      align=\bookish@ornatetranslatoralign,
+      font=\fontsize{\bookish@ornatetranslatorfontsize}{\numexpr\bookish@ornatetranslatorfontsize+2\relax}\selectfont
+    ] (translatedBy) at \bookish@ornatetranslatorcoord {%
+      \textcolor{bookishcovermuted}{\itshape Translated by}\par
+      \textcolor{bookishcoverfg}{\fontsize{\numexpr\bookish@ornatetranslatorfontsize+1\relax}{\numexpr\bookish@ornatetranslatorfontsize+3\relax}\selectfont\bookish@translator}%
+    };
   }%
 }
 
@@ -989,6 +1179,7 @@
 
 % Mid-band spiral/circle cover derived from the warm dark reference layout.
 \newcommand{\bookishfrontpagespiralcirclemid}{%
+  \bookish@setupornatefrontpage{circle}%
   \fill[bookishcoverbg] (current page.south west) rectangle (current page.north east);
   \bookish@drawstatustag
 
@@ -996,83 +1187,50 @@
     \ifstrempty{\bookish@subtitle}{}{%
       \node[
         white,
-        text width=\paperwidth,
-        align=right,
-        anchor=north east,
-        font=\bookishsansfont\fontsize{15}{17}\selectfont
-      ] (subtitle) at ([xshift=-22pt,yshift=-42pt] current page.north east) {\textcolor{bookishcovermuted}{\bookish@coverSubtitleText{\bookish@subtitle}}};
+        text width=\bookish@ornatetitlewidth,
+        align=\bookish@ornatetitlealign,
+        anchor=\bookish@ornatetitleanchor,
+        font=\bookishsansfont\fontsize{\bookish@ornatesubtitlefontsize}{\numexpr\bookish@ornatesubtitlefontsize+2\relax}\selectfont
+      ] (subtitle) at \bookish@ornatetitlecoord {\textcolor{bookishcovermuted}{\bookish@coverSubtitleText{\bookish@subtitle}}};
       \node[
         white,
         anchor=north east,
-        text width=\paperwidth,
-        align=right,
-        font=\bookishcoverseriffont\bfseries\fontsize{33}{37}\selectfont
+        text width=\bookish@ornatetitlewidth,
+        align=\bookish@ornatetitlealign,
+        font=\bookishcoverseriffont\bfseries\fontsize{\bookish@ornatetitlefontsize}{\numexpr\bookish@ornatetitlefontsize+4\relax}\selectfont
       ] (title) at ([yshift=-4pt] subtitle.south east) {\textcolor{bookishcoverfg}{\bookish@coverTitleText{\bookish@title}}};
     }%
   }{%
     \node[
       white,
-      anchor=north east,
-      text width=\paperwidth,
-      align=right,
-      font=\bookishcoverseriffont\bfseries\fontsize{33}{37}\selectfont
-    ] (title) at ([xshift=-22pt,yshift=-42pt] current page.north east) {\textcolor{bookishcoverfg}{\bookish@coverTitleText{\bookish@title}}};
+      anchor=\bookish@ornatetitleanchor,
+      text width=\bookish@ornatetitlewidth,
+      align=\bookish@ornatetitlealign,
+      font=\bookishcoverseriffont\bfseries\fontsize{\bookish@ornatetitlefontsize}{\numexpr\bookish@ornatetitlefontsize+4\relax}\selectfont
+    ] (title) at \bookish@ornatetitlecoord {\textcolor{bookishcoverfg}{\bookish@coverTitleText{\bookish@title}}};
     \ifstrempty{\bookish@subtitle}{}{%
       \node at ([yshift=-3pt] title.south east) [
         white,
-        text width=\paperwidth,
-        align=right,
+        text width=\bookish@ornatetitlewidth,
+        align=\bookish@ornatetitlealign,
         anchor=north east,
-        font=\bookishsansfont\fontsize{15}{17}\selectfont
+        font=\bookishsansfont\fontsize{\bookish@ornatesubtitlefontsize}{\numexpr\bookish@ornatesubtitlefontsize+2\relax}\selectfont
       ] (subtitle) {\textcolor{bookishcovermuted}{\bookish@coverSubtitleText{\bookish@subtitle}}};
     }%
   }%
 
-  \bookish@ifsubtitleabove{%
-    \node[
-      white,
-      anchor=north east,
-      text width=\paperwidth,
-      align=right,
-      below=58pt of title.south,
-      font=\bookishsansfont\fontsize{13}{15}\selectfont
-    ] (author) {%
-      \textcolor{bookishcoveraccent}{%
-        \ifstrempty{\bookish@authoraddress}{}{\bookish@coverAddressText{\bookish@authoraddress}\\[3pt]}%
-        {\fontsize{22}{24}\selectfont\bookish@coverAuthorText{\bookish@author}}%
-      }%
-    };
-  }{%
-    \ifstrempty{\bookish@subtitle}{%
-      \node[
-        white,
-        anchor=north east,
-        text width=\paperwidth,
-        align=right,
-        below=58pt of title.south,
-        font=\bookishsansfont\fontsize{13}{15}\selectfont
-      ] (author) {%
-        \textcolor{bookishcoveraccent}{%
-          \ifstrempty{\bookish@authoraddress}{}{\bookish@coverAddressText{\bookish@authoraddress}\\[3pt]}%
-          {\fontsize{22}{24}\selectfont\bookish@coverAuthorText{\bookish@author}}%
-        }%
-      };
-    }{%
-      \node[
-        white,
-        anchor=north east,
-        text width=\paperwidth,
-        align=right,
-        below=52pt of subtitle.south,
-        font=\bookishsansfont\fontsize{13}{15}\selectfont
-      ] (author) {%
-        \textcolor{bookishcoveraccent}{%
-          \ifstrempty{\bookish@authoraddress}{}{\bookish@coverAddressText{\bookish@authoraddress}\\[3pt]}%
-          {\fontsize{22}{24}\selectfont\bookish@coverAuthorText{\bookish@author}}%
-        }%
-      };
+  \node[
+    white,
+    anchor=\bookish@ornateauthoranchor,
+    text width=\bookish@ornateauthorwidth,
+    align=\bookish@ornateauthoralign,
+    font=\bookishsansfont\fontsize{\bookish@ornateauthoraddressfontsize}{\numexpr\bookish@ornateauthoraddressfontsize+2\relax}\selectfont
+  ] (author) at \bookish@ornateauthorcoord {%
+    \textcolor{bookishcoveraccent}{%
+      \ifstrempty{\bookish@authoraddress}{}{\bookish@coverAddressText{\bookish@authoraddress}\\[3pt]}%
+      {\fontsize{\bookish@ornateauthorfontsize}{\numexpr\bookish@ornateauthorfontsize+2\relax}\selectfont\bookish@coverAuthorText{\bookish@author}}%
     }%
-  }%
+  };
 
   \begin{scope}[shift={(current page.center)}, scale=1.0871]
     % Repeat concentric circles across the page to form the horizontal motif band.
@@ -1117,16 +1275,22 @@
   \end{scope}
 
   \node[white, font=\Huge, anchor=south]
-    (publisher) at ([yshift=32pt] current page.south)
-    {\textcolor{bookishcovermuted}{\fontsize{11}{11}\selectfont\bookish@coverMetaText{\bookish@publishername}}};
+    (publisher) at \bookish@ornatepublishercoord
+    {\textcolor{bookishcovermuted}{\fontsize{11}{11}\selectfont\parbox{\bookish@ornatepublishernamewidth}{\centering\bookish@coverMetaText{\bookish@publishername}}}};
 
-  \bookish@drawpublisherlogo{anchor=north, above=4pt of publisher.north}{0.07\textwidth}
+  \bookish@drawpublisherlogo{anchor=north, above=4pt of publisher.north}{\bookish@ornatepublisherlogowidth}
 
   \ifstrempty{\bookish@translator}{}{%
-    \node[white, font=\Large, anchor=north, above=114pt of publisher.north]
-      (translatedBy) {\textcolor{bookishcovermuted}{\itshape\large{Translated by}}};
-    \node[white, font=\Large, anchor=south, below=2pt of translatedBy.south]
-      {\textcolor{bookishcoverfg}{\fontsize{12}{14}\selectfont\bookish@translator}};
+    \node[
+      white,
+      anchor=\bookish@ornatetranslatoranchor,
+      text width=\bookish@ornatetranslatorwidth,
+      align=\bookish@ornatetranslatoralign,
+      font=\fontsize{\bookish@ornatetranslatorfontsize}{\numexpr\bookish@ornatetranslatorfontsize+2\relax}\selectfont
+    ] (translatedBy) at \bookish@ornatetranslatorcoord {%
+      \textcolor{bookishcovermuted}{\itshape Translated by}\par
+      \textcolor{bookishcoverfg}{\fontsize{\numexpr\bookish@ornatetranslatorfontsize+1\relax}{\numexpr\bookish@ornatetranslatorfontsize+3\relax}\selectfont\bookish@translator}%
+    };
   }%
 }
 
