@@ -30,6 +30,7 @@
 \RequirePackage{tcolorbox}
 \RequirePackage{xparse}
 \RequirePackage{bookish-frontpage}
+\RequirePackage{bookish-prelim}
 
 % Public package options controlling theme, page size, numbering, and frontpage style.
 \SetupKeyvalOptions{family=bookish,prefix=bookish@}
@@ -347,22 +348,14 @@
 % Optional TOC wrapper so the main document can keep a stable API.
 \newcommand{\booktableofcontents}{%
   \ifbookish@toc
-    \tableofcontents
+    \bookishprintstyledcontents
   \fi
 }
 
-% Frontmatter/backmatter helpers add unnumbered chapters and keep the TOC in sync.
-\newcommand{\bookfrontmattersection}[1]{%
-  \chapter*{#1}
-  \addcontentsline{toc}{chapter}{#1}
-  \thispagestyle{plain}
-}
-
-\newcommand{\bookbackmattersection}[1]{%
-  \chapter*{#1}
-  \addcontentsline{toc}{chapter}{#1}
-  \thispagestyle{plain}
-}
+% Frontmatter/backmatter helpers delegate their opening-page design to the
+% dedicated prelim package so those styles stay separate from chapter styling.
+\newcommand{\bookfrontmattersection}[1]{\bookishrenderfrontmattersection{#1}}
+\newcommand{\bookbackmattersection}[1]{\bookishrenderbackmattersection{#1}}
 
 % Compact epigraph helper used inside chapters or frontmatter sections.
 \NewDocumentCommand{\bookepigraph}{m m}{%

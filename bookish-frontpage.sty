@@ -83,15 +83,19 @@
   \bookish@imprint%
 }
 
-\newcommand{\bookish@publishstatuslabel}{%
-  \ifdefstring{\bookish@publishstatus}{demo}{Preview}{%
-    \ifdefstring{\bookish@publishstatus}{review}{Review}{%
-      \ifdefstring{\bookish@publishstatus}{published}{}{%
-        \bookish@publishstatus%
-      }%
-    }%
-  }%
+\ExplSyntaxOn
+\cs_new:Npn \bookishpublishstatuslabelaux {
+  \str_case:VnF \bookish@publishstatus
+    {
+      {demo}{Preview}
+      {review}{Review}
+      {published}{}
+    }
+    { \bookish@publishstatus }
 }
+\ExplSyntaxOff
+
+\newcommand{\bookish@publishstatuslabel}{\bookishpublishstatuslabelaux}
 
 % Shared cover typography keeps title, subtitle, author, and metadata consistent.
 \newcommand{\bookish@coverTitleText}[1]{%
@@ -133,7 +137,7 @@
 }
 
 \newcommand{\bookish@drawstatustag}{%
-  \ifstrempty{\bookish@publishstatuslabel}{}{%
+  \ifdefstring{\bookish@publishstatus}{published}{}{%
     \node[
       anchor=north west,
       fill=bookishaccent,

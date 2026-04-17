@@ -6,6 +6,7 @@ It provides:
 - theme-based colors via [bookish-colors.sty](./bookish-colors.sty)
 - swappable frontmatter/backmatter styles via [bookish-frontpage.sty](./bookish-frontpage.sty)
 - a single metadata API through `\booksetup{...}`
+- template-derived prelim section styles via [bookish-prelim.sty](./bookish-prelim.sty)
 
 ## Quick Start
 
@@ -51,6 +52,17 @@ Text goes here.
 
 \backmatter
 \bookmakebackmatter
+```
+
+Optional prelim-section selection:
+
+```latex
+\customizeprelim{
+  frontmatterstyle=auto,
+  backmatterstyle=auto,
+  frontmatterimage={assets/frontimages/feminine.jpg},
+  backmatterimage={assets/frontimages/feminine.jpg}
+}
 ```
 
 ## Package Options
@@ -112,10 +124,34 @@ With `theme=default`, the package currently maps:
 - `\bookmakebackmatter`
 - `\bookfrontmattersection{...}`
 - `\bookbackmattersection{...}`
+- `\customizeprelim{...}`
 - `\bookepigraph{quote}{attribution}`
 - `\arabictext{...}`
 
 The package also provides a `bookcallout` environment.
+
+## Prelim Styles
+
+The frontmatter/backmatter section openers now live in [bookish-prelim.sty](./bookish-prelim.sty).
+
+Use `\customizeprelim{...}` with:
+
+- `frontmatterstyle=auto|flower|circle|elegant|imagebg`
+- `backmatterstyle=auto|flower|circle|elegant|imagebg`
+- `image={...}` as a shared fallback image for `imagebg`
+- `frontmatterimage={...}` to override only frontmatter opener images
+- `backmatterimage={...}` to override only backmatter opener images
+
+With `auto`, the package currently maps:
+
+- `frontpage=flower` -> `flower`
+- `frontpage=circle` -> `circle`
+- image-backed frontpages -> `imagebg`
+- everything else -> `elegant`
+
+If an `imagebg` prelim style is selected and no image is provided, the package
+reuses the matching `assets/frontimages/<frontpage>.jpg` file when possible,
+and otherwise falls back to `assets/frontimages/emerald.jpg`.
 
 ## Fonts
 
@@ -132,6 +168,7 @@ XeLaTeX is required because the package depends on `fontspec` and local font loa
 - [bookish.sty](./bookish.sty): main package and document-level options
 - [bookish-colors.sty](./bookish-colors.sty): theme palette definitions
 - [bookish-frontpage.sty](./bookish-frontpage.sty): frontmatter and backmatter renderers
+- [bookish-prelim.sty](./bookish-prelim.sty): frontmatter/backmatter section opener renderers
 - [main.tex](./main.tex): example entrypoint
 - [src/content](./src/content): example chapter files
 - [src/frontmatter](./src/frontmatter): example front/backmatter content

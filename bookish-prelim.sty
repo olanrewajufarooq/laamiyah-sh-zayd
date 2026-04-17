@@ -1,0 +1,231 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{bookish-prelim}[2026/04/17 Prelim section styles for bookish]
+% Usage:
+% Loaded by bookish.sty. Configure with:
+% \customizeprelim{
+%   frontmatterstyle=curly,
+%   backmatterstyle=auto,
+%   frontmatterimage={assets/frontimages/rose.jpg},
+%   backmatterimage={assets/frontimages/rose.jpg}
+% }
+%
+% Available styles:
+% - curly     : centered small-caps heading with ornament, based on flower-center
+% - straight  : centered small-caps heading with plain divider, based on spiral-circle-mid
+% - sideblock : left-aligned heading with a margin accent, based on hexagon-elegant
+% - useimage  : image-backed chapter opener, based on imagebg
+
+% This package owns the unnumbered frontmatter/backmatter opening-page designs.
+% It does not style the cover. That separation keeps cover tuning in
+% bookish-frontpage.sty and prelim tuning here.
+\RequirePackage{etoolbox}
+\RequirePackage{graphicx}
+\RequirePackage{tikz}
+\RequirePackage{pgfornament}
+\usetikzlibrary{calc}
+
+% Public prelim configuration defaults. `auto` maps the prelim style to the
+% current `frontpage=` selection so the book gets a coherent opening style
+% without requiring extra setup in main.tex.
+\newcommand{\bookish@prelim@frontmatterstyle}{curly}
+\newcommand{\bookish@prelim@backmatterstyle}{auto}
+\newcommand{\bookish@prelim@image}{}
+\newcommand{\bookish@prelim@frontmatterimage}{}
+\newcommand{\bookish@prelim@backmatterimage}{}
+
+% Internal resolved values. These are refreshed every time a frontmatter or
+% backmatter opener is rendered, so later `\customizeprelim{...}` calls still
+% take effect.
+\newcommand{\bookish@prelim@resolvedfrontstyle}{curly}
+\newcommand{\bookish@prelim@resolvedbackstyle}{curly}
+\newcommand{\bookish@prelim@resolvedfrontimage}{}
+\newcommand{\bookish@prelim@resolvedbackimage}{}
+
+% User-facing prelim key/value interface.
+\pgfkeys{
+  /bookish/prelim/.is family,
+  /bookish/prelim,
+  frontmatterstyle/.store in=\bookish@prelim@frontmatterstyle,
+  backmatterstyle/.store in=\bookish@prelim@backmatterstyle,
+  image/.store in=\bookish@prelim@image,
+  frontmatterimage/.store in=\bookish@prelim@frontmatterimage,
+  backmatterimage/.store in=\bookish@prelim@backmatterimage
+}
+
+\newcommand{\customizeprelim}[1]{\pgfkeys{/bookish/prelim,#1}}
+
+% Default fallback image for the `useimage` prelim style.
+\newcommand{\bookish@prelim@defaultimage}{assets/frontimages/emerald.jpg}
+
+\newcommand{\bookish@prelim@resolvefrontstyle}{%
+  \ifdefstring{\bookish@prelim@frontmatterstyle}{auto}{%
+    \edef\bookish@prelim@resolvedfrontstyle{curly}%
+  }{%
+    \edef\bookish@prelim@resolvedfrontstyle{\bookish@prelim@frontmatterstyle}%
+  }%
+}
+
+\newcommand{\bookish@prelim@resolvebackstyle}{%
+  \ifdefstring{\bookish@prelim@backmatterstyle}{auto}{%
+    \edef\bookish@prelim@resolvedbackstyle{\bookish@prelim@resolvedfrontstyle}%
+  }{%
+    \edef\bookish@prelim@resolvedbackstyle{\bookish@prelim@backmatterstyle}%
+  }%
+}
+
+\newcommand{\bookish@prelim@resolvefrontimage}{%
+  \ifdefempty{\bookish@prelim@frontmatterimage}{%
+    \ifdefempty{\bookish@prelim@image}{%
+      \edef\bookish@prelim@resolvedfrontimage{\bookish@prelim@defaultimage}%
+    }{%
+      \edef\bookish@prelim@resolvedfrontimage{\bookish@prelim@image}%
+    }%
+  }{%
+    \edef\bookish@prelim@resolvedfrontimage{\bookish@prelim@frontmatterimage}%
+  }%
+}
+
+\newcommand{\bookish@prelim@resolvebackimage}{%
+  \ifdefempty{\bookish@prelim@backmatterimage}{%
+    \ifdefempty{\bookish@prelim@image}{%
+      \edef\bookish@prelim@resolvedbackimage{\bookish@prelim@defaultimage}%
+    }{%
+      \edef\bookish@prelim@resolvedbackimage{\bookish@prelim@image}%
+    }%
+  }{%
+    \edef\bookish@prelim@resolvedbackimage{\bookish@prelim@backmatterimage}%
+  }%
+}
+
+% Shared entry work for every prelim page:
+% - flush to a new right-hand page when needed
+% - sync the TOC entry
+% - reset page style
+% - set running marks for later pages in the section
+\newcommand{\bookish@prelim@beginsection}[1]{%
+  \cleardoublepage
+  \thispagestyle{plain}%
+  \markboth{#1}{#1}%
+  \addcontentsline{toc}{chapter}{#1}%
+}
+
+% curly source style: centered roman/small-caps heading plus ornament.
+\newcommand{\bookish@prelim@rendercurly}[1]{%
+  \bookish@prelim@beginsection{#1}%
+  \vspace*{3.5em}%
+  {\centering
+    \normalfont\bookishdisplayfont\scshape\fontsize{26}{30}\selectfont #1\par
+    \vspace{0.65em}%
+    \pgfornament[width=0.30\paperwidth,color=bookishaccent]{85}\par
+    \vspace{1.5em}%
+  }%
+}
+
+% straight source style: same centered heading family, but without the
+% flower ornament. A thin accent rule preserves the cleaner, more restrained
+% look of that template.
+\newcommand{\bookish@prelim@renderstraight}[1]{%
+  \bookish@prelim@beginsection{#1}%
+  \vspace*{3.5em}%
+  {\centering
+    \normalfont\bookishdisplayfont\scshape\fontsize{26}{30}\selectfont #1\par
+    \vspace{0.8em}%
+    {\color{bookishaccent}\rule{0.22\paperwidth}{0.7pt}}\par
+    \vspace{1.6em}%
+  }%
+}
+
+% sideblock source style: unnumbered prelim page with a strong heading
+% set off by a margin accent. The source template uses numbered heads in the
+% margin; for prelim pages we keep the asymmetrical structure but omit numbering.
+\newcommand{\bookish@prelim@rendersideblock}[1]{%
+  \bookish@prelim@beginsection{#1}%
+  \vspace*{2.75em}%
+  \noindent
+  \makebox[0pt][r]{%
+    \hspace*{-2.25em}%
+    \textcolor{bookishaccent}{\rule{1.4pt}{2.2em}}%
+    \hspace*{1.1em}%
+  }%
+  {\normalfont\bookishdisplayfont\bfseries\fontsize{24}{28}\selectfont\MakeUppercase{#1}\par}%
+  \vspace{1.35em}%
+}
+
+% useimage source style: a full-width header image with the prelim title in a
+% translucent panel. The source template hardcodes specific JPG files and fixed
+% positions; this version keeps the composition but makes the image user-selectable.
+\newcommand{\bookish@prelim@renderuseimage}[2]{%
+  \bookish@prelim@beginsection{#1}%
+  \thispagestyle{empty}%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=north west,inner sep=0pt] at (current page.north west) {%
+      \includegraphics[width=\paperwidth,height=0.27\paperheight]{#2}%
+    };
+    \node[
+      anchor=west,
+      rounded corners=16pt,
+      fill=bookishsoft,
+      fill opacity=0.78,
+      text opacity=1,
+      draw=bookishaccent,
+      line width=1pt,
+      inner sep=12pt
+    ] at ($(current page.north west)+(0.13\paperwidth,-0.18\paperheight)$) {%
+      \parbox{0.72\paperwidth}{%
+        \centering
+        \bookishsansfont\bfseries\fontsize{21}{25}\selectfont
+        #1\strut
+      }%
+    };
+  \end{tikzpicture}%
+  \vspace*{0.31\paperheight}%
+}
+
+% Resolve and render the requested frontmatter opener.
+\newcommand{\bookishrenderfrontmattersection}[1]{%
+  \bookish@prelim@resolvefrontstyle
+  \bookish@prelim@resolvefrontimage
+  \ifdefstring{\bookish@prelim@resolvedfrontstyle}{curly}{%
+    \bookish@prelim@rendercurly{#1}%
+  }{%
+    \ifdefstring{\bookish@prelim@resolvedfrontstyle}{straight}{%
+      \bookish@prelim@renderstraight{#1}%
+    }{%
+      \ifdefstring{\bookish@prelim@resolvedfrontstyle}{useimage}{%
+        \bookish@prelim@renderuseimage{#1}{\bookish@prelim@resolvedfrontimage}%
+      }{%
+        \bookish@prelim@rendersideblock{#1}%
+      }%
+    }%
+  }%
+}
+
+% Resolve and render the requested backmatter opener.
+\newcommand{\bookishrenderbackmattersection}[1]{%
+  \bookish@prelim@resolvebackstyle
+  \bookish@prelim@resolvebackimage
+  \ifdefstring{\bookish@prelim@resolvedbackstyle}{curly}{%
+    \bookish@prelim@rendercurly{#1}%
+  }{%
+    \ifdefstring{\bookish@prelim@resolvedbackstyle}{straight}{%
+      \bookish@prelim@renderstraight{#1}%
+    }{%
+      \ifdefstring{\bookish@prelim@resolvedbackstyle}{useimage}{%
+        \bookish@prelim@renderuseimage{#1}{\bookish@prelim@resolvedbackimage}%
+      }{%
+        \bookish@prelim@rendersideblock{#1}%
+      }%
+    }%
+  }%
+}
+
+% The table of contents should visually belong to the frontmatter family, so it
+% reuses the resolved frontmatter style instead of LaTeX's default `\chapter*`
+% TOC heading. We keep the actual TOC body generation separate and delegate that
+% part back to the class via `\@starttoc{toc}`.
+\makeatletter
+\newcommand{\bookishprintstyledcontents}{%
+  \bookishrenderfrontmattersection{\contentsname}%
+  \@starttoc{toc}%
+}
+\makeatother
