@@ -1,19 +1,36 @@
-\documentclass{article}
+#set document(
+  title: "Foundations of Knowledge",
+  author: "Your Name",
+)
 
-\usepackage{fontspec}
-\usepackage{polyglossia}
+#set page(
+  margin: (x: 1.2in, y: 1in),
+  numbering: "1",
+)
 
-\setmainlanguage{english}
-\setotherlanguage{arabic}
+#set text(
+  font: "Noto Serif",
+  size: 11pt,
+)
 
-\newfontfamily\arabicfont{Amiri}
-\setmainfont{Times New Roman}
+#let arabic = text.with(
+  font: "Amiri",
+  dir: rtl,
+  lang: "ar"
+)
 
-\usepackage{setspace}
-\onehalfspacing
+#show heading.where(level: 1): it => [
+  #v(1.5em)
+  #set text(size: 20pt, weight: "bold")
+  #it.body
+  #v(0.8em)
+]
 
-\begin{document}
+#show heading.where(level: 2): it => [
+  #v(1em)
+  #set text(size: 15pt, weight: "semibold")
+  #it.body
+  #v(0.5em)
+]
 
 $body$
-
-\end{document}

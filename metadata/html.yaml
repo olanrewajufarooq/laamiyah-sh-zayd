@@ -11,6 +11,6 @@ css:
 
 template: templates/default.html
 
-lua-filter:
+filters:
   - filters/quran.lua
   - filters/translator-note.lua

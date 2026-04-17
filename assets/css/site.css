@@ -1,3 +1,13 @@
+@font-face {
+  font-family: "Amiri";
+  src: url("../fonts/Amiri-Regular.ttf");
+}
+
+@font-face {
+  font-family: "NotoSerif";
+  src: url("../fonts/NotoSerif-Regular.ttf");
+}
+
 body {
   font-family: sans-serif;
   max-width: 800px;
