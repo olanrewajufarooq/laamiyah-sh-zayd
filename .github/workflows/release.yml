@@ -22,6 +22,7 @@ jobs:
             texlive-xetex \
             texlive-latex-extra \
             texlive-fonts-recommended \
+            texlive-lang-arabic \
             texlive-pictures \
             texlive-plain-generic
           xelatex --version
