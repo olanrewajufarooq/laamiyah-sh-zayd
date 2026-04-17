@@ -7,6 +7,8 @@ It provides:
 - swappable frontmatter/backmatter styles via [bookish-frontpage.sty](./bookish-frontpage.sty)
 - a single metadata API through `\booksetup{...}`
 - template-derived prelim section styles via [bookish-prelim.sty](./bookish-prelim.sty)
+- template-derived chapter, section, TOC, and page-number styles via [bookish-chapters.sty](./bookish-chapters.sty)
+- reusable Quran, hadith, athar, Arabic, and poem environments via [bookish-special-text.sty](./bookish-special-text.sty)
 
 ## Quick Start
 
@@ -62,6 +64,23 @@ Optional prelim-section selection:
   backmatterstyle=auto,
   frontmatterimage={assets/frontimages/feminine.jpg},
   backmatterimage={assets/frontimages/feminine.jpg}
+}
+```
+
+Optional chapter and source-text selection:
+
+```latex
+\customizechapter{
+  chapterstyle=ornament,
+  pagenumberposition=center
+}
+
+\customizespecialtext{
+  quranstyle=default,
+  hadithstyle=auto,
+  atharstyle=auto,
+  arabicstyle=centered,
+  poemseparator=drawn
 }
 ```
 
@@ -179,6 +198,36 @@ Refresh these previews with:
 
 With `theme=default`, each frontpage uses its intended built-in design colors. If you set a different `theme`, it fully recolors `star`, `flower`, and `circle`, while the image-backed frontpages keep their image design and only the text styling is affected.
 
+## Chapter Styles
+
+These chapter presets live in [bookish-chapters.sty](./bookish-chapters.sty) and
+draw from the original template directions.
+
+Refresh these previews with:
+
+- `scripts/generate-chapter-samples.bat`
+- `scripts/generate-chapter-samples.sh`
+
+<table>
+  <tr>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/chapters/ornament.png" alt="ornament chapter preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">ornament</div>
+    </td>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/chapters/margin.png" alt="margin chapter preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">margin</div>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/chapters/band.png" alt="band chapter preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">band</div>
+    </td>
+    <td width="50%"></td>
+  </tr>
+</table>
+
 ## Helper Commands
 
 - `\bookmaketitlepage`
@@ -187,10 +236,24 @@ With `theme=default`, each frontpage uses its intended built-in design colors. I
 - `\bookfrontmattersection{...}`
 - `\bookbackmattersection{...}`
 - `\customizeprelim{...}`
+- `\customizechapter{...}`
+- `\customizechpater{...}`
+- `\customizespecialtext{...}`
 - `\bookepigraph{quote}{attribution}`
 - `\arabictext{...}`
 
-The package also provides a `bookcallout` environment.
+The package also provides:
+
+- a `bookcallout` environment
+- `quran`, `hadith`, `athar`, `arabicblock`, and `poem` environments
+- nested `reference`, `translation`, and `grade` environments for the source-text blocks
+
+Poem separator sizing uses one public width/height pair:
+
+- `poemseparator=drawn|auto|{path/to/image}`
+- `poemseparatorwidth` / `poemseparatorheight` are the public size controls
+- drawn separators use those values directly
+- imported image separators use larger internal defaults unless you override the same two keys yourself
 
 ## Prelim Styles
 
@@ -241,6 +304,47 @@ Refresh these previews with:
   </tr>
 </table>
 
+## Special Text Styles
+
+These shared text treatments live in [bookish-special-text.sty](./bookish-special-text.sty).
+Set `quranstyle` explicitly, then leave `hadithstyle=auto` and `atharstyle=auto`
+to inherit the same design. `poem` keeps its own dedicated layout.
+
+Refresh these previews with:
+
+- `scripts/generate-special-text-samples.bat`
+- `scripts/generate-special-text-samples.sh`
+
+<table>
+  <tr>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/special-text/ornament.png" alt="ornament special text preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">ornament</div>
+    </td>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/special-text/framed.png" alt="framed special text preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">framed</div>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/special-text/minimal.png" alt="minimal special text preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">minimal</div>
+    </td>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/special-text/centered.png" alt="centered special text preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">centered</div>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center" valign="top" style="padding: 12px 14px 28px 14px;">
+      <img src="sample/special-text/poem.png" alt="poem special text preview" width="100%">
+      <div style="margin-top: 6px; font-size: 1.08em; font-weight: 600;">poem</div>
+    </td>
+    <td width="50%"></td>
+  </tr>
+</table>
+
 ## Fonts
 
 The package currently loads local fonts from [assets/fonts](./assets/fonts):
@@ -257,10 +361,14 @@ XeLaTeX is required because the package depends on `fontspec` and local font loa
 - [bookish-colors.sty](./bookish-colors.sty): theme palette definitions
 - [bookish-frontpage.sty](./bookish-frontpage.sty): frontmatter and backmatter renderers
 - [bookish-prelim.sty](./bookish-prelim.sty): frontmatter/backmatter section opener renderers
+- [bookish-chapters.sty](./bookish-chapters.sty): chapter, section, TOC, and page-number styling
+- [bookish-special-text.sty](./bookish-special-text.sty): Quran, hadith, athar, Arabic, and poem environments
 - [main.tex](./main.tex): example entrypoint
-- [scripts](./scripts): sample-generation scripts for frontpages and prelim styles
+- [scripts](./scripts): sample-generation scripts for frontpages, prelim styles, chapter styles, and special text styles
 - [sample/frontpage](./sample/frontpage): generated frontpage preview PNGs
 - [sample/prelim](./sample/prelim): generated prelim preview PNGs
+- [sample/chapters](./sample/chapters): generated chapter-style preview PNGs
+- [sample/special-text](./sample/special-text): generated special-text preview PNGs
 - [src/content](./src/content): example chapter files
 - [src/frontmatter](./src/frontmatter): example front/backmatter content
 - [assets/fonts](./assets/fonts): bundled fonts

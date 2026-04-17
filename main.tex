@@ -1,6 +1,6 @@
 \documentclass[11pt,fleqn,oneside]{book}
 \usepackage[
-  frontpage=feminine, % Options: star, flower, circle, bluelight, cushion, embroid, emerald, feminine, goldenblue, greencutton, greenflower, petals, rose
+  frontpage=star, % Options: star, flower, circle, bluelight, cushion, embroid, emerald, feminine, goldenblue, greencutton, greenflower, petals, rose
   theme=default, % Options: default, purple, black, sepia, ocean, forest, bluelight, cushion, embroid, emerald, feminine, goldenblue, greencutton, greenflower, petals, rose
   paper=a5, % Options: a4, a5, letter, etc.
   backmatter=true,
@@ -60,6 +60,45 @@
 %   backmatterimage={assets/frontimages/feminine.jpg}
 }
 
+% Optional chapter/page tuning. Styles:
+% - ornament : flower-center / spiral-circle-mid inspired centered chapter heads
+% - margin   : hexagon-elegant inspired margin-number chapter heads
+% - band     : imagebg inspired bold title-band chapter heads
+\customizechapter{
+%   chapterstyle=ornament,
+%   chaptertitlesize=30,
+%   chapterlabelsize=15,
+%   sectiontitlesize=18,
+%   subsectiontitlesize=14,
+%   chapteralign=center,
+%   pagenumberposition=center,
+%   chapterrulelength=4cm,
+%   tocnumbers=false
+}
+
+% Typo-compatible alias:
+% \customizechpater{chapterstyle=margin}
+
+% Optional Quran / hadith / athar / Arabic / poem tuning.
+\customizespecialtext{
+%   quranstyle=default, % Options: default, auto, ornament, framed, minimal, centered
+%   hadithstyle=auto,   % auto/default inherit from quranstyle
+%   atharstyle=auto,    % auto/default inherit from quranstyle
+%   arabicstyle=centered,
+%   quranfontsize=22,
+%   hadithfontsize=18,
+%   atharfontsize=18,
+%   arabicfontsize=18,
+%   poemfontsize=18,
+%   poemseparator=drawn, % drawn|auto or an image path like assets/images/poem-separator.png
+%   poemseparatorwidth=0.9em,
+%   poemseparatorheight=0.7em,
+%   % For imported images, width/height still come from the same two keys,
+%   % but the package uses its own larger internal defaults when you do not set them.
+%   poemseparatorgap=0.2em
+%   poemseparator={assets/images/poem-separator.png}
+}
+
 \begin{document}
 
 \frontmatter
@@ -72,7 +111,8 @@
 
 \mainmatter
 \input{src/content/01-introduction}
-\input{src/content/02-tawhid}
+\input{src/content/02-theme-variant}
+\input{src/content/03-tawhid}
 
 \backmatter
 \input{src/backmatter/01-afterword}

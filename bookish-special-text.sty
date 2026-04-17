@@ -1,0 +1,267 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{bookish-special-text}[2026/04/18 Quran, hadith, athar, Arabic, and poem blocks]
+% Usage:
+% \customizespecialtext{quranstyle=ornament,hadithstyle=framed,poemseparator={assets/images/poem-separator.png}}
+% \begin{quran} ... \begin{reference}Surah ...\end{reference} \end{quran}
+% \begin{hadith} ... \begin{reference}Bukhari ...\end{reference}\begin{grade}Sahih\end{grade}\end{hadith}
+
+\RequirePackage{xparse}
+\RequirePackage{array}
+\RequirePackage{graphicx}
+\RequirePackage{tikz}
+\RequirePackage{tcolorbox}
+\tcbuselibrary{breakable,skins}
+
+% Generic style assignment means users can map the same visual treatment to
+% Quran, hadith, athar, or generic Arabic blocks without changing the env names.
+% "default" and "auto" resolve to the package's recommended Quran treatment.
+\newcommand{\bookish@defaultspecialstyle}{ornament}
+\newcommand{\bookish@quranstyle}{default}
+\newcommand{\bookish@hadithstyle}{auto}
+\newcommand{\bookish@atharstyle}{auto}
+\newcommand{\bookish@arabicblockstyle}{centered}
+\newcommand{\bookish@quranfontsize}{22}
+\newcommand{\bookish@hadithfontsize}{18}
+\newcommand{\bookish@atharfontsize}{18}
+\newcommand{\bookish@arabicblockfontsize}{18}
+\newcommand{\bookish@metafontsize}{11}
+\newcommand{\bookish@poemfontsize}{18}
+\newcommand{\bookish@poemseparator}{drawn}
+\newcommand{\bookish@poemseparatorheight}{0.7em}
+\newcommand{\bookish@poemseparatorwidth}{0.9em}
+% Image separators need a looser default footprint than the drawn TikZ variant,
+% but this stays internal so the public API remains one width/height pair.
+\newcommand{\bookish@poemseparatorimagedefaultheight}{1.1em}
+\newcommand{\bookish@poemseparatorimagedefaultwidth}{1.8em}
+\newcommand{\bookish@poemcolumnwidth}{0.47\linewidth}
+\newcommand{\bookish@poemseparatorgap}{0.2em}
+
+\pgfkeys{
+  /bookish/specialtext/.is family,
+  /bookish/specialtext,
+  quranstyle/.store in=\bookish@quranstyle,
+  hadithstyle/.store in=\bookish@hadithstyle,
+  atharstyle/.store in=\bookish@atharstyle,
+  arabicstyle/.store in=\bookish@arabicblockstyle,
+  quranfontsize/.store in=\bookish@quranfontsize,
+  hadithfontsize/.store in=\bookish@hadithfontsize,
+  atharfontsize/.store in=\bookish@atharfontsize,
+  arabicfontsize/.store in=\bookish@arabicblockfontsize,
+  metfontsize/.store in=\bookish@metafontsize,
+  metafontsize/.store in=\bookish@metafontsize,
+  poemfontsize/.store in=\bookish@poemfontsize,
+  poemseparator/.store in=\bookish@poemseparator,
+  poemseparatorheight/.store in=\bookish@poemseparatorheight,
+  poemseparatorwidth/.store in=\bookish@poemseparatorwidth,
+  poemcolumnwidth/.store in=\bookish@poemcolumnwidth,
+  poemseparatorgap/.store in=\bookish@poemseparatorgap
+}
+
+\newcommand{\customizespecialtext}[1]{\pgfkeys{/bookish/specialtext,#1}}
+
+% Reference, grade, and translation are implemented as inner environments so
+% users can place them naturally inside quran/hadith/athar/arabic blocks
+% without remembering extra args.
+\newcommand{\bookish@special@reference}{}
+\newcommand{\bookish@special@grade}{}
+\newcommand{\bookish@special@translation}{}
+
+\NewDocumentEnvironment{reference}{+b}
+  {\def\bookish@special@reference{#1}\ignorespaces}
+  {\ignorespacesafterend}
+
+\NewDocumentEnvironment{grade}{+b}
+  {\def\bookish@special@grade{#1}\ignorespaces}
+  {\ignorespacesafterend}
+
+\NewDocumentEnvironment{translation}{+b}
+  {\def\bookish@special@translation{#1}\ignorespaces}
+  {\ignorespacesafterend}
+
+\newcommand{\bookish@specialreset}{%
+  \def\bookish@special@reference{}%
+  \def\bookish@special@grade{}%
+  \def\bookish@special@translation{}%
+}
+
+\newcommand{\bookish@specialbodyfont}[2]{%
+  \bookisharabicfont
+  \bookish@chapterfontsize{#2}%
+  \centering
+  \color{bookishtext}%
+}
+
+\newcommand{\bookish@specialresolve}[1]{%
+  \def\bookish@resolvedspecialstyle{#1}%
+  \ifdefstring{\bookish@resolvedspecialstyle}{default}{%
+    \edef\bookish@resolvedspecialstyle{\bookish@defaultspecialstyle}%
+  }{}%
+  \ifdefstring{\bookish@resolvedspecialstyle}{auto}{%
+    \edef\bookish@resolvedspecialstyle{\bookish@defaultspecialstyle}%
+  }{}%
+}
+
+\newcommand{\bookish@specialbodytranslation}{%
+  \ifx\bookish@special@translation\@empty\else
+    \par\medskip
+    {\bookishseriffont\itshape\fontsize{\bookish@metafontsize pt}{\dimexpr \bookish@metafontsize pt + 5pt\relax}\selectfont\color{bookishtext}\centering \bookish@special@translation\par}%
+  \fi
+}
+
+\newcommand{\bookish@drawnpoemseparator}{%
+  \resizebox{\bookish@poemseparatorwidth}{\bookish@poemseparatorheight}{%
+    \begin{tikzpicture}[x=0.42cm,y=0.42cm,baseline=(current bounding box.center),line cap=round,line join=round]
+      \path[fill=bookishaccent,draw=bookishtext,line width=0.17cm,even odd rule]
+      (0,4.85)
+        .. controls (0.35,4.28) and (0.82,3.95) .. (1.55,3.62)
+        .. controls (2.15,3.36) and (2.80,3.00) .. (3.55,2.25)
+        .. controls (4.05,1.82) and (4.48,1.72) .. (4.92,1.84)
+        .. controls (4.72,1.56) and (4.63,1.22) .. (4.67,0.78)
+        .. controls (4.77,-0.18) and (4.58,-1.02) .. (4.18,-1.72)
+        .. controls (4.48,-1.60) and (4.82,-1.62) .. (5.18,-1.86)
+        .. controls (4.55,-1.90) and (4.02,-2.22) .. (3.38,-2.72)
+        .. controls (2.72,-3.20) and (1.96,-3.48) .. (1.18,-3.78)
+        .. controls (0.62,-4.00) and (0.20,-4.38) .. (0,-4.82)
+        .. controls (-0.20,-4.38) and (-0.62,-4.00) .. (-1.18,-3.78)
+        .. controls (-1.96,-3.48) and (-2.72,-3.20) .. (-3.38,-2.72)
+        .. controls (-4.02,-2.22) and (-4.55,-1.90) .. (-5.18,-1.86)
+        .. controls (-4.82,-1.62) and (-4.48,-1.60) .. (-4.18,-1.72)
+        .. controls (-4.58,-1.02) and (-4.77,-0.18) .. (-4.67,0.78)
+        .. controls (-4.63,1.22) and (-4.72,1.56) .. (-4.92,1.84)
+        .. controls (-4.48,1.72) and (-4.05,1.82) .. (-3.55,2.25)
+        .. controls (-2.80,3.00) and (-2.15,3.36) .. (-1.55,3.62)
+        .. controls (-0.82,3.95) and (-0.35,4.28) .. cycle
+
+      (0,2.15)
+        .. controls (0.52,2.52) and (1.05,2.68) .. (1.62,2.52)
+        .. controls (2.16,2.36) and (2.62,2.05) .. (3.04,1.46)
+        .. controls (3.42,0.90) and (3.62,0.25) .. (3.62,-0.42)
+        .. controls (3.62,-0.98) and (3.48,-1.44) .. (3.18,-1.82)
+        .. controls (2.88,-1.66) and (2.55,-1.68) .. (2.18,-1.98)
+        .. controls (1.60,-2.42) and (0.95,-2.54) .. (0,-1.78)
+        .. controls (-0.95,-2.54) and (-1.60,-2.42) .. (-2.18,-1.98)
+        .. controls (-2.55,-1.68) and (-2.88,-1.66) .. (-3.18,-1.82)
+        .. controls (-3.48,-1.44) and (-3.62,-0.98) .. (-3.62,-0.42)
+        .. controls (-3.62,0.25) and (-3.42,0.90) .. (-3.04,1.46)
+        .. controls (-2.62,2.05) and (-2.16,2.36) .. (-1.62,2.52)
+        .. controls (-1.05,2.68) and (-0.52,2.52) .. cycle;
+
+      \fill[bookishtext] (0,3.22) circle[radius=0.40];
+      \fill[bookishtext] (0,-3.08) circle[radius=0.40];
+
+      \draw[bookishtext,line width=0.17cm]
+        (-2.75,2.42) .. controls (-2.15,2.78) and (-1.45,3.02) .. (-1.00,3.10);
+      \draw[bookishtext,line width=0.17cm]
+        ( 2.75,2.42) .. controls ( 2.15,2.78) and ( 1.45,3.02) .. ( 1.00,3.10);
+      \draw[bookishtext,line width=0.17cm]
+        (-2.75,-2.22) .. controls (-2.15,-2.58) and (-1.45,-2.82) .. (-1.00,-2.90);
+      \draw[bookishtext,line width=0.17cm]
+        ( 2.75,-2.22) .. controls ( 2.15,-2.58) and ( 1.45,-2.82) .. ( 1.00,-2.90);
+    \end{tikzpicture}%
+  }%
+}
+
+\newcommand{\bookish@poemseparatorcontent}{%
+  \ifdefstring{\bookish@poemseparator}{drawn}{%
+    \bookish@drawnpoemseparator
+  }{%
+    \ifdefstring{\bookish@poemseparator}{auto}{%
+      \bookish@drawnpoemseparator
+    }{%
+      \includegraphics[width=\bookish@poemseparatorimagedefaultwidth,height=\bookish@poemseparatorimagedefaultheight,keepaspectratio]{\bookish@poemseparator}%
+    }%
+  }%
+}
+
+\newcommand{\bookish@resolvepoemseparatorboxwidth}{%
+  \ifdefstring{\bookish@poemseparator}{drawn}{%
+    \def\bookish@activepoemseparatorboxwidth{\bookish@poemseparatorwidth}%
+  }{%
+    \ifdefstring{\bookish@poemseparator}{auto}{%
+      \def\bookish@activepoemseparatorboxwidth{\bookish@poemseparatorwidth}%
+    }{%
+      \def\bookish@activepoemseparatorboxwidth{\bookish@poemseparatorimagedefaultwidth}%
+    }%
+  }%
+}
+
+\newcommand{\bookish@specialfootercommon}{%
+  \par\medskip
+  \ifx\bookish@special@reference\@empty\else
+    {\bookishsansfont\fontsize{\bookish@metafontsize pt}{\dimexpr \bookish@metafontsize pt + 3pt\relax}\selectfont\color{bookishaccent}\raggedleft \bookish@special@reference\par}%
+  \fi
+}
+
+\newcommand{\bookish@specialfooterhadith}{%
+  \par\medskip
+  \ifx\bookish@special@reference\@empty
+    \ifx\bookish@special@grade\@empty\else
+      {\bookishsansfont\fontsize{\bookish@metafontsize pt}{\dimexpr \bookish@metafontsize pt + 3pt\relax}\selectfont\color{bookishtext}\centering\textbf{Grade:} \bookish@special@grade\par}%
+    \fi
+  \else
+    \ifx\bookish@special@grade\@empty
+      {\bookishsansfont\fontsize{\bookish@metafontsize pt}{\dimexpr \bookish@metafontsize pt + 3pt\relax}\selectfont\color{bookishaccent}\raggedleft \bookish@special@reference\par}%
+    \else
+      {\bookishsansfont\fontsize{\bookish@metafontsize pt}{\dimexpr \bookish@metafontsize pt + 3pt\relax}\selectfont
+      \noindent
+      \makebox[\linewidth][l]{\color{bookishtext}\textbf{Grade:} \bookish@special@grade}%
+      \makebox[0pt][r]{\color{bookishaccent}\bookish@special@reference}\par}%
+    \fi
+  \fi
+}
+
+\newcommand{\bookish@specialopen}[1]{%
+  \bookish@specialresolve{#1}%
+  \ifdefstring{\bookish@resolvedspecialstyle}{framed}{%
+    \begin{tcolorbox}[enhanced,breakable,colback=bookishsoft,colframe=bookishaccent,boxrule=0.5pt,arc=3pt,left=10pt,right=10pt,top=10pt,bottom=10pt]%
+  }{%
+    \ifdefstring{\bookish@resolvedspecialstyle}{centered}{%
+      \begin{tcolorbox}[enhanced,breakable,colback=white,boxrule=0pt,left=10pt,right=10pt,top=10pt,bottom=10pt,borderline north={0.8pt}{0pt}{bookishaccent},borderline south={0.8pt}{0pt}{bookishaccent}]%
+    }{%
+      \ifdefstring{\bookish@resolvedspecialstyle}{ornament}{%
+        \begin{tcolorbox}[enhanced,breakable,colback=white,boxrule=0pt,left=10pt,right=10pt,top=10pt,bottom=10pt,borderline north={0.8pt}{0pt}{bookishaccent},borderline south={0.8pt}{0pt}{bookishaccent}]%
+      }{%
+        \begin{tcolorbox}[enhanced,breakable,colback=white,boxrule=0pt,left=10pt,right=10pt,top=10pt,bottom=10pt,borderline west={1.5pt}{0pt}{bookishaccent}]%
+      }%
+    }%
+  }%
+}
+
+% Quran, hadith, and athar share the same box machinery but keep separate
+% defaults so users can tune them independently.
+\NewDocumentEnvironment{quran}{}%
+  {\bookish@specialreset\bookish@specialopen{\bookish@quranstyle}\bookish@specialbodyfont{quran}{\bookish@quranfontsize}\ignorespaces}
+  {\bookish@specialbodytranslation\bookish@specialfootercommon\end{tcolorbox}}
+
+\NewDocumentEnvironment{hadith}{}%
+  {\bookish@specialreset\bookish@specialopen{\bookish@hadithstyle}\bookish@specialbodyfont{hadith}{\bookish@hadithfontsize}\ignorespaces}
+  {\bookish@specialbodytranslation\bookish@specialfooterhadith\end{tcolorbox}}
+
+\NewDocumentEnvironment{athar}{}%
+  {\bookish@specialreset\bookish@specialopen{\bookish@atharstyle}\bookish@specialbodyfont{athar}{\bookish@atharfontsize}\ignorespaces}
+  {\bookish@specialbodytranslation\bookish@specialfootercommon\end{tcolorbox}}
+
+\NewDocumentEnvironment{arabicblock}{}%
+  {\bookish@specialreset\bookish@specialopen{\bookish@arabicblockstyle}\bookish@specialbodyfont{arabic}{\bookish@arabicblockfontsize}\ignorespaces}
+  {\bookish@specialbodytranslation\end{tcolorbox}}
+
+% Poem lines are set in a two-column Arabic table separated by the supplied art.
+% Users write lines in a matrix-like form: first hemistich & second hemistich \\ ...
+\NewDocumentEnvironment{poem}{}%
+  {%
+    \begin{center}%
+      \bookisharabicfont
+      \bookish@chapterfontsize{\bookish@poemfontsize}%
+      \bookish@resolvepoemseparatorboxwidth
+      \offinterlineskip
+      \let\\\cr
+      \hbox to \linewidth\bgroup\hfil
+      \vbox\bgroup
+      \halign\bgroup
+      \hbox to \bookish@poemcolumnwidth{\hfil##\hfil}&\hskip\bookish@poemseparatorgap\makebox[\bookish@activepoemseparatorboxwidth][c]{\bookish@poemseparatorcontent}\hskip\bookish@poemseparatorgap\hbox to \bookish@poemcolumnwidth{\hfil##\hfil}\cr
+  }{%
+      \crcr\egroup
+      \egroup
+      \hfil\egroup
+    \end{center}%
+  }

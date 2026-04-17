@@ -31,6 +31,8 @@
 \RequirePackage{xparse}
 \RequirePackage{bookish-frontpage}
 \RequirePackage{bookish-prelim}
+\RequirePackage{bookish-chapters}
+\RequirePackage{bookish-special-text}
 
 % Public package options controlling theme, page size, numbering, and frontpage style.
 \SetupKeyvalOptions{family=bookish,prefix=bookish@}
@@ -225,73 +227,6 @@
   ]{Amiri}%
 }
 
-% Choose how chapter counters are printed.
-\newcommand{\bookish@setnumbering}{%
-  \ifdefstring{\bookish@chapternumbering}{arabic}{%
-    \renewcommand{\thechapter}{\arabic{chapter}}%
-  }{%
-    \ifdefstring{\bookish@chapternumbering}{roman-lower}{%
-      \renewcommand{\thechapter}{\roman{chapter}}%
-    }{%
-      \renewcommand{\thechapter}{\Roman{chapter}}%
-    }%
-  }%
-}
-
-% Configure the default and plain pagestyles.
-\newcommand{\bookish@setheaders}{%
-  \setlength{\headheight}{16pt}%
-  \pagestyle{fancy}%
-  \fancyhf{}%
-  \renewcommand{\headrulewidth}{0pt}%
-  \fancyfoot[C]{\thepage}%
-  \ifdefstring{\bookish@runningheader}{none}{%
-    \fancyhead{}%
-  }{%
-    \ifdefstring{\bookish@runningheader}{minimal}{%
-      \fancyhead[C]{\itshape\bookish@title}%
-    }{%
-      \fancyhead[L]{\itshape\bookish@author}%
-      \fancyhead[R]{\itshape\bookish@title}%
-    }%
-  }%
-  \fancypagestyle{plain}{%
-    \fancyhf{}%
-    \renewcommand{\headrulewidth}{0pt}%
-    \fancyfoot[C]{\thepage}%
-  }%
-}
-
-% Define chapter and section heading appearance.
-\newcommand{\bookish@settitles}{%
-  \titleformat{\chapter}[display]
-    {\normalfont\bookishdisplayfont\centering}
-    {\vspace*{1.2em}\Large\scshape\color{bookishaccent}\bookish@chapterlabel\ \thechapter}
-    {0.5em}
-    {\Huge\bfseries\color{bookishtext}}
-    [\vspace{0.8em}\color{bookishaccent}\rule{4cm}{0.6pt}]%
-  \titlespacing*{\chapter}{0pt}{0pt}{1.4em}%
-  \titleformat{\section}
-    {\normalfont\Large\bookishdisplayfont\bfseries\color{bookishaccent}}
-    {\thesection}
-    {0.6em}
-    {}%
-  \titleformat{\subsection}
-    {\normalfont\large\bookishdisplayfont\bfseries\color{bookishtext}}
-    {\thesubsection}
-    {0.6em}
-    {}%
-}
-
-% Keep table-of-contents typography aligned with the active theme.
-\newcommand{\bookish@settoc}{%
-  \renewcommand{\cftchapfont}{\large\itshape}%
-  \renewcommand{\cftchappagefont}{\normalfont}%
-  \renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}%
-  \renewcommand{\cfttoctitlefont}{\hfill\Huge\bookishdisplayfont\bfseries\color{bookishaccent}}%
-  \renewcommand{\cftaftertoctitle}{\hfill}%
-}
-
 % Apply shared paragraph and page-level text formatting.
 \newcommand{\bookish@baseformat}{%
   \color{bookishtext}%
@@ -309,10 +244,7 @@
   \bookish@settheme
   \bookish@setfonts
   \bookishfrontpagesetup{\bookish@frontpage}
-  \bookish@setnumbering
-  \bookish@setheaders
-  \bookish@settitles
-  \bookish@settoc
+  \bookishchaptersetup
   \bookish@baseformat
 }
 
