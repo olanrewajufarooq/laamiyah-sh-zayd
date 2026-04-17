@@ -1,7 +1,7 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{bookish}[2026/04/17 XeLaTeX book template]
 % Usage:
-% \usepackage[theme=purple,frontpage=flower,backmatter=true,paper=a4]{bookish}
+% \usepackage[theme=default,frontpage=flower,backmatter=true,paper=a4]{bookish}
 % \booksetup{title={My Book},subtitle={Optional Subtitle},subtitleposition={below},author={Author Name},imprint={My Press},publishstatus={demo},publisherlogo={assets/images/publisher-white.png},backtext={Back cover copy}}
 
 % Restrict the package to XeLaTeX because fonts are configured through fontspec.
@@ -33,7 +33,7 @@
 
 % Public package options controlling theme, page size, numbering, and frontpage style.
 \SetupKeyvalOptions{family=bookish,prefix=bookish@}
-\DeclareStringOption[purple]{theme}
+\DeclareStringOption[default]{theme}
 \DeclareStringOption[6x9]{paper}
 \DeclareStringOption[roman]{chapternumbering}
 \DeclareStringOption[auto]{coverstyle}
@@ -76,6 +76,7 @@
 \newcommand{\booksetup}[1]{\pgfkeys{/bookish,#1}}
 
 % Internal state for theme-specific defaults that affect later formatting.
+\newcommand{\bookish@resolvedtheme}{purple}
 \newcommand{\bookish@resolvedcoverstyle}{classic}
 \newcommand{\bookish@chapterlabel}{Chapter}
 
@@ -96,13 +97,31 @@
   }%
 }
 
+% Map theme=default to a frontpage-specific palette while keeping explicit theme overrides.
+\newcommand{\bookish@resolvetheme}{%
+  \ifdefstring{\bookish@theme}{default}{%
+    \ifdefstring{\bookish@frontpage}{flower}{%
+      \renewcommand{\bookish@resolvedtheme}{purple}%
+    }{%
+      \ifdefstring{\bookish@frontpage}{circle}{%
+        \renewcommand{\bookish@resolvedtheme}{sepia}%
+      }{%
+        \renewcommand{\bookish@resolvedtheme}{black}%
+      }%
+    }%
+  }{%
+    \renewcommand{\bookish@resolvedtheme}{\bookish@theme}%
+  }%
+}
+
 % Apply the active color palette and derive any style defaults from it.
 \newcommand{\bookish@settheme}{%
-  \bookishapplytheme{\bookish@theme}%
-  \ifdefstring{\bookish@theme}{black}{%
+  \bookish@resolvetheme
+  \bookishapplytheme{\bookish@resolvedtheme}%
+  \ifdefstring{\bookish@resolvedtheme}{black}{%
     \renewcommand{\bookish@resolvedcoverstyle}{band}%
   }{%
-    \ifdefstring{\bookish@theme}{sepia}{%
+    \ifdefstring{\bookish@resolvedtheme}{sepia}{%
       \renewcommand{\bookish@resolvedcoverstyle}{classic}%
     }{%
       \renewcommand{\bookish@resolvedcoverstyle}{frame}%

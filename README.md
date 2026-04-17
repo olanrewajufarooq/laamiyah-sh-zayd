@@ -14,7 +14,7 @@ The example entrypoint is [main.tex](./main.tex):
 ```latex
 \documentclass[11pt,fleqn,oneside]{book}
 \usepackage[
-  theme=forest,
+  theme=default,
   paper=a5,
   frontpage=star,
   backmatter=true,
@@ -57,7 +57,7 @@ Text goes here.
 
 `bookish.sty` supports:
 
-- `theme=purple|black|sepia|ocean|forest`
+- `theme=default|purple|black|sepia|ocean|forest`
 - `paper=6x9|a5|a4|letter`
 - `frontpage=star|flower|circle`
 - `backmatter=true|false`
@@ -98,6 +98,12 @@ Notes:
   Circular band composition with right-aligned title and author stacks.
 
 When `backmatter=true`, `\bookmakebackmatter` uses the back cover style associated with the selected frontpage style.
+
+With `theme=default`, the package currently maps:
+
+- `star` -> `black`
+- `flower` -> `purple`
+- `circle` -> `sepia`
 
 ## Helper Commands
 
