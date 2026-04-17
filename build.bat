@@ -3,6 +3,9 @@ setlocal EnableDelayedExpansion
 
 if not exist build mkdir build
 
+rem Allow TeX files in subdirectories to resolve repo-root .sty/.tex inputs.
+set "TEXINPUTS=%CD%;%CD%\;%TEXINPUTS%"
+
 set "LATEX_CMD=xelatex"
 if defined XELATEX_EXE set "LATEX_CMD=%XELATEX_EXE%"
 

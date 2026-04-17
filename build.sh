@@ -4,6 +4,9 @@ set -euo pipefail
 
 mkdir -p build
 
+# Allow TeX files in subdirectories to resolve repo-root .sty/.tex inputs.
+export TEXINPUTS="$(pwd):$(pwd)//:${TEXINPUTS-}"
+
 if command -v xelatex >/dev/null 2>&1; then
   echo "Building main.tex..."
   xelatex -interaction=nonstopmode -halt-on-error -output-directory=build main.tex

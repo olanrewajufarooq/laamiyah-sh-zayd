@@ -9,14 +9,27 @@ jobs:
   release:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - uses: actions/checkout@v4
 
       - name: Install XeLaTeX
         run: |
           sudo apt-get update
-          sudo apt-get install -y texlive-xetex texlive-latex-extra texlive-fonts-recommended
+          sudo apt-get install -y \
+            texlive-xetex \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            texlive-pictures \
+            texlive-plain-generic
           xelatex --version
 
       - name: Build
-        run: ./build.sh
+        run: bash ./build.sh
+
+      - name: Upload release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/main.pdf

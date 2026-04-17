@@ -3,6 +3,7 @@ name: CI
 on:
   push:
     branches: [main]
+  pull_request:
 
 jobs:
   build:
@@ -14,8 +15,19 @@ jobs:
       - name: Install XeLaTeX
         run: |
           sudo apt-get update
-          sudo apt-get install -y texlive-xetex texlive-latex-extra texlive-fonts-recommended
+          sudo apt-get install -y \
+            texlive-xetex \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            texlive-pictures \
+            texlive-plain-generic
           xelatex --version
 
       - name: Build
-        run: ./build.sh
+        run: bash ./build.sh
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: main-pdf
+          path: build/main.pdf

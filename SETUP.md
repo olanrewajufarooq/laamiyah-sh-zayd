@@ -1,10 +1,10 @@
 # XeLaTeX Setup
 
-This repository is built for XeLaTeX.
+This repository is built for XeLaTeX and local font loading through `fontspec`.
 
 ## Required Tool
 
-You need `xelatex` available on your `PATH`.
+You need `xelatex` available either on your `PATH` or through the Windows override used by the build script.
 
 Verify:
 
@@ -26,6 +26,13 @@ xelatex --version
 where.exe xelatex
 ```
 
+If `xelatex` works in PowerShell but not from `cmd.exe`, `build.bat` supports an override:
+
+```powershell
+$env:XELATEX_EXE = 'C:\full\path\to\xelatex.exe'
+build.bat
+```
+
 ## macOS
 
 Install MacTeX or TeX Live, then verify:
@@ -36,13 +43,18 @@ xelatex --version
 
 ## Linux
 
-Install XeLaTeX and common LaTeX extras from your distribution.
+Install XeLaTeX plus the LaTeX extras used by this package.
 
 Example for Ubuntu / Debian:
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y texlive-xetex texlive-latex-extra texlive-fonts-recommended
+sudo apt-get install -y \
+  texlive-xetex \
+  texlive-latex-extra \
+  texlive-fonts-recommended \
+  texlive-pictures \
+  texlive-plain-generic
 ```
 
 Then verify:
@@ -50,6 +62,14 @@ Then verify:
 ```bash
 xelatex --version
 ```
+
+## Bundled Fonts
+
+The template loads fonts from [assets/fonts](./assets/fonts), so you do not need those families installed system-wide. The currently bundled families are:
+
+- `NotoSerif`
+- `NeueHaasText`
+- `Amiri`
 
 ## Build
 
@@ -71,3 +91,7 @@ The output PDF is:
 build/main.pdf
 ```
 
+The build scripts also:
+
+- clean common `.aux` / `.log` / `.toc` style byproducts
+- set `TEXINPUTS` so TeX files in subdirectories can still resolve the repo-root style files

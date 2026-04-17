@@ -38,7 +38,7 @@
 \DeclareStringOption[roman]{chapternumbering}
 \DeclareStringOption[auto]{coverstyle}
 \DeclareStringOption[book]{runningheader}
-\DeclareStringOption[hexagon]{frontpage}
+\DeclareStringOption[star]{frontpage}
 \DeclareBoolOption[true]{toc}
 \DeclareBoolOption[false]{backmatter}
 \ProcessKeyvalOptions*
@@ -126,28 +126,28 @@
     BoldItalicFont=*-Bold
   ]{NotoSerif}%
   \newfontfamily\bookishdisplayfont[
+    Ligatures=TeX,
+    Scale=MatchUppercase
+  ]{TeX Gyre Pagella}%
+  \newfontfamily\bookishcoverseriffont[
+    Ligatures=TeX,
+    Scale=MatchUppercase
+  ]{TeX Gyre Pagella}%
+  \newfontfamily\bookishsansfont[
     Path=assets/fonts/,
-    Extension=.ttf,
+    Ligatures=TeX,
+    Scale=MatchUppercase,
     UprightFont=*-Regular,
     ItalicFont=*-Regular,
-    BoldFont=*-Bold,
-    BoldItalicFont=*-Bold
-  ]{NotoSerif}%
-  \newfontfamily\bookishcoverfont[
-    Path=latex templates/book-templates/hexagon-elegant/template/generic/fonts/inconsolata/,
-    Ligatures=TeX,
-    Scale=MatchUppercase,
-    UprightFont=*.otf,
-    BoldFont=*-Bold.otf,
-    ItalicFont=*-Italic.otf,
-    BoldItalicFont=*-BoldItalic.otf
-  ]{Inconsolata-LGC}%
+    BoldFont=*-Bold
+  ]{NeueHaasText}%
   \newfontfamily\bookishelegantfont[
-    Path=latex templates/book-templates/hexagon-elegant/template/forta/fonts/,
+    Path=assets/fonts/,
     Ligatures=TeX,
     Scale=MatchUppercase,
-    UprightFont=*Regular.ttf,
-    BoldFont=*Bold.ttf
+    UprightFont=*-Regular,
+    ItalicFont=*-Regular,
+    BoldFont=*-Bold
   ]{NeueHaasText}%
   \newfontfamily\bookisharabicfont[
     Script=Arabic,
