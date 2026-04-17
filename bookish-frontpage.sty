@@ -172,6 +172,7 @@
 \newcommand{\bookish@imagebgtranslatoranchor}{south}
 \newcommand{\bookish@imagebgtranslatoralign}{center}
 \newcommand{\bookish@imagebgtranslatorwidth}{0.40\paperwidth}
+\newcommand{\bookish@imagebgmetapanelopacity}{0.00}
 \newcommand{\bookish@imagebglogowidth}{0.055\textwidth}
 
 % Per-style layout macros for image-background covers.
@@ -198,14 +199,20 @@
 
 \newcommand{\bookish@imagebgsetup@cushion}{%
   % Busy tufted texture — needs stronger panels for readability.
-  \renewcommand{\bookish@imagebgtitlepos}{([yshift=-0.20\paperheight]current page.north)}%
-  \renewcommand{\bookish@imagebgtitlewidth}{0.64\paperwidth}%
-  \renewcommand{\bookish@imagebgtitlepanelopacity}{0.48}%
-  \renewcommand{\bookish@imagebgauthorpos}{([yshift=0.20\paperheight]current page.south)}%
-  \renewcommand{\bookish@imagebgauthorwidth}{0.52\paperwidth}%
-  \renewcommand{\bookish@imagebgauthorpanelopacity}{0.34}%
-  \renewcommand{\bookish@imagebgtranslatorpos}{([yshift=2.0cm]current page.south)}%
-  \renewcommand{\bookish@imagebgpublisherpos}{([yshift=1.0cm]current page.south)}%
+  \renewcommand{\bookish@imagebgtitlepos}{($(current page.north)!0.22!(current page.south)$)}%
+  \renewcommand{\bookish@imagebgtitlewidth}{0.58\paperwidth}%
+  \renewcommand{\bookish@imagebgtitlepanelopacity}{0.40}%
+  \renewcommand{\bookish@imagebgauthorpos}{($(current page.south)!0.48!(current page.north)$)}%
+  \renewcommand{\bookish@imagebgauthorwidth}{0.48\paperwidth}%
+  \renewcommand{\bookish@imagebgauthorpanelopacity}{0.22}%
+  \renewcommand{\bookish@imagebgaddressfontsize}{13}%
+  \renewcommand{\bookish@imagebgauthorfontsize}{22}%
+  \renewcommand{\bookish@imagebgtranslatorpos}{($(current page.south)!0.34!(current page.north)$)}%
+  \renewcommand{\bookish@imagebgtranslatorwidth}{0.50\paperwidth}%
+  \renewcommand{\bookish@imagebgpublisherpos}{($(current page.south)!0.18!(current page.north)$)}%
+  \renewcommand{\bookish@imagebgpublisherwidth}{0.20\paperwidth}%
+  \renewcommand{\bookish@imagebgmetapanelopacity}{0.18}%
+  \renewcommand{\bookish@imagebglogowidth}{0.08\textwidth}%
 }
 
 \newcommand{\bookish@imagebgsetup@embroid}{%
@@ -386,6 +393,7 @@
   \renewcommand{\bookish@imagebgtranslatoranchor}{south}%
   \renewcommand{\bookish@imagebgtranslatoralign}{center}%
   \renewcommand{\bookish@imagebgtranslatorwidth}{0.40\paperwidth}%
+  \renewcommand{\bookish@imagebgmetapanelopacity}{0.00}%
   \renewcommand{\bookish@imagebglogowidth}{0.055\textwidth}%
   \ifcsdef{bookish@imagebgsetup@\bookishfrontpage@style}{%
     \csname bookish@imagebgsetup@\bookishfrontpage@style\endcsname
@@ -437,6 +445,12 @@
   };
   \node[
     text=bookishcoverfg,
+    fill=bookishcoverbg,
+    fill opacity=\bookish@imagebgmetapanelopacity,
+    text opacity=1,
+    rounded corners=10pt,
+    inner xsep=10pt,
+    inner ysep=8pt,
     anchor=\bookish@imagebgpublisheranchor,
     text width=\bookish@imagebgpublisherwidth,
     align=\bookish@imagebgpublisheralign,
@@ -448,6 +462,12 @@
   \ifstrempty{\bookish@translator}{}{%
     \node[
       text=bookishcoverfg,
+      fill=bookishcoverbg,
+      fill opacity=\bookish@imagebgmetapanelopacity,
+      text opacity=1,
+      rounded corners=10pt,
+      inner xsep=10pt,
+      inner ysep=8pt,
       anchor=\bookish@imagebgtranslatoranchor,
       text width=\bookish@imagebgtranslatorwidth,
       align=\bookish@imagebgtranslatoralign,
@@ -482,6 +502,12 @@
   };
   \node[
     text=bookishcoverfg,
+    fill=bookishcoverbg,
+    fill opacity=\bookish@imagebgmetapanelopacity,
+    text opacity=1,
+    rounded corners=10pt,
+    inner xsep=10pt,
+    inner ysep=8pt,
     anchor=\bookish@imagebgpublisheranchor,
     text width=\bookish@imagebgpublisherwidth,
     align=\bookish@imagebgpublisheralign,
