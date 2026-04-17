@@ -100,13 +100,17 @@
 % Map theme=default to a frontpage-specific palette while keeping explicit theme overrides.
 \newcommand{\bookish@resolvetheme}{%
   \ifdefstring{\bookish@theme}{default}{%
-    \ifdefstring{\bookish@frontpage}{flower}{%
-      \renewcommand{\bookish@resolvedtheme}{purple}%
+    \bookish@ifimagebgstyle{\bookish@frontpage}{%
+      \renewcommand{\bookish@resolvedtheme}{\bookish@frontpage}%
     }{%
-      \ifdefstring{\bookish@frontpage}{circle}{%
-        \renewcommand{\bookish@resolvedtheme}{sepia}%
+      \ifdefstring{\bookish@frontpage}{flower}{%
+        \renewcommand{\bookish@resolvedtheme}{purple}%
       }{%
-        \renewcommand{\bookish@resolvedtheme}{black}%
+        \ifdefstring{\bookish@frontpage}{circle}{%
+          \renewcommand{\bookish@resolvedtheme}{sepia}%
+        }{%
+          \renewcommand{\bookish@resolvedtheme}{black}%
+        }%
       }%
     }%
   }{%

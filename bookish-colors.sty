@@ -18,58 +18,178 @@
 \providecolor{bookishcoveraccent}{HTML}{B791CA}
 \providecolor{bookishcovermuted}{HTML}{DCC8E6}
 
+% Theme definitions.
+\newcommand{\bookish@theme@purple}{%
+  \definecolor{bookishpage}{HTML}{FBF7FC}%
+  \definecolor{bookishtext}{HTML}{241C27}%
+  \definecolor{bookishaccent}{HTML}{643D78}%
+  \definecolor{bookishsoft}{HTML}{EFE3F6}%
+  \definecolor{bookishcoverbg}{HTML}{241329}%
+  \definecolor{bookishcoverfg}{HTML}{F8F0FB}%
+  \definecolor{bookishcoveraccent}{HTML}{B791CA}%
+  \definecolor{bookishcovermuted}{HTML}{DCC8E6}%
+}
+
+\newcommand{\bookish@theme@black}{%
+  \definecolor{bookishpage}{HTML}{FCFBF7}%
+  \definecolor{bookishtext}{HTML}{181818}%
+  \definecolor{bookishaccent}{HTML}{A36A1D}%
+  \definecolor{bookishsoft}{HTML}{F5E7CF}%
+  \definecolor{bookishcoverbg}{HTML}{101010}%
+  \definecolor{bookishcoverfg}{HTML}{F4EFE7}%
+  \definecolor{bookishcoveraccent}{HTML}{C98A35}%
+  \definecolor{bookishcovermuted}{HTML}{E7CCB1}%
+}
+
+\newcommand{\bookish@theme@sepia}{%
+  \definecolor{bookishpage}{HTML}{FFFDF8}%
+  \definecolor{bookishtext}{HTML}{1A1714}%
+  \definecolor{bookishaccent}{HTML}{80603D}%
+  \definecolor{bookishsoft}{HTML}{F0E6D8}%
+  \definecolor{bookishcoverbg}{HTML}{171310}%
+  \definecolor{bookishcoverfg}{HTML}{F9F3EA}%
+  \definecolor{bookishcoveraccent}{HTML}{B69773}%
+  \definecolor{bookishcovermuted}{HTML}{D9C2A8}%
+}
+
+\newcommand{\bookish@theme@ocean}{%
+  \definecolor{bookishpage}{HTML}{F4FAFB}%
+  \definecolor{bookishtext}{HTML}{16333B}%
+  \definecolor{bookishaccent}{HTML}{1E6F86}%
+  \definecolor{bookishsoft}{HTML}{DDF0F4}%
+  \definecolor{bookishcoverbg}{HTML}{0E2A33}%
+  \definecolor{bookishcoverfg}{HTML}{EDF9FC}%
+  \definecolor{bookishcoveraccent}{HTML}{58B6C9}%
+  \definecolor{bookishcovermuted}{HTML}{B9DDE4}%
+}
+
+\newcommand{\bookish@theme@forest}{%
+  \definecolor{bookishpage}{HTML}{F7FBF5}%
+  \definecolor{bookishtext}{HTML}{1F3327}%
+  \definecolor{bookishaccent}{HTML}{4E7A3E}%
+  \definecolor{bookishsoft}{HTML}{E4EFDE}%
+  \definecolor{bookishcoverbg}{HTML}{1D2D22}%
+  \definecolor{bookishcoverfg}{HTML}{F1F8ED}%
+  \definecolor{bookishcoveraccent}{HTML}{8EB66D}%
+  \definecolor{bookishcovermuted}{HTML}{C9DAB9}%
+}
+
+% Image-derived themes for the image background frontmatter family.
+\newcommand{\bookish@theme@bluelight}{%
+  \definecolor{bookishpage}{HTML}{EEF4F8}%
+  \definecolor{bookishtext}{HTML}{16263A}%
+  \definecolor{bookishaccent}{HTML}{C59A53}%
+  \definecolor{bookishsoft}{HTML}{D9E5F0}%
+  \definecolor{bookishcoverbg}{HTML}{0B2340}%
+  \definecolor{bookishcoverfg}{HTML}{F5E8D0}%
+  \definecolor{bookishcoveraccent}{HTML}{D3A458}%
+  \definecolor{bookishcovermuted}{HTML}{BFCFE0}%
+}
+
+\newcommand{\bookish@theme@cushion}{%
+  \definecolor{bookishpage}{HTML}{F6F2EE}%
+  \definecolor{bookishtext}{HTML}{2C2521}%
+  \definecolor{bookishaccent}{HTML}{A58B64}%
+  \definecolor{bookishsoft}{HTML}{E7DDD2}%
+  \definecolor{bookishcoverbg}{HTML}{1E1A18}%
+  \definecolor{bookishcoverfg}{HTML}{F0E9E2}%
+  \definecolor{bookishcoveraccent}{HTML}{C8A46D}%
+  \definecolor{bookishcovermuted}{HTML}{B6AAA0}%
+}
+
+\newcommand{\bookish@theme@embroid}{%
+  \definecolor{bookishpage}{HTML}{F5FAF5}%
+  \definecolor{bookishtext}{HTML}{183025}%
+  \definecolor{bookishaccent}{HTML}{C6A362}%
+  \definecolor{bookishsoft}{HTML}{DCE9E1}%
+  \definecolor{bookishcoverbg}{HTML}{092519}%
+  \definecolor{bookishcoverfg}{HTML}{F3E8C8}%
+  \definecolor{bookishcoveraccent}{HTML}{D4B06C}%
+  \definecolor{bookishcovermuted}{HTML}{A9C0B3}%
+}
+
+\newcommand{\bookish@theme@emerald}{%
+  \definecolor{bookishpage}{HTML}{F2F6F8}%
+  \definecolor{bookishtext}{HTML}{1A2735}%
+  \definecolor{bookishaccent}{HTML}{C3A261}%
+  \definecolor{bookishsoft}{HTML}{DAE2E8}%
+  \definecolor{bookishcoverbg}{HTML}{10263D}%
+  \definecolor{bookishcoverfg}{HTML}{F2E9D8}%
+  \definecolor{bookishcoveraccent}{HTML}{D3AB5A}%
+  \definecolor{bookishcovermuted}{HTML}{B9C7D4}%
+}
+
+\newcommand{\bookish@theme@feminine}{%
+  \definecolor{bookishpage}{HTML}{F9F6F1}%
+  \definecolor{bookishtext}{HTML}{5D5A54}%
+  \definecolor{bookishaccent}{HTML}{8C8A7E}%
+  \definecolor{bookishsoft}{HTML}{EBE7E1}%
+  \definecolor{bookishcoverbg}{HTML}{E8DFD3}%
+  \definecolor{bookishcoverfg}{HTML}{324038}%
+  \definecolor{bookishcoveraccent}{HTML}{8C9B8B}%
+  \definecolor{bookishcovermuted}{HTML}{6E746B}%
+}
+
+\newcommand{\bookish@theme@goldenblue}{%
+  \definecolor{bookishpage}{HTML}{F2F7F8}%
+  \definecolor{bookishtext}{HTML}{17313A}%
+  \definecolor{bookishaccent}{HTML}{C7A15A}%
+  \definecolor{bookishsoft}{HTML}{DDE8EA}%
+  \definecolor{bookishcoverbg}{HTML}{123D4F}%
+  \definecolor{bookishcoverfg}{HTML}{F1E7D3}%
+  \definecolor{bookishcoveraccent}{HTML}{D8B268}%
+  \definecolor{bookishcovermuted}{HTML}{B3CBD0}%
+}
+
+\newcommand{\bookish@theme@greencutton}{%
+  \definecolor{bookishpage}{HTML}{F4F8F7}%
+  \definecolor{bookishtext}{HTML}{16302E}%
+  \definecolor{bookishaccent}{HTML}{C9A45A}%
+  \definecolor{bookishsoft}{HTML}{DCE7E4}%
+  \definecolor{bookishcoverbg}{HTML}{0D3B3D}%
+  \definecolor{bookishcoverfg}{HTML}{F0EADA}%
+  \definecolor{bookishcoveraccent}{HTML}{DAB068}%
+  \definecolor{bookishcovermuted}{HTML}{ABC8C3}%
+}
+
+\newcommand{\bookish@theme@greenflower}{%
+  \definecolor{bookishpage}{HTML}{F3F8F4}%
+  \definecolor{bookishtext}{HTML}{18332F}%
+  \definecolor{bookishaccent}{HTML}{CBA85E}%
+  \definecolor{bookishsoft}{HTML}{DCE8DE}%
+  \definecolor{bookishcoverbg}{HTML}{0F4444}%
+  \definecolor{bookishcoverfg}{HTML}{F0E9D6}%
+  \definecolor{bookishcoveraccent}{HTML}{D9B36A}%
+  \definecolor{bookishcovermuted}{HTML}{AEC8C1}%
+}
+
+\newcommand{\bookish@theme@petals}{%
+  \definecolor{bookishpage}{HTML}{FCF9F1}%
+  \definecolor{bookishtext}{HTML}{5A4A3A}%
+  \definecolor{bookishaccent}{HTML}{C9A55A}%
+  \definecolor{bookishsoft}{HTML}{F2E8D7}%
+  \definecolor{bookishcoverbg}{HTML}{E9D7BE}%
+  \definecolor{bookishcoverfg}{HTML}{47372A}%
+  \definecolor{bookishcoveraccent}{HTML}{BE9A59}%
+  \definecolor{bookishcovermuted}{HTML}{8D7B67}%
+}
+
+\newcommand{\bookish@theme@rose}{%
+  \definecolor{bookishpage}{HTML}{FBFAF7}%
+  \definecolor{bookishtext}{HTML}{514A46}%
+  \definecolor{bookishaccent}{HTML}{8A9A78}%
+  \definecolor{bookishsoft}{HTML}{F0ECE6}%
+  \definecolor{bookishcoverbg}{HTML}{E8E2DB}%
+  \definecolor{bookishcoverfg}{HTML}{384235}%
+  \definecolor{bookishcoveraccent}{HTML}{92A06C}%
+  \definecolor{bookishcovermuted}{HTML}{7C7A73}%
+}
+
 % Swap the shared named colors to the palette associated with the active theme.
 \newcommand{\bookishapplytheme}[1]{%
-  \ifdefstring{#1}{black}{%
-    \definecolor{bookishpage}{HTML}{FCFBF7}%
-    \definecolor{bookishtext}{HTML}{181818}%
-    \definecolor{bookishaccent}{HTML}{A36A1D}%
-    \definecolor{bookishsoft}{HTML}{F5E7CF}%
-    \definecolor{bookishcoverbg}{HTML}{101010}%
-    \definecolor{bookishcoverfg}{HTML}{F4EFE7}%
-    \definecolor{bookishcoveraccent}{HTML}{C98A35}%
-    \definecolor{bookishcovermuted}{HTML}{E7CCB1}%
+  \ifcsdef{bookish@theme@#1}{%
+    \csname bookish@theme@#1\endcsname
   }{%
-    \ifdefstring{#1}{sepia}{%
-      \definecolor{bookishpage}{HTML}{FFFDF8}%
-      \definecolor{bookishtext}{HTML}{1A1714}%
-      \definecolor{bookishaccent}{HTML}{80603D}%
-      \definecolor{bookishsoft}{HTML}{F0E6D8}%
-      \definecolor{bookishcoverbg}{HTML}{171310}%
-      \definecolor{bookishcoverfg}{HTML}{F9F3EA}%
-      \definecolor{bookishcoveraccent}{HTML}{B69773}%
-      \definecolor{bookishcovermuted}{HTML}{D9C2A8}%
-    }{%
-      \ifdefstring{#1}{ocean}{%
-        \definecolor{bookishpage}{HTML}{F4FAFB}%
-        \definecolor{bookishtext}{HTML}{16333B}%
-        \definecolor{bookishaccent}{HTML}{1E6F86}%
-        \definecolor{bookishsoft}{HTML}{DDF0F4}%
-        \definecolor{bookishcoverbg}{HTML}{0E2A33}%
-        \definecolor{bookishcoverfg}{HTML}{EDF9FC}%
-        \definecolor{bookishcoveraccent}{HTML}{58B6C9}%
-        \definecolor{bookishcovermuted}{HTML}{B9DDE4}%
-      }{%
-        \ifdefstring{#1}{forest}{%
-          \definecolor{bookishpage}{HTML}{F7FBF5}%
-          \definecolor{bookishtext}{HTML}{1F3327}%
-          \definecolor{bookishaccent}{HTML}{4E7A3E}%
-          \definecolor{bookishsoft}{HTML}{E4EFDE}%
-          \definecolor{bookishcoverbg}{HTML}{1D2D22}%
-          \definecolor{bookishcoverfg}{HTML}{F1F8ED}%
-          \definecolor{bookishcoveraccent}{HTML}{8EB66D}%
-          \definecolor{bookishcovermuted}{HTML}{C9DAB9}%
-        }{%
-          \definecolor{bookishpage}{HTML}{FBF7FC}%
-          \definecolor{bookishtext}{HTML}{241C27}%
-          \definecolor{bookishaccent}{HTML}{643D78}%
-          \definecolor{bookishsoft}{HTML}{EFE3F6}%
-          \definecolor{bookishcoverbg}{HTML}{241329}%
-          \definecolor{bookishcoverfg}{HTML}{F8F0FB}%
-          \definecolor{bookishcoveraccent}{HTML}{B791CA}%
-          \definecolor{bookishcovermuted}{HTML}{DCC8E6}%
-        }%
-      }%
-    }%
+    \bookish@theme@purple
   }%
 }

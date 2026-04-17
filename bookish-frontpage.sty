@@ -13,6 +13,26 @@
 
 \newcommand{\bookishfrontpage@style}{star}
 
+% Marker commands let the package detect image-background frontmatter styles.
+\expandafter\def\csname bookish@imagebgstyle@bluelight\endcsname{}
+\expandafter\def\csname bookish@imagebgstyle@cushion\endcsname{}
+\expandafter\def\csname bookish@imagebgstyle@embroid\endcsname{}
+\expandafter\def\csname bookish@imagebgstyle@emerald\endcsname{}
+\expandafter\def\csname bookish@imagebgstyle@feminine\endcsname{}
+\expandafter\def\csname bookish@imagebgstyle@goldenblue\endcsname{}
+\expandafter\def\csname bookish@imagebgstyle@greencutton\endcsname{}
+\expandafter\def\csname bookish@imagebgstyle@greenflower\endcsname{}
+\expandafter\def\csname bookish@imagebgstyle@petals\endcsname{}
+\expandafter\def\csname bookish@imagebgstyle@rose\endcsname{}
+
+\newcommand{\bookish@ifimagebgstyle}[3]{%
+  \expandafter\ifcsname bookish@imagebgstyle@#1\endcsname
+    #2%
+  \else
+    #3%
+  \fi
+}
+
 % Store the public frontpage style name for later dispatch.
 \newcommand{\bookishfrontpagesetup}[1]{%
   \edef\bookishfrontpage@style{#1}%
@@ -100,6 +120,13 @@
   }%
 }
 
+% Image-backed covers need footer blocks that stay together instead of floating pieces.
+\newcommand{\bookish@imagebgparalign}[1]{%
+  \ifdefstring{#1}{left}{\raggedright}{%
+    \ifdefstring{#1}{right}{\raggedleft}{\centering}%
+  }%
+}
+
 % Subtitle placement is configurable: above or below the title.
 \newcommand{\bookish@ifsubtitleabove}[2]{%
   \ifdefstring{\bookish@subtitleposition}{above}{#1}{#2}%
@@ -119,6 +146,350 @@
       \bookish@coverMetaText{\bookish@publishstatuslabel}%
     };
   }%
+}
+
+% Shared image-background layout variables. These are overridden per image so text sits in the quiet area.
+\newcommand{\bookish@imagebgfilepath}{assets/frontimages/bluelight.jpg}
+\newcommand{\bookish@imagebgtitlepos}{([yshift=-0.16\paperheight]current page.north)}
+\newcommand{\bookish@imagebgtitleanchor}{north}
+\newcommand{\bookish@imagebgtitlealign}{center}
+\newcommand{\bookish@imagebgtitlewidth}{0.72\paperwidth}
+\newcommand{\bookish@imagebgtitlepanelopacity}{0.34}
+\newcommand{\bookish@imagebgtitlefontsize}{34}
+\newcommand{\bookish@imagebgsubtitlefontsize}{15}
+\newcommand{\bookish@imagebgauthorpos}{([yshift=0.18\paperheight]current page.south)}
+\newcommand{\bookish@imagebgauthoranchor}{south}
+\newcommand{\bookish@imagebgauthoralign}{center}
+\newcommand{\bookish@imagebgauthorwidth}{0.58\paperwidth}
+\newcommand{\bookish@imagebgauthorpanelopacity}{0.26}
+\newcommand{\bookish@imagebgauthorfontsize}{19}
+\newcommand{\bookish@imagebgaddressfontsize}{11}
+\newcommand{\bookish@imagebgpublisherpos}{([yshift=0.9cm]current page.south)}
+\newcommand{\bookish@imagebgpublisheranchor}{south}
+\newcommand{\bookish@imagebgpublisheralign}{center}
+\newcommand{\bookish@imagebgpublisherwidth}{0.20\paperwidth}
+\newcommand{\bookish@imagebgtranslatorpos}{([yshift=1.8cm]current page.south)}
+\newcommand{\bookish@imagebgtranslatoranchor}{south}
+\newcommand{\bookish@imagebgtranslatoralign}{center}
+\newcommand{\bookish@imagebgtranslatorwidth}{0.40\paperwidth}
+\newcommand{\bookish@imagebglogowidth}{0.055\textwidth}
+
+% Per-style layout macros for image-background covers.
+% Each macro overrides only the variables that differ from the defaults set in \bookish@setupimagebgstyle.
+% To tune a style: find its macro below, adjust values, rebuild.
+
+\newcommand{\bookish@imagebgsetup@bluelight}{%
+  % Strong central arch — symmetric, formal. Text inside arch, light panels.
+  \renewcommand{\bookish@imagebgtitlepos}{($(current page.north)!0.20!(current page.south)$)}%
+  \renewcommand{\bookish@imagebgtitlewidth}{0.54\paperwidth}%
+  \renewcommand{\bookish@imagebgtitlepanelopacity}{0.08}%
+  \renewcommand{\bookish@imagebgtitlefontsize}{36}%
+  \renewcommand{\bookish@imagebgauthorpos}{($(current page.south)!0.50!(current page.north)$)}%
+  \renewcommand{\bookish@imagebgauthorwidth}{0.48\paperwidth}%
+  \renewcommand{\bookish@imagebgauthorpanelopacity}{0.04}%
+  \renewcommand{\bookish@imagebgaddressfontsize}{13}%
+  \renewcommand{\bookish@imagebgauthorfontsize}{22}%
+  \renewcommand{\bookish@imagebgtranslatorpos}{($(current page.south)!0.32!(current page.north)$)}%
+  \renewcommand{\bookish@imagebgtranslatorwidth}{0.50\paperwidth}%
+  \renewcommand{\bookish@imagebgpublisherpos}{($(current page.south)!0.14!(current page.north)$)}%
+  \renewcommand{\bookish@imagebgpublisherwidth}{0.20\paperwidth}%
+  \renewcommand{\bookish@imagebglogowidth}{0.08\textwidth}%
+}
+
+\newcommand{\bookish@imagebgsetup@cushion}{%
+  % Busy tufted texture — needs stronger panels for readability.
+  \renewcommand{\bookish@imagebgtitlepos}{([yshift=-0.20\paperheight]current page.north)}%
+  \renewcommand{\bookish@imagebgtitlewidth}{0.64\paperwidth}%
+  \renewcommand{\bookish@imagebgtitlepanelopacity}{0.48}%
+  \renewcommand{\bookish@imagebgauthorpos}{([yshift=0.20\paperheight]current page.south)}%
+  \renewcommand{\bookish@imagebgauthorwidth}{0.52\paperwidth}%
+  \renewcommand{\bookish@imagebgauthorpanelopacity}{0.34}%
+  \renewcommand{\bookish@imagebgtranslatorpos}{([yshift=2.0cm]current page.south)}%
+  \renewcommand{\bookish@imagebgpublisherpos}{([yshift=1.0cm]current page.south)}%
+}
+
+\newcommand{\bookish@imagebgsetup@embroid}{%
+  % Asymmetric — strong right ornament, quiet left. All text left-aligned.
+  \renewcommand{\bookish@imagebgtitlepos}{([xshift=0.10\paperwidth,yshift=-0.14\paperheight]current page.north west)}%
+  \renewcommand{\bookish@imagebgtitleanchor}{north west}%
+  \renewcommand{\bookish@imagebgtitlealign}{left}%
+  \renewcommand{\bookish@imagebgtitlewidth}{0.44\paperwidth}%
+  \renewcommand{\bookish@imagebgtitlepanelopacity}{0.20}%
+  \renewcommand{\bookish@imagebgauthorpos}{([xshift=0.10\paperwidth,yshift=0.20\paperheight]current page.south west)}%
+  \renewcommand{\bookish@imagebgauthoranchor}{south west}%
+  \renewcommand{\bookish@imagebgauthoralign}{left}%
+  \renewcommand{\bookish@imagebgauthorwidth}{0.38\paperwidth}%
+  \renewcommand{\bookish@imagebgauthorpanelopacity}{0.14}%
+  \renewcommand{\bookish@imagebgpublisherpos}{([xshift=0.10\paperwidth,yshift=0.8cm]current page.south west)}%
+  \renewcommand{\bookish@imagebgpublisheranchor}{south west}%
+  \renewcommand{\bookish@imagebgpublisheralign}{left}%
+  \renewcommand{\bookish@imagebgpublisherwidth}{0.20\paperwidth}%
+  \renewcommand{\bookish@imagebgtranslatorpos}{([xshift=0.10\paperwidth,yshift=1.6cm]current page.south west)}%
+  \renewcommand{\bookish@imagebgtranslatoranchor}{south west}%
+  \renewcommand{\bookish@imagebgtranslatoralign}{left}%
+  \renewcommand{\bookish@imagebgtranslatorwidth}{0.34\paperwidth}%
+  \renewcommand{\bookish@imagebglogowidth}{0.042\textwidth}%
+}
+
+\newcommand{\bookish@imagebgsetup@emerald}{%
+  % Symmetric dark-teal arch — similar to bluelight but slightly tighter.
+  \renewcommand{\bookish@imagebgtitlewidth}{0.60\paperwidth}%
+  \renewcommand{\bookish@imagebgtitlepanelopacity}{0.18}%
+  \renewcommand{\bookish@imagebgtitlefontsize}{35}%
+  \renewcommand{\bookish@imagebgauthorpos}{([yshift=0.22\paperheight]current page.south)}%
+  \renewcommand{\bookish@imagebgauthorwidth}{0.50\paperwidth}%
+  \renewcommand{\bookish@imagebgauthorpanelopacity}{0.10}%
+  \renewcommand{\bookish@imagebgtranslatorpos}{([yshift=2.0cm]current page.south)}%
+  \renewcommand{\bookish@imagebgpublisherpos}{([yshift=1.0cm]current page.south)}%
+}
+
+\newcommand{\bookish@imagebgsetup@feminine}{%
+  % Light floral frame, large empty center. No panels — let the image breathe.
+  % Title upper-left, author lower-right for visual balance.
+  \renewcommand{\bookish@imagebgtitlepos}{([xshift=0.08\paperwidth,yshift=-0.18\paperheight]current page.north west)}%
+  \renewcommand{\bookish@imagebgtitleanchor}{north west}%
+  \renewcommand{\bookish@imagebgtitlealign}{left}%
+  \renewcommand{\bookish@imagebgtitlewidth}{0.42\paperwidth}%
+  \renewcommand{\bookish@imagebgtitlepanelopacity}{0.00}%
+  \renewcommand{\bookish@imagebgauthorpos}{([xshift=-0.10\paperwidth,yshift=0.18\paperheight]current page.south east)}%
+  \renewcommand{\bookish@imagebgauthoranchor}{south east}%
+  \renewcommand{\bookish@imagebgauthoralign}{right}%
+  \renewcommand{\bookish@imagebgauthorwidth}{0.30\paperwidth}%
+  \renewcommand{\bookish@imagebgauthorpanelopacity}{0.00}%
+  \renewcommand{\bookish@imagebgpublisherpos}{([xshift=-0.10\paperwidth,yshift=0.8cm]current page.south east)}%
+  \renewcommand{\bookish@imagebgpublisheranchor}{south east}%
+  \renewcommand{\bookish@imagebgpublisheralign}{right}%
+  \renewcommand{\bookish@imagebgpublisherwidth}{0.20\paperwidth}%
+  \renewcommand{\bookish@imagebgtranslatorpos}{([xshift=-0.10\paperwidth,yshift=1.6cm]current page.south east)}%
+  \renewcommand{\bookish@imagebgtranslatoranchor}{south east}%
+  \renewcommand{\bookish@imagebgtranslatoralign}{right}%
+  \renewcommand{\bookish@imagebgtranslatorwidth}{0.30\paperwidth}%
+  \renewcommand{\bookish@imagebglogowidth}{0.042\textwidth}%
+}
+
+\newcommand{\bookish@imagebgsetup@goldenblue}{%
+  % Ornate teal frame — strong border, deep background. Very light panels.
+  \renewcommand{\bookish@imagebgtitlepos}{([yshift=-0.15\paperheight]current page.north)}%
+  \renewcommand{\bookish@imagebgtitlewidth}{0.58\paperwidth}%
+  \renewcommand{\bookish@imagebgtitlepanelopacity}{0.12}%
+  \renewcommand{\bookish@imagebgtitlefontsize}{35}%
+  \renewcommand{\bookish@imagebgauthorpos}{([yshift=0.24\paperheight]current page.south)}%
+  \renewcommand{\bookish@imagebgauthorwidth}{0.48\paperwidth}%
+  \renewcommand{\bookish@imagebgauthorpanelopacity}{0.08}%
+  \renewcommand{\bookish@imagebgtranslatorpos}{([yshift=2.1cm]current page.south)}%
+  \renewcommand{\bookish@imagebgpublisherpos}{([yshift=1.0cm]current page.south)}%
+}
+
+\newcommand{\bookish@imagebgsetup@greencutton}{%
+  % Heavy decoration top-right, left side open. All text left-aligned.
+  \renewcommand{\bookish@imagebgtitlepos}{([xshift=0.10\paperwidth,yshift=-0.18\paperheight]current page.north west)}%
+  \renewcommand{\bookish@imagebgtitleanchor}{north west}%
+  \renewcommand{\bookish@imagebgtitlealign}{left}%
+  \renewcommand{\bookish@imagebgtitlewidth}{0.44\paperwidth}%
+  \renewcommand{\bookish@imagebgtitlepanelopacity}{0.26}%
+  \renewcommand{\bookish@imagebgauthorpos}{([xshift=0.10\paperwidth,yshift=0.16\paperheight]current page.south west)}%
+  \renewcommand{\bookish@imagebgauthoranchor}{south west}%
+  \renewcommand{\bookish@imagebgauthoralign}{left}%
+  \renewcommand{\bookish@imagebgauthorwidth}{0.36\paperwidth}%
+  \renewcommand{\bookish@imagebgauthorpanelopacity}{0.18}%
+  \renewcommand{\bookish@imagebgpublisherpos}{([xshift=0.10\paperwidth,yshift=0.8cm]current page.south west)}%
+  \renewcommand{\bookish@imagebgpublisheranchor}{south west}%
+  \renewcommand{\bookish@imagebgpublisheralign}{left}%
+  \renewcommand{\bookish@imagebgpublisherwidth}{0.20\paperwidth}%
+  \renewcommand{\bookish@imagebgtranslatorpos}{([xshift=0.10\paperwidth,yshift=1.6cm]current page.south west)}%
+  \renewcommand{\bookish@imagebgtranslatoranchor}{south west}%
+  \renewcommand{\bookish@imagebgtranslatoralign}{left}%
+  \renewcommand{\bookish@imagebgtranslatorwidth}{0.34\paperwidth}%
+}
+
+\newcommand{\bookish@imagebgsetup@greenflower}{%
+  % Symmetric centered floral — mid-weight texture, moderate panels.
+  \renewcommand{\bookish@imagebgtitlewidth}{0.54\paperwidth}%
+  \renewcommand{\bookish@imagebgtitlepanelopacity}{0.18}%
+  \renewcommand{\bookish@imagebgauthorpos}{([yshift=0.20\paperheight]current page.south)}%
+  \renewcommand{\bookish@imagebgauthorwidth}{0.44\paperwidth}%
+  \renewcommand{\bookish@imagebgauthorpanelopacity}{0.12}%
+  \renewcommand{\bookish@imagebgtranslatorpos}{([yshift=2.0cm]current page.south)}%
+  \renewcommand{\bookish@imagebgpublisherpos}{([yshift=1.0cm]current page.south)}%
+}
+
+\newcommand{\bookish@imagebgsetup@petals}{%
+  % Very soft, airy — no panels. Title top-center (larger), author lower-right.
+  % Publisher bottom-left for diagonal balance.
+  \renewcommand{\bookish@imagebgtitlepos}{([yshift=-0.14\paperheight]current page.north)}%
+  \renewcommand{\bookish@imagebgtitlewidth}{0.48\paperwidth}%
+  \renewcommand{\bookish@imagebgtitlepanelopacity}{0.00}%
+  \renewcommand{\bookish@imagebgtitlefontsize}{38}%
+  \renewcommand{\bookish@imagebgauthorpos}{([xshift=-0.12\paperwidth,yshift=0.18\paperheight]current page.south east)}%
+  \renewcommand{\bookish@imagebgauthoranchor}{south east}%
+  \renewcommand{\bookish@imagebgauthoralign}{right}%
+  \renewcommand{\bookish@imagebgauthorwidth}{0.30\paperwidth}%
+  \renewcommand{\bookish@imagebgauthorpanelopacity}{0.00}%
+  \renewcommand{\bookish@imagebgpublisherpos}{([xshift=0.08\paperwidth,yshift=0.8cm]current page.south west)}%
+  \renewcommand{\bookish@imagebgpublisheranchor}{south west}%
+  \renewcommand{\bookish@imagebgpublisheralign}{left}%
+  \renewcommand{\bookish@imagebgpublisherwidth}{0.20\paperwidth}%
+  \renewcommand{\bookish@imagebgtranslatorpos}{([xshift=0.08\paperwidth,yshift=1.6cm]current page.south west)}%
+  \renewcommand{\bookish@imagebgtranslatoranchor}{south west}%
+  \renewcommand{\bookish@imagebgtranslatoralign}{left}%
+  \renewcommand{\bookish@imagebgtranslatorwidth}{0.34\paperwidth}%
+  \renewcommand{\bookish@imagebglogowidth}{0.040\textwidth}%
+}
+
+\newcommand{\bookish@imagebgsetup@rose}{%
+  % Diagonal floral corners — cross-diagonal balance.
+  % Title upper-right, author lower-left. Publisher/translator centered bottom.
+  \renewcommand{\bookish@imagebgtitlepos}{([xshift=-0.08\paperwidth,yshift=-0.15\paperheight]current page.north east)}%
+  \renewcommand{\bookish@imagebgtitleanchor}{north east}%
+  \renewcommand{\bookish@imagebgtitlealign}{right}%
+  \renewcommand{\bookish@imagebgtitlewidth}{0.38\paperwidth}%
+  \renewcommand{\bookish@imagebgtitlepanelopacity}{0.00}%
+  \renewcommand{\bookish@imagebgauthorpos}{([xshift=0.08\paperwidth,yshift=0.16\paperheight]current page.south west)}%
+  \renewcommand{\bookish@imagebgauthoranchor}{south west}%
+  \renewcommand{\bookish@imagebgauthoralign}{left}%
+  \renewcommand{\bookish@imagebgauthorwidth}{0.34\paperwidth}%
+  \renewcommand{\bookish@imagebgauthorpanelopacity}{0.00}%
+  \renewcommand{\bookish@imagebgpublisherpos}{([yshift=0.8cm]current page.south)}%
+  \renewcommand{\bookish@imagebgpublisheranchor}{south}%
+  \renewcommand{\bookish@imagebgpublisheralign}{center}%
+  \renewcommand{\bookish@imagebgpublisherwidth}{0.20\paperwidth}%
+  \renewcommand{\bookish@imagebgtranslatorpos}{([yshift=1.6cm]current page.south)}%
+  \renewcommand{\bookish@imagebgtranslatoranchor}{south}%
+  \renewcommand{\bookish@imagebgtranslatoralign}{center}%
+  \renewcommand{\bookish@imagebgtranslatorwidth}{0.32\paperwidth}%
+  \renewcommand{\bookish@imagebglogowidth}{0.040\textwidth}%
+}
+
+% Configure the generic image-background cover to fit the visual breathing room of each source image.
+% Defaults are applied first, then the per-style macro overrides what it needs.
+\newcommand{\bookish@setupimagebgstyle}{%
+  \edef\bookish@imagebgfilepath{assets/frontimages/\bookishfrontpage@style.jpg}%
+  \renewcommand{\bookish@imagebgtitlepos}{([yshift=-0.16\paperheight]current page.north)}%
+  \renewcommand{\bookish@imagebgtitleanchor}{north}%
+  \renewcommand{\bookish@imagebgtitlealign}{center}%
+  \renewcommand{\bookish@imagebgtitlewidth}{0.72\paperwidth}%
+  \renewcommand{\bookish@imagebgtitlepanelopacity}{0.30}%
+  \renewcommand{\bookish@imagebgtitlefontsize}{34}%
+  \renewcommand{\bookish@imagebgsubtitlefontsize}{15}%
+  \renewcommand{\bookish@imagebgauthorpos}{([yshift=0.18\paperheight]current page.south)}%
+  \renewcommand{\bookish@imagebgauthoranchor}{south}%
+  \renewcommand{\bookish@imagebgauthoralign}{center}%
+  \renewcommand{\bookish@imagebgauthorwidth}{0.58\paperwidth}%
+  \renewcommand{\bookish@imagebgauthorpanelopacity}{0.22}%
+  \renewcommand{\bookish@imagebgauthorfontsize}{19}%
+  \renewcommand{\bookish@imagebgaddressfontsize}{11}%
+  \renewcommand{\bookish@imagebgpublisherpos}{([yshift=1.0cm]current page.south)}%
+  \renewcommand{\bookish@imagebgpublisheranchor}{south}%
+  \renewcommand{\bookish@imagebgpublisheralign}{center}%
+  \renewcommand{\bookish@imagebgpublisherwidth}{0.20\paperwidth}%
+  \renewcommand{\bookish@imagebgtranslatorpos}{([yshift=1.95cm]current page.south)}%
+  \renewcommand{\bookish@imagebgtranslatoranchor}{south}%
+  \renewcommand{\bookish@imagebgtranslatoralign}{center}%
+  \renewcommand{\bookish@imagebgtranslatorwidth}{0.40\paperwidth}%
+  \renewcommand{\bookish@imagebglogowidth}{0.055\textwidth}%
+  \ifcsdef{bookish@imagebgsetup@\bookishfrontpage@style}{%
+    \csname bookish@imagebgsetup@\bookishfrontpage@style\endcsname
+  }{}%
+}
+
+% Full-bleed image cover derived from the local imagebg template and tuned per source image.
+\newcommand{\bookishfrontpageimagebg}{%
+  \bookish@setupimagebgstyle
+  \node[anchor=south west, inner sep=0pt] at (current page.south west) {%
+    \includegraphics[width=\paperwidth,height=\paperheight]{\bookish@imagebgfilepath}%
+  };
+  \bookish@drawstatustag
+  \node[
+    text=bookishcoverfg,
+    fill=bookishcoverbg,
+    fill opacity=\bookish@imagebgtitlepanelopacity,
+    text opacity=1,
+    rounded corners=16pt,
+    inner xsep=16pt,
+    inner ysep=15pt,
+    text width=\bookish@imagebgtitlewidth,
+    align=\bookish@imagebgtitlealign,
+    anchor=\bookish@imagebgtitleanchor
+  ] at \bookish@imagebgtitlepos {%
+    \bookish@ifsubtitleabove{%
+      \ifstrempty{\bookish@subtitle}{}{{\color{bookishcovermuted}\fontsize{\bookish@imagebgsubtitlefontsize}{\numexpr\bookish@imagebgsubtitlefontsize+2\relax}\selectfont\bookish@coverSubtitleText{\bookish@subtitle}\par\vspace{4pt}}%
+      }%
+      {\fontsize{\bookish@imagebgtitlefontsize}{\numexpr\bookish@imagebgtitlefontsize+2\relax}\selectfont\bookish@coverTitleText{\bookish@title}}%
+    }{%
+      {\fontsize{\bookish@imagebgtitlefontsize}{\numexpr\bookish@imagebgtitlefontsize+2\relax}\selectfont\bookish@coverTitleText{\bookish@title}}%
+      \ifstrempty{\bookish@subtitle}{}{\par\vspace{4pt}{\color{bookishcovermuted}\fontsize{\bookish@imagebgsubtitlefontsize}{\numexpr\bookish@imagebgsubtitlefontsize+2\relax}\selectfont\bookish@coverSubtitleText{\bookish@subtitle}}}%
+    }%
+  };
+  \node[
+    text=bookishcoverfg,
+    fill=bookishcoverbg,
+    fill opacity=\bookish@imagebgauthorpanelopacity,
+    text opacity=1,
+    rounded corners=14pt,
+    inner xsep=14pt,
+    inner ysep=11pt,
+    text width=\bookish@imagebgauthorwidth,
+    align=\bookish@imagebgauthoralign,
+    anchor=\bookish@imagebgauthoranchor
+  ] at \bookish@imagebgauthorpos {%
+    \ifstrempty{\bookish@authoraddress}{}{{\color{bookishcovermuted}\fontsize{\bookish@imagebgaddressfontsize}{\numexpr\bookish@imagebgaddressfontsize+2\relax}\selectfont\bookish@coverAddressText{\bookish@authoraddress}}\par\vspace{2pt}}%
+    {\fontsize{\bookish@imagebgauthorfontsize}{\numexpr\bookish@imagebgauthorfontsize+2\relax}\selectfont\bookish@coverAuthorText{\bookish@author}}%
+  };
+  \node[
+    text=bookishcoverfg,
+    anchor=\bookish@imagebgpublisheranchor,
+    text width=\bookish@imagebgpublisherwidth,
+    align=\bookish@imagebgpublisheralign,
+    font=\fontsize{11}{11}\bookishsansfont
+  ] (publisher) at \bookish@imagebgpublisherpos {%
+    \textcolor{bookishcovermuted}{\bookish@coverMetaText{\bookish@publishername}}%
+  };
+  \bookish@drawpublisherlogo{anchor=north, above=4pt of publisher.north}{\bookish@imagebglogowidth}
+  \ifstrempty{\bookish@translator}{}{%
+    \node[
+      text=bookishcoverfg,
+      anchor=\bookish@imagebgtranslatoranchor,
+      text width=\bookish@imagebgtranslatorwidth,
+      align=\bookish@imagebgtranslatoralign,
+      font=\fontsize{13}{15}\bookishsansfont
+    ] at \bookish@imagebgtranslatorpos {%
+      \textcolor{bookishcovermuted}{Translated by}\par
+      \textcolor{bookishcoverfg}{\fontsize{14}{16}\selectfont\bookish@translator}%
+    };
+  }%
+}
+
+% Matching backmatter reuses the image with a quieter synopsis panel.
+\newcommand{\bookishbackmatterimagebg}{%
+  \bookish@setupimagebgstyle
+  \node[anchor=south west, inner sep=0pt] at (current page.south west) {%
+    \includegraphics[width=\paperwidth,height=\paperheight]{\bookish@imagebgfilepath}%
+  };
+  \node[
+    text=bookishcoverfg,
+    fill=bookishcoverbg,
+    fill opacity=0.62,
+    text opacity=1,
+    rounded corners=18pt,
+    inner xsep=18pt,
+    inner ysep=16pt,
+    text width=0.70\paperwidth,
+    align=justify,
+    anchor=center
+  ] at (current page.center) {%
+    \fontsize{13}{17}\selectfont
+    \ifstrempty{\bookish@backtext}{\bookish@title}{\bookish@backtext}%
+  };
+  \node[
+    text=bookishcoverfg,
+    anchor=\bookish@imagebgpublisheranchor,
+    text width=\bookish@imagebgpublisherwidth,
+    align=\bookish@imagebgpublisheralign,
+    font=\fontsize{11}{11}\bookishsansfont
+  ] (publisher) at \bookish@imagebgpublisherpos {%
+    \textcolor{bookishcovermuted}{\bookish@coverMetaText{\bookish@publishername}}%
+  };
+  \bookish@drawpublisherlogo{anchor=north, above=4pt of publisher.north}{\bookish@imagebglogowidth}
 }
 
 % Elegant Forta-style cover derived from the alternate black template cover.
@@ -684,16 +1055,20 @@
 
 % Resolve the public style name to the matching frontpage renderer.
 \newcommand{\bookishprintfontpage}{%
-  \ifdefstring{\bookishfrontpage@style}{star}{%
-    \bookishfrontpageelegant
+  \bookish@ifimagebgstyle{\bookishfrontpage@style}{%
+    \bookishfrontpageimagebg
   }{%
-    \ifdefstring{\bookishfrontpage@style}{flower}{%
-      \bookishfrontpageflowercenter
-    }{%
-      \ifdefstring{\bookishfrontpage@style}{circle}{%
-        \bookishfrontpagespiralcirclemid
-      }{%
+    \ifdefstring{\bookishfrontpage@style}{star}{%
         \bookishfrontpageelegant
+    }{%
+      \ifdefstring{\bookishfrontpage@style}{flower}{%
+        \bookishfrontpageflowercenter
+      }{%
+        \ifdefstring{\bookishfrontpage@style}{circle}{%
+          \bookishfrontpagespiralcirclemid
+        }{%
+          \bookishfrontpageelegant
+        }%
       }%
     }%
   }%
@@ -701,16 +1076,20 @@
 
 % Resolve the public style name to the matching backmatter renderer.
 \newcommand{\bookishprintbackmatter}{%
-  \ifdefstring{\bookishfrontpage@style}{star}{%
-    \bookishbackmatterelegant
+  \bookish@ifimagebgstyle{\bookishfrontpage@style}{%
+    \bookishbackmatterimagebg
   }{%
-    \ifdefstring{\bookishfrontpage@style}{flower}{%
-      \bookishbackmatterflowercenter
-    }{%
-      \ifdefstring{\bookishfrontpage@style}{circle}{%
-        \bookishbackmatterspiralcirclemid
-      }{%
+    \ifdefstring{\bookishfrontpage@style}{star}{%
         \bookishbackmatterelegant
+    }{%
+      \ifdefstring{\bookishfrontpage@style}{flower}{%
+        \bookishbackmatterflowercenter
+      }{%
+        \ifdefstring{\bookishfrontpage@style}{circle}{%
+          \bookishbackmatterspiralcirclemid
+        }{%
+          \bookishbackmatterelegant
+        }%
       }%
     }%
   }%
