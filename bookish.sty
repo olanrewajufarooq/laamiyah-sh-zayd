@@ -56,6 +56,22 @@
 \newcommand{\bookish@backtext}{}
 \newcommand{\bookish@publisherlogo}{}
 
+% Optional frontpage overrides let the document tune cover layout without editing the style file.
+\newcommand{\bookish@frontpage@titleblockfromtop}{}
+\newcommand{\bookish@frontpage@titleblockwidth}{}
+\newcommand{\bookish@frontpage@titlefontsize}{}
+\newcommand{\bookish@frontpage@subtitlefontsize}{}
+\newcommand{\bookish@frontpage@authorblockfromtop}{}
+\newcommand{\bookish@frontpage@authorblockwidth}{}
+\newcommand{\bookish@frontpage@authorfontsize}{}
+\newcommand{\bookish@frontpage@authoraddressfontsize}{}
+\newcommand{\bookish@frontpage@translatorblockfrombottom}{}
+\newcommand{\bookish@frontpage@translatorblockwidth}{}
+\newcommand{\bookish@frontpage@translatorfontsize}{}
+\newcommand{\bookish@frontpage@publisherblockfrombottom}{}
+\newcommand{\bookish@frontpage@publisherlogowidth}{}
+\newcommand{\bookish@frontpage@publishernamewidth}{}
+
 % User-facing metadata key/value interface.
 \pgfkeys{
   /bookish/.is family,
@@ -73,7 +89,27 @@
   publisherlogo/.store in=\bookish@publisherlogo
 }
 
+\pgfkeys{
+  /bookish/frontpage/.is family,
+  /bookish/frontpage,
+  titleblockfromtop/.store in=\bookish@frontpage@titleblockfromtop,
+  titleblockwidth/.store in=\bookish@frontpage@titleblockwidth,
+  titlefontsize/.store in=\bookish@frontpage@titlefontsize,
+  subtitlefontsize/.store in=\bookish@frontpage@subtitlefontsize,
+  authorblockfromtop/.store in=\bookish@frontpage@authorblockfromtop,
+  authorblockwidth/.store in=\bookish@frontpage@authorblockwidth,
+  authorfontsize/.store in=\bookish@frontpage@authorfontsize,
+  authoraddressfontsize/.store in=\bookish@frontpage@authoraddressfontsize,
+  translatorblockfrombottom/.store in=\bookish@frontpage@translatorblockfrombottom,
+  translatorblockwidth/.store in=\bookish@frontpage@translatorblockwidth,
+  translatorfontsize/.store in=\bookish@frontpage@translatorfontsize,
+  publisherblockfrombottom/.store in=\bookish@frontpage@publisherblockfrombottom,
+  publisherlogowidth/.store in=\bookish@frontpage@publisherlogowidth,
+  publishernamewidth/.store in=\bookish@frontpage@publishernamewidth
+}
+
 \newcommand{\booksetup}[1]{\pgfkeys{/bookish,#1}}
+\newcommand{\customizefrontpage}[1]{\pgfkeys{/bookish/frontpage,#1}}
 
 % Internal state for theme-specific defaults that affect later formatting.
 \newcommand{\bookish@resolvedtheme}{purple}
