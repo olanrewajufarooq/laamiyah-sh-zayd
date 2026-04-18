@@ -1,0 +1,56 @@
+\chapter{Tawhid}
+
+The point of the package is not to hide LaTeX from you. It is to move repeated
+design logic into one place and keep the document entrypoint stable.
+
+\section{What You Can Change}
+
+You can adjust:
+
+\begin{itemize}
+  \item theme
+  \item trim size
+  \item chapter numbering style
+  \item cover treatment
+  \item running headers
+\end{itemize}
+
+\section{What You Still Control Directly}
+
+You still write normal LaTeX content. If you need to extend the design, the
+style file is a standard package and can be edited directly.
+
+\section{Styled Source Text}
+
+The package now includes dedicated environments for Qur'an, hadith, athar,
+general Arabic blocks, and Arabic poetry, so recurring source-text patterns can
+share one visual system.
+
+\begin{quran}
+إِنَّ مَعَ الْعُسْرِ يُسْرًا
+\begin{translation}Indeed, with hardship comes ease.\end{translation}
+\begin{reference}Surah al-Inshirah 94:6\end{reference}
+\end{quran}
+
+\begin{hadith}
+إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ
+\begin{translation}Actions are judged only by intentions.\end{translation}
+\begin{reference}Sahih al-Bukhari 1\end{reference}
+\begin{grade}Sahih\end{grade}
+\end{hadith}
+
+\begin{athar}
+العِلْمُ قَبْلَ القَوْلِ وَالعَمَلِ
+\begin{translation}Knowledge comes before speech and action.\end{translation}
+\begin{reference}Reported from al-Bukhari in his chapter headings\end{reference}
+\end{athar}
+
+\begin{arabicblock}
+هَذَا نَصٌّ عَرَبِيٌّ تَجْرِيبِيٌّ لِإِظْهَارِ تَنْسِيقِ الكُتْلَةِ العَرَبِيَّةِ العَامَّةِ.
+\begin{translation}This is a short Arabic sample showing the generic Arabic block treatment.\end{translation}
+\end{arabicblock}
+
+\begin{poem}
+أَلا كُلُّ شَيءٍ ما خَلا اللَهَ باطِلٌ & وَكُلُّ نَعيمٍ لا مَحالَةَ زائِلُ \\
+وَكُلُّ أُناسٍ سَوفَ تَدخُلُ بَينَهُم & دُوَيهِيَّةٌ تَصفَرُّ مِنها الأَنامِلُ
+\end{poem}

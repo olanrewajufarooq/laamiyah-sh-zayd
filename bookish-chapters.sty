@@ -1,0 +1,254 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{bookish-chapters}[2026/04/18 Chapter, section, and page styling]
+% Usage:
+% \customizechapter{chapterstyle=ornament,pagenumberposition=center,chaptertitlesize=30}
+% \customizechpater{...} is kept as a typo-compatible alias.
+%
+% Design sources:
+% - ornament: flower-center / spiral-circle-mid
+% - margin:   hexagon-elegant
+% - band:     imagebg
+
+\RequirePackage{etoolbox}
+\RequirePackage{titlesec}
+\RequirePackage[titles]{tocloft}
+\RequirePackage{fancyhdr}
+\RequirePackage{pgfornament}
+
+% Shared numeric and spacing defaults live here so the main package only has to
+% call \bookishchaptersetup once after theme/fonts/options are resolved.
+\newcommand{\bookish@chapterstyle}{ornament}
+\newcommand{\bookish@sectionstyle}{auto}
+\newcommand{\bookish@chaptertitlesize}{30}
+\newcommand{\bookish@chapterlabelsize}{15}
+\newcommand{\bookish@sectiontitlesize}{18}
+\newcommand{\bookish@subsectiontitlesize}{14}
+\newcommand{\bookish@chapterbeforeskip}{0pt}
+\newcommand{\bookish@chapterafterskip}{1.4em}
+\newcommand{\bookish@chapterrulelength}{4cm}
+\newcommand{\bookish@chapteralign}{center}
+\newcommand{\bookish@pagenumberposition}{center}
+\newcommand{\bookish@tocstyle}{auto}
+\newcommand{\bookish@tocnumbers}{false}
+\newcommand{\bookish@resolvedsectionstyle}{ornament}
+
+% Chapter customization keys intentionally focus on the knobs users are likely
+% to touch from main.tex instead of exposing every internal formatter macro.
+\pgfkeys{
+  /bookish/chapter/.is family,
+  /bookish/chapter,
+  chapterstyle/.store in=\bookish@chapterstyle,
+  sectionstyle/.store in=\bookish@sectionstyle,
+  chaptertitlesize/.store in=\bookish@chaptertitlesize,
+  chapterlabelsize/.store in=\bookish@chapterlabelsize,
+  sectiontitlesize/.store in=\bookish@sectiontitlesize,
+  subsectiontitlesize/.store in=\bookish@subsectiontitlesize,
+  chapterbeforeskip/.store in=\bookish@chapterbeforeskip,
+  chapterafterskip/.store in=\bookish@chapterafterskip,
+  chapterrulelength/.store in=\bookish@chapterrulelength,
+  chapteralign/.store in=\bookish@chapteralign,
+  pagenumberposition/.store in=\bookish@pagenumberposition,
+  tocstyle/.store in=\bookish@tocstyle,
+  tocnumbers/.store in=\bookish@tocnumbers
+}
+
+\newcommand{\customizechapter}[1]{\pgfkeys{/bookish/chapter,#1}}
+\newcommand{\customizechpater}[1]{\customizechapter{#1}}
+
+% Helpers keep the titlesec definitions readable and make it easy to reuse the
+% same alignment and size logic across all preset styles.
+\newcommand{\bookish@chapteraligncmd}{%
+  \ifdefstring{\bookish@chapteralign}{left}{\raggedright}{%
+    \ifdefstring{\bookish@chapteralign}{right}{\raggedleft}{\centering}%
+  }%
+}
+
+\newcommand{\bookish@chapterfontsize}[1]{%
+  \fontsize{#1pt}{\dimexpr #1pt + 6pt\relax}\selectfont
+}
+
+\newcommand{\bookish@marginnumber}[3]{%
+  \makebox[0pt][r]{%
+    \textcolor{#3}{%
+      \fontsize{#2pt}{\dimexpr #2pt + 2pt\relax}\selectfont
+      \bookishsansfont\bfseries #1.%
+    }%
+    \hskip\marginparsep
+  }%
+}
+
+% Chapter counter printing remains driven by the main package option so the
+% existing public API does not change.
+\newcommand{\bookishchaptersetnumbering}{%
+  \ifdefstring{\bookish@chapternumbering}{arabic}{%
+    \renewcommand{\thechapter}{\arabic{chapter}}%
+  }{%
+    \ifdefstring{\bookish@chapternumbering}{roman-lower}{%
+      \renewcommand{\thechapter}{\roman{chapter}}%
+    }{%
+      \renewcommand{\thechapter}{\Roman{chapter}}%
+    }%
+  }%
+}
+
+% Page numbering is split from running headers so users can keep headers on but
+% move the page number between centered footer and outer header positions.
+\newcommand{\bookishchaptersetheaders}{%
+  \setlength{\headheight}{16pt}%
+  \pagestyle{fancy}%
+  \fancyhf{}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \renewcommand{\footrulewidth}{0pt}%
+  \ifdefstring{\bookish@pagenumberposition}{outer}{%
+    \fancyhead[LE,RO]{\thepage}%
+  }{%
+    \ifdefstring{\bookish@pagenumberposition}{none}{}{%
+      \fancyfoot[C]{\thepage}%
+    }%
+  }%
+  \ifdefstring{\bookish@runningheader}{none}{%
+    \fancyhead{}%
+    \ifdefstring{\bookish@pagenumberposition}{outer}{%
+      \fancyhead[LE,RO]{\thepage}%
+    }{}%
+  }{%
+    \ifdefstring{\bookish@runningheader}{minimal}{%
+      \fancyhead[C]{\itshape\bookish@title}%
+      \ifdefstring{\bookish@pagenumberposition}{outer}{%
+        \fancyhead[LE,RO]{\thepage}%
+      }{}%
+    }{%
+      \ifdefstring{\bookish@pagenumberposition}{outer}{%
+        \fancyhead[LO]{\itshape\bookish@title}%
+        \fancyhead[RE]{\itshape\bookish@author}%
+        \fancyhead[LE,RO]{\thepage}%
+      }{%
+        \fancyhead[L]{\itshape\bookish@author}%
+        \fancyhead[R]{\itshape\bookish@title}%
+      }%
+    }%
+  }%
+  \fancypagestyle{plain}{%
+    \fancyhf{}%
+    \renewcommand{\headrulewidth}{0pt}%
+    \renewcommand{\footrulewidth}{0pt}%
+    \ifdefstring{\bookish@pagenumberposition}{outer}{%
+      \fancyhead[LE,RO]{\thepage}%
+    }{%
+      \ifdefstring{\bookish@pagenumberposition}{none}{}{%
+        \fancyfoot[C]{\thepage}%
+      }%
+    }%
+  }%
+}
+
+% The three chapter presets map directly to the reference templates:
+% ornament -> centered Roman numeral + ornament
+% margin   -> large heading with numbers in the margin
+% band     -> imagebg-inspired sans block title band
+\newcommand{\bookishchaptersettitles}{%
+  \ifdefstring{\bookish@sectionstyle}{auto}{%
+    \edef\bookish@resolvedsectionstyle{\bookish@chapterstyle}%
+  }{%
+    \edef\bookish@resolvedsectionstyle{\bookish@sectionstyle}%
+  }%
+  \ifdefstring{\bookish@chapterstyle}{margin}{%
+    \titlespacing*{\chapter}{0pt}{\bookish@chapterbeforeskip}{\bookish@chapterafterskip}%
+    \titleformat{\chapter}[hang]
+      {\normalfont\huge\bookishsansfont\bfseries\color{bookishaccent}}
+      {\bookish@marginnumber{\thechapter}{24}{bookishaccent}}
+      {0pt}
+      {\MakeUppercase}%
+  }{%
+    \ifdefstring{\bookish@chapterstyle}{band}{%
+      \titlespacing*{\chapter}{0pt}{\bookish@chapterbeforeskip}{\bookish@chapterafterskip}%
+      \titleformat{\chapter}[display]
+        {\normalfont\bookishsansfont\color{bookishtext}}
+        {\bookish@chapteraligncmd\bookish@chapterfontsize{\bookish@chapterlabelsize}\bfseries\color{bookishaccent}\bookish@chapterlabel\ \thechapter}
+        {0.75em}
+        {\bookish@chapteraligncmd\bookishsansfont\bfseries\color{bookishtext}\bookish@chapterfontsize{\bookish@chaptertitlesize}}%
+        [\vspace{0.5em}\bookish@chapteraligncmd\color{bookishaccent}\rule{0.72\textwidth}{0.8pt}]%
+    }{%
+      \titlespacing*{\chapter}{0pt}{\bookish@chapterbeforeskip}{\bookish@chapterafterskip}%
+      \titleformat{\chapter}[block]
+        {\normalfont\bookishcoverseriffont\color{bookishtext}\bookish@chapteraligncmd}
+        {{\bookish@chapterfontsize{\bookish@chapterlabelsize}\scshape\color{bookishaccent}\thechapter\\}}
+        {0pt}
+        {{\bookish@chapterfontsize{\bookish@chaptertitlesize}\bfseries\scshape}}%
+        [\vspace{0.6em}\bookish@chapteraligncmd\textcolor{bookishaccent}{\pgfornament[width=\bookish@chapterrulelength]{85}}]%
+    }%
+  }%
+  \ifdefstring{\bookish@resolvedsectionstyle}{margin}{%
+    \titleformat{\section}
+      {\normalfont\bookish@chapterfontsize{\bookish@sectiontitlesize}\bookishsansfont\bfseries\color{bookishtext}}
+      {\bookish@marginnumber{\thesection}{16}{bookishaccent}}
+      {0pt}
+      {\MakeUppercase}%
+    \titleformat{\subsection}
+      {\normalfont\bookish@chapterfontsize{\bookish@subsectiontitlesize}\bookishsansfont\bfseries\color{bookishtext}}
+      {\bookish@marginnumber{\thesubsection}{12}{bookishtext}}
+      {0pt}
+      {}%
+  }{%
+    \ifdefstring{\bookish@resolvedsectionstyle}{band}{%
+      \titleformat{\section}
+        {\normalfont\bookish@chapterfontsize{\bookish@sectiontitlesize}\bookishsansfont\bfseries\color{bookishaccent}}
+        {\thesection}
+        {0.6em}
+        {}%
+      \titleformat{\subsection}
+        {\normalfont\bookish@chapterfontsize{\bookish@subsectiontitlesize}\bookishsansfont\bfseries\color{bookishtext}}
+        {\thesubsection}
+        {0.6em}
+        {}%
+    }{%
+      \titleformat{\section}
+        {\normalfont\bookish@chapterfontsize{\bookish@sectiontitlesize}\bookishdisplayfont\bfseries\color{bookishaccent}}
+        {\thesection}
+        {0.6em}
+        {}%
+      \titleformat{\subsection}
+        {\normalfont\bookish@chapterfontsize{\bookish@subsectiontitlesize}\bookishdisplayfont\bfseries\color{bookishtext}}
+        {\thesubsection}
+        {0.6em}
+        {}%
+    }%
+  }%
+}
+
+% TOC presets mirror the chapter style family so the interior structure matches
+% the chosen chapter treatment without requiring separate manual tuning.
+\newcommand{\bookishchaptersettoc}{%
+  \ifdefstring{\bookish@tocstyle}{auto}{%
+    \edef\bookish@resolvedtocstyle{\bookish@chapterstyle}%
+  }{%
+    \edef\bookish@resolvedtocstyle{\bookish@tocstyle}%
+  }%
+  \renewcommand{\cfttoctitlefont}{\hfill\Huge\bookishdisplayfont\bfseries\color{bookishaccent}}%
+  \renewcommand{\cftaftertoctitle}{\hfill}%
+  \ifdefstring{\bookish@resolvedtocstyle}{band}{%
+    \renewcommand{\cftchapfont}{\large\bookishsansfont\bfseries}%
+    \renewcommand{\cftchappagefont}{\bookishsansfont\bfseries}%
+    \renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}%
+  }{%
+    \ifdefstring{\bookish@resolvedtocstyle}{margin}{%
+      \renewcommand{\cftchapfont}{\large\bookishsansfont\bfseries}%
+      \renewcommand{\cftchappagefont}{\normalfont}%
+      \renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}%
+    }{%
+      \renewcommand{\cftchapfont}{\large\itshape}%
+      \renewcommand{\cftchappagefont}{\normalfont}%
+      \renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}%
+    }%
+  }%
+  \ifdefstring{\bookish@tocnumbers}{true}{}{%
+    \renewcommand{\numberline}[1]{}%
+  }%
+}
+
+\newcommand{\bookishchaptersetup}{%
+  \bookishchaptersetnumbering
+  \bookishchaptersetheaders
+  \bookishchaptersettitles
+  \bookishchaptersettoc
+}

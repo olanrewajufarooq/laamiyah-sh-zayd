@@ -10,9 +10,13 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 FRONTPAGE_BUILD_DIR = REPO_ROOT / "build" / "samplegen-frontpage"
 PRELIM_BUILD_DIR = REPO_ROOT / "build" / "samplegen-prelim"
+CHAPTER_BUILD_DIR = REPO_ROOT / "build" / "samplegen-chapters"
+SPECIAL_TEXT_BUILD_DIR = REPO_ROOT / "build" / "samplegen-special-text"
 SAMPLE_DIR = REPO_ROOT / "sample"
 FRONTPAGE_DIR = SAMPLE_DIR / "frontpage"
 PRELIM_DIR = SAMPLE_DIR / "prelim"
+CHAPTER_DIR = SAMPLE_DIR / "chapters"
+SPECIAL_TEXT_DIR = SAMPLE_DIR / "special-text"
 
 FRONTPAGE_STYLES = [
     "star",
@@ -35,6 +39,20 @@ PRELIM_STYLES = [
     "straight",
     "sideblock",
     "useimage",
+]
+
+CHAPTER_STYLES = [
+    "ornament",
+    "margin",
+    "band",
+]
+
+SPECIAL_TEXT_STYLES = [
+    "ornament",
+    "framed",
+    "minimal",
+    "centered",
+    "poem",
 ]
 
 LIGHT_COVER_STYLES = {
@@ -187,6 +205,127 @@ def prelim_tex(style: str) -> str:
     ).strip() + "\n"
 
 
+def chapter_tex(style: str) -> str:
+    return textwrap.dedent(
+        f"""
+        \\documentclass[11pt,fleqn,oneside]{{book}}
+        \\usepackage[
+          frontpage=star,
+          theme=default,
+          paper=a5,
+          backmatter=false,
+          chapternumbering=roman,
+          coverstyle=auto,
+          runningheader=book,
+          toc=false
+        ]{{bookish}}
+
+        \\booksetup{{
+          title={{Explanation of Laamiyyah}},
+          author={{Zayd ibn Hadi Al-Madkhali}},
+          imprint={{Salafi Press}},
+          publishstatus={{published}}
+        }}
+
+        \\customizechapter{{
+          chapterstyle={style},
+          pagenumberposition=center
+        }}
+
+        \\begin{{document}}
+        \\mainmatter
+        \\chapter{{Chapter Style Preview}}
+        This page previews the \\texttt{{{style}}} chapter treatment.
+
+        \\section{{A Short Section}}
+        Body copy stays ordinary LaTeX content while the chapter and section
+        treatments follow the selected preset.
+        \\end{{document}}
+        """
+    ).strip() + "\n"
+
+
+def special_text_tex(style: str) -> str:
+    config = ""
+    body = ""
+    if style == "poem":
+        body = textwrap.dedent(
+            """
+            \\begin{poem}
+            أَلا كُلُّ شَيءٍ ما خَلا اللَهَ باطِلٌ & وَكُلُّ نَعيمٍ لا مَحالَةَ زائِلُ \\\\
+            وَكُلُّ أُناسٍ سَوفَ تَدخُلُ بَينَهُم & دُوَيهِيَّةٌ تَصفَرُّ مِنها الأَنامِلُ
+            \\end{poem}
+            """
+        ).strip()
+    else:
+        config = textwrap.dedent(
+            f"""
+            \\customizespecialtext{{
+              quranstyle={style},
+              hadithstyle=auto,
+              atharstyle=auto,
+              arabicstyle={style}
+            }}
+            """
+        ).strip()
+        body = textwrap.dedent(
+            """
+            \\begin{quran}
+            إِنَّ مَعَ الْعُسْرِ يُسْرًا
+            \\begin{translation}Indeed, with hardship comes ease.\\end{translation}
+            \\begin{reference}Surah al-Inshirah 94:6\\end{reference}
+            \\end{quran}
+
+            \\begin{hadith}
+            إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ
+            \\begin{translation}Actions are judged only by intentions.\\end{translation}
+            \\begin{reference}Sahih al-Bukhari 1\\end{reference}
+            \\begin{grade}Sahih\\end{grade}
+            \\end{hadith}
+
+            \\begin{athar}
+            العِلْمُ قَبْلَ القَوْلِ وَالعَمَلِ
+            \\begin{translation}Knowledge comes before speech and action.\\end{translation}
+            \\begin{reference}Reported from al-Bukhari in his chapter headings\\end{reference}
+            \\end{athar}
+
+            \\begin{arabicblock}
+            هَذَا نَصٌّ عَرَبِيٌّ تَجْرِيبِيٌّ لِإِظْهَارِ تَنْسِيقِ الكُتْلَةِ العَرَبِيَّةِ العَامَّةِ.
+            \\begin{translation}This is a short Arabic sample showing the generic Arabic block treatment.\\end{translation}
+            \\end{arabicblock}
+            """
+        ).strip()
+
+    return textwrap.dedent(
+        f"""
+        \\documentclass[11pt,fleqn,oneside]{{book}}
+        \\usepackage[
+          frontpage=star,
+          theme=default,
+          paper=a5,
+          backmatter=false,
+          chapternumbering=roman,
+          coverstyle=auto,
+          runningheader=none,
+          toc=false
+        ]{{bookish}}
+
+        \\booksetup{{
+          title={{Explanation of Laamiyyah}},
+          author={{Zayd ibn Hadi Al-Madkhali}},
+          imprint={{Salafi Press}},
+          publishstatus={{published}}
+        }}
+
+        {config}
+
+        \\begin{{document}}
+        {body}
+        \\end{{document}}
+        """
+    ).strip() + "\n"
+
+
 def generate_frontpages() -> None:
     clean_build_dir(FRONTPAGE_BUILD_DIR)
     FRONTPAGE_DIR.mkdir(parents=True, exist_ok=True)
@@ -207,3 +346,25 @@ def generate_prelims() -> None:
         pdf_path = compile_tex(tex_path, PRELIM_BUILD_DIR)
         pdf_to_png(pdf_path, PRELIM_DIR / f"{style}.png")
     clean_build_dir(PRELIM_BUILD_DIR)
+
+
+def generate_chapters() -> None:
+    clean_build_dir(CHAPTER_BUILD_DIR)
+    CHAPTER_DIR.mkdir(parents=True, exist_ok=True)
+    for style in CHAPTER_STYLES:
+        tex_path = CHAPTER_BUILD_DIR / f"chapter-{style}.tex"
+        write_text(tex_path, chapter_tex(style))
+        pdf_path = compile_tex(tex_path, CHAPTER_BUILD_DIR)
+        pdf_to_png(pdf_path, CHAPTER_DIR / f"{style}.png")
+    clean_build_dir(CHAPTER_BUILD_DIR)
+
+
+def generate_special_text() -> None:
+    clean_build_dir(SPECIAL_TEXT_BUILD_DIR)
+    SPECIAL_TEXT_DIR.mkdir(parents=True, exist_ok=True)
+    for style in SPECIAL_TEXT_STYLES:
+        tex_path = SPECIAL_TEXT_BUILD_DIR / f"special-text-{style}.tex"
+        write_text(tex_path, special_text_tex(style))
+        pdf_path = compile_tex(tex_path, SPECIAL_TEXT_BUILD_DIR)
+        pdf_to_png(pdf_path, SPECIAL_TEXT_DIR / f"{style}.png")
+    clean_build_dir(SPECIAL_TEXT_BUILD_DIR)
